@@ -1,0 +1,12 @@
+build/
+asm/
+assets/
+TMB*.ld
+.vscode/
+.ruff_cache
+.venv
+__pycache__/
+TMB*.map
+undefined_syms_auto.txt
+undefined_funcs_auto.txt
+nonmatchings/
