@@ -88,7 +88,7 @@ ENDLINE := \n'
 ASFLAGS        := -EL -Iinclude -march=5900 -G0 -no-pad-sections -mabi=eabi
 CFLAGS         := -O2 -G8 -Iinclude
 CXXFLAGS       := -O2 -G8 -x c++ -Iinclude
-LDFLAGS        := -EL -T $(SPLAT_DIR)/undefined_syms_auto.txt -T $(SPLAT_DIR)/undefined_funcs.txt -T $(LD_SCRIPT) -Map $(LD_MAP) --no-check-sections -nostdlib
+LDFLAGS        := -EL -T $(SPLAT_DIR)/undefined_syms_auto.txt -T $(SPLAT_DIR)/undefined_funcs.txt -T $(LD_SCRIPT) -Map $(LD_MAP) -nostdlib
 
 ifeq ($(NON_MATCHING),1)
 CPPFLAGS += -DNON_MATCHING
@@ -113,6 +113,7 @@ clean:
 distclean: clean
 	$(V)rm -f $(LD_SCRIPT)
 	$(V)rm -rf asm
+	$(V)rm -rf assets
 	$(V)rm -rf *_auto.txt
 
 setup: distclean split
@@ -137,12 +138,6 @@ $(BUILD_DIR)/%.bin.o: %.bin
 	@$(PRINT)$(GREEN)objcopying binary file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
 	@mkdir -p $(shell dirname $@)
 	$(V)$(LD) -r -b binary -o $@ $<
-
-# $(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT)
-# 	@$(PRINT)$(GREEN)Preprocessing linker script: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
-# 	$(V)$(CPP) -P -DBUILD_PATH=$(BUILD_DIR) $< -o $@
-#Temporary hack for noload segment wrong alignment
-#@sed -r -i 's/\.main_bss \(NOLOAD\) : SUBALIGN\(4\)/.main_bss main_SDATA_END (NOLOAD) : SUBALIGN(4)/g' $@
 
 # Link the .o files into the .elf
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS)

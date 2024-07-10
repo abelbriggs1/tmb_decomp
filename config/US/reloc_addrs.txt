@@ -1,0 +1,63 @@
+// Most of these are offsets into the `Game` struct. The struct is so
+// massive that it requires a full 32 bits to index into, which trips up
+// both `spimdisasm` and Ghidra.
+
+// game.cpp
+rom:0x0315FC symbol:0x001B3D88 reloc:MIPS_LO16
+rom:0x033308 symbol:0x001B3D88 reloc:MIPS_HI16
+rom:0x0333DC symbol:0x001B3D88 reloc:MIPS_LO16
+rom:0x0338B0 symbol:0x001B3D88 reloc:MIPS_LO16
+
+rom:0x035D88 symbol:0x001B28EC reloc:MIPS_HI16
+rom:0x035DC0 symbol:0x001B28EC reloc:MIPS_LO16
+rom:0x035DCC symbol:0x001B28EC reloc:MIPS_LO16 addend:0x1
+rom:0x035DD8 symbol:0x001B28EC reloc:MIPS_LO16 addend:0x2
+rom:0x035DE4 symbol:0x001B28EC reloc:MIPS_LO16 addend:0x3
+rom:0x035E8C symbol:0x001B28EC reloc:MIPS_LO16
+rom:0x035E98 symbol:0x001B28EC reloc:MIPS_LO16 addend:0x1
+rom:0x035EA4 symbol:0x001B28EC reloc:MIPS_LO16 addend:0x2
+rom:0x035EB0 symbol:0x001B28EC reloc:MIPS_LO16 addend:0x3
+rom:0x035F48 symbol:0x001B28EC reloc:MIPS_HI16
+rom:0x035F74 symbol:0x001B28EC reloc:MIPS_LO16
+rom:0x035F7C symbol:0x001B28EC reloc:MIPS_LO16 addend:0x1
+rom:0x035F88 symbol:0x001B28EC reloc:MIPS_LO16 addend:0x2
+rom:0x035F94 symbol:0x001B28EC reloc:MIPS_LO16 addend:0x3
+rom:0x036110 symbol:0x001B28EC reloc:MIPS_LO16
+rom:0x036120 symbol:0x001B28EC reloc:MIPS_LO16 addend:0x1
+rom:0x03612C symbol:0x001B28EC reloc:MIPS_LO16 addend:0x2
+rom:0x036138 symbol:0x001B28EC reloc:MIPS_LO16 addend:0x3
+
+rom:0x036258 symbol:0x001B4024 reloc:MIPS_LO16
+rom:0x0364DC symbol:0x001B4024 reloc:MIPS_LO16
+rom:0x036514 symbol:0x001B4024 reloc:MIPS_LO16
+rom:0x036544 symbol:0x001B4024 reloc:MIPS_LO16
+rom:0x036554 symbol:0x001B4024 reloc:MIPS_LO16
+rom:0x036558 symbol:0x001B4024 reloc:MIPS_LO16
+rom:0x036564 symbol:0x001B4024 reloc:MIPS_LO16
+
+rom:0x0362B0 symbol:0x001B3FFC reloc:MIPS_LO16
+rom:0x03634C symbol:0x001B3FFC reloc:MIPS_LO16
+rom:0x0363B8 symbol:0x001B3FFC reloc:MIPS_LO16
+rom:0x036408 symbol:0x001B3FFC reloc:MIPS_LO16
+rom:0x036474 symbol:0x001B3FFC reloc:MIPS_LO16
+rom:0x0364A0 symbol:0x001B3FFC reloc:MIPS_LO16
+
+// skidmark.cpp
+rom:0x069DF4 symbol:0x00185088 reloc:MIPS_LO16
+rom:0x06A034 symbol:0x00185088 reloc:MIPS_HI16
+rom:0x06A048 symbol:0x00185088 reloc:MIPS_LO16
+
+// uimemcard.cpp
+rom:0x0A3854 symbol:0x001B28EC reloc:MIPS_HI16
+rom:0x0A38CC symbol:0x001B28EC reloc:MIPS_LO16
+rom:0x0A38F0 symbol:0x001B28EC reloc:MIPS_LO16 addend:0x2
+rom:0x0A3914 symbol:0x001B28EC reloc:MIPS_LO16 addend:0x3
+rom:0x0A39DC symbol:0x001B28EC reloc:MIPS_HI16
+rom:0x0A3A24 symbol:0x001B28EC reloc:MIPS_LO16
+rom:0x0A3A48 symbol:0x001B28EC reloc:MIPS_LO16 addend:0x2
+rom:0x0A3A6C symbol:0x001B28EC reloc:MIPS_LO16 addend:0x3
+
+// e_sqrt.s
+rom:0x11556C symbol:0x00200000 reloc:MIPS_HI16 addend:0x1
+rom:0x11565C symbol:0x00200000 reloc:MIPS_LO16 addend:0x1
+rom:0x11566C symbol:0x00200000 reloc:MIPS_LO16 addend:0x1
