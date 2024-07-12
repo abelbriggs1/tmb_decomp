@@ -1,4 +1,5 @@
 colorama
+mapfile-parser
 pre-commit
 ruff
 argcomplete

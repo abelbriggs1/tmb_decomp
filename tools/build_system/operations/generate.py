@@ -104,6 +104,11 @@ def generate(env: Environment, clean_first: bool = True):
             description="CHECK       $in",
             command="./configure.py check --binary $in --output $out",
         )
+        ninja.rule(
+            name="progress",
+            description="PROGRESS    $in",
+            command="./configure.py progress --map-file $in --output $out",
+        )
 
         built_objects: set[Path] = set()
         # Add each object to the build script according to its segment type.
@@ -129,6 +134,7 @@ def generate(env: Environment, clean_first: bool = True):
             rule="ld",
             inputs=[str(env.files.ldscript)],
             implicit=[str(obj) for obj in built_objects],
+            implicit_outputs=[str(env.files.ldmap)],
         )
 
         # Add the final object step.
@@ -143,6 +149,14 @@ def generate(env: Environment, clean_first: bool = True):
             outputs=[str(env.directories.build / "build.sha1")],
             rule="check",
             inputs=[str(env.files.final_elf)],
+        )
+
+        # Add a step to print binary progress if matching.
+        ninja.build(
+            outputs=[str(env.directories.build / "progress.txt")],
+            rule="progress",
+            inputs=[str(env.files.ldmap)],
+            implicit=[str(env.directories.build / "build.sha1")],
         )
 
 

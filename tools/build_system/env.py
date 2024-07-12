@@ -47,6 +47,8 @@ class EnvironmentDirectories:
     src: Path
     # Directory for split assets/binary files.
     assets: Path
+    # Directory for nonmatching code.
+    nonmatchings: Path
     # List of include directories. These should be relative to the root.
     includes: list[Path]
     # List of include directories which should be considered "system includes" by
@@ -68,6 +70,7 @@ class EnvironmentDirectories:
             asm=root / "asm",
             src=root / "src",
             assets=root / "assets",
+            nonmatchings=root / "asm/nonmatchings",
             includes=[Path("include")],
             system_includes=[],
         )
