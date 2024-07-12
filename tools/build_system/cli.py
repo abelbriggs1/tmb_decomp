@@ -7,8 +7,6 @@ import logging
 import logging.config
 from pathlib import Path
 
-import splat
-
 from .operations import clean, distclean, generate, split, check, progress
 from .env import Environment, Version
 from .log import get_logger_config

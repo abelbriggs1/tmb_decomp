@@ -4,7 +4,6 @@ Implementation of the "build" command.
 
 import argparse
 import logging
-import shutil
 from pathlib import Path
 
 import splat.scripts.split as splat_split
