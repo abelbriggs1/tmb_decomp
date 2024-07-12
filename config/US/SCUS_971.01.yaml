@@ -3,12 +3,13 @@ sha1: 3ff17f4897552e355d0bb8c3abfa5125fe3ff2ef
 options:
   platform: ps2
   compiler: EEGCC
-  basename: TMB_US
+  basename: SCUS_971.01
   base_path: ../..
   target_path: disks/SCUS_971.01
   asm_path: asm
   src_path: src
-  ld_script_path: config/US/TMB_US.ld
+  ld_script_path: config/US/SCUS_971.01.ld
+  cache_path: config/US/.splache
   symbol_addrs_path: config/US/symbol_addrs.txt
   reloc_addrs_path: config/US/reloc_addrs.txt
   undefined_funcs_auto_path: config/US/undefined_funcs.txt
@@ -21,8 +22,8 @@ options:
   use_legacy_include_asm: False
   section_order: [".text", ".data", ".rodata", ".lit4", ".sdata", ".sbss", ".bss"]
   auto_all_sections: []
-  create_undefined_funcs_auto: True
-  create_undefined_syms_auto: True
+  create_undefined_funcs_auto: False
+  create_undefined_syms_auto: False
   do_c_func_detection: False
   string_encoding: ASCII
   data_string_encoding: ASCII

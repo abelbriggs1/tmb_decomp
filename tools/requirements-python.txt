@@ -1,3 +1,4 @@
+colorama
 pre-commit
 ruff
 argcomplete

@@ -11,7 +11,7 @@ ifeq ($(VERSION),US)
 BASEEXE      := SCUS_971.01
 endif
 
-TARGET       := TMB_$(VERSION)
+TARGET       := ${BASEEXE}
 SPLAT_DIR    := config/$(VERSION)
 
 # Fail early if baserom does not exist

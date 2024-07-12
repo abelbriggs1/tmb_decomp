@@ -1,12 +1,13 @@
 build/
 asm/
 assets/
-TMB*.ld
+SCUS*.ld
 .vscode/
 .ruff_cache
 .venv
+.splache
+build.ninja
 __pycache__/
-TMB*.map
-undefined_syms_auto.txt
-undefined_funcs_auto.txt
+SCUS*.map
 nonmatchings/
+.ninja_log
