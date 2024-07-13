@@ -264,3 +264,34 @@ TODO
 ### 4. Decompile Data
 
 TODO
+
+## Resources
+
+It's highly recommended to join some or all of the following Discord groups dedicated
+to decompilation if you'd like help or resources on decompilation. Many people here are
+experienced with reverse engineering and can help with a lot of issues.
+
+[PS1/PS2 Decompilation](https://discord.gg/VwCPdfbxgm)
+
+[`decomp.me`](https://discord.gg/fGjbfPeGTX)
+
+### `decomp.me`
+
+[decomp.me](https://decomp.me) is an online tool that allows you to collaborate with
+others on decompiling code through a web interface. It's very helpful for getting a
+visual representation of your code.
+
+This repository doesn't have any integration with `decomp.me` currently, so setting
+up scratches for TMB code can be annoying. Here's a very brief guide to creating a
+scratch for TMB:
+
+1. Go to https://decomp.me/new.
+2. Under `Platform`, select `Playstation 2 - MIPS (little-endian)`.
+3. Under `Compiler`, select `EE GCC 2.9 build 991111-01` as the compiler with `Custom` preset.
+4. Under `Target assembly`, copy-paste the contents of the function you are matching
+   from its corresponding file in `asm/nonmatchings/`.
+5. Under `Context`, add all typedefs from `include/common.h`.
+6. Click `Create scratch`.
+7. On the new page, in the `Options` tab of the left window, enter
+   `-O2 -G8 -x c++` for the compiler flags.
+8. Decompile the code to your heart's content!
