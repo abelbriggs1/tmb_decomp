@@ -7,7 +7,7 @@ import logging
 import logging.config
 from pathlib import Path
 
-from .operations import clean, distclean, generate, split, check, progress
+from .operations import clean, distclean, generate, split, check, progress, fix_gprel
 from .env import Environment, Version
 from .log import get_logger_config
 
@@ -39,6 +39,7 @@ split.add_subparser(subparsers)
 generate.add_subparser(subparsers)
 check.add_subparser(subparsers)
 progress.add_subparser(subparsers)
+fix_gprel.add_subparser(subparsers)
 
 
 def cli(root: Path):
@@ -49,4 +50,8 @@ def cli(root: Path):
     logging.config.dictConfig(get_logger_config(args.log_level))
     env = Environment.for_version(args.version, root)
 
-    args.func(env, args)
+    try:
+        args.func(env, args)
+    except Exception as e:
+        LOG.critical("Exception occurred!", exc_info=True)
+        LOG.critical("Exiting due to error: %s", e)

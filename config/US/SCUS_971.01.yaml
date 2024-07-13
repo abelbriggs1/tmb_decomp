@@ -24,7 +24,7 @@ options:
   auto_all_sections: []
   create_undefined_funcs_auto: False
   create_undefined_syms_auto: False
-  do_c_func_detection: False
+  do_c_func_detection: True
   string_encoding: ASCII
   data_string_encoding: ASCII
   rodata_string_guesser_level: 2
@@ -33,6 +33,7 @@ options:
   subalign: 4
   migrate_rodata_to_functions: False
   include_macro_inc: False
+  named_regs_for_c_funcs: False
 
 segments:
   - name: header
@@ -139,7 +140,7 @@ segments:
       - [0xC2B20, asm, tmb/drawc]
       - [0xC31D0, asm, tmb/file]
       - [0xC46F8, asm, tmb/fog]
-      - [0xC4E48, asm, tmb/font]
+      - [0xC4E48, cpp, tmb/font]
       - [0xC5C38, asm, tmb/hd]
       - [0xC9D40, asm, tmb/hdcar]
       - [0xCFC90, asm, tmb/hdhat]

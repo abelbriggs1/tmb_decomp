@@ -1,5 +1,5 @@
 def apply(config, args):
-    config["arch"] = "mipsel"
+    config["arch"] = "mipsee"
     config["baseimg"] = "disks/SCUS_971.01"
     config["myimg"] = "build/SCUS_971.01"
     config["mapfile"] = "build/SCUS_971.01.map"
