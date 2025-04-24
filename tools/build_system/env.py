@@ -180,11 +180,7 @@ class EnvironmentToolchain:
             c_preprocessor_cmd=f"{_CROSS}cpp",
             gp_value=0x004FEE70,
             c_flags=["-O2", "-G8"],
-            cxx_flags=[
-                "-O2",
-                "-G8",
-                "-x c++",
-            ],
+            cxx_flags=["-O2", "-G8", "-x c++", "-fno-exceptions"],
             as_flags=[
                 "-EL",
                 "-march=5900",

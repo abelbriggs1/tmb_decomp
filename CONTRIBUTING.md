@@ -293,5 +293,5 @@ scratch for TMB:
 5. Under `Context`, add all typedefs from `include/common.h`.
 6. Click `Create scratch`.
 7. On the new page, in the `Options` tab of the left window, enter
-   `-O2 -G8 -x c++` for the compiler flags.
+   `-O2 -G8 -x c++ -fno-exceptions` for the compiler flags.
 8. Decompile the code to your heart's content!
