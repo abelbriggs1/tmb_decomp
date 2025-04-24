@@ -103,15 +103,15 @@ directory, `src/tmb/font.cpp`:
 ```cpp
 #include "common.h"
 
-INCLUDE_ASM("/workspace/asm/nonmatchings/tmb/font", fontInit__F10_vramAddrs);
+INCLUDE_ASM("asm/nonmatchings/tmb/font", fontInit__F10_vramAddrs);
 
-INCLUDE_ASM("/workspace/asm/nonmatchings/tmb/font", fontDmaFontData__Fv);
+INCLUDE_ASM("asm/nonmatchings/tmb/font", fontDmaFontData__Fv);
 
-INCLUDE_ASM("/workspace/asm/nonmatchings/tmb/font", fontSetColorGifTag__Fi);
+INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetColorGifTag__Fi);
 
-INCLUDE_ASM("/workspace/asm/nonmatchings/tmb/font", fontDimColor__Fi);
+INCLUDE_ASM("asm/nonmatchings/tmb/font", fontDimColor__Fi);
 
-INCLUDE_ASM("/workspace/asm/nonmatchings/tmb/font", fontSetHilightColor__Fi);
+INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetHilightColor__Fi);
 
 // ...
 ```
