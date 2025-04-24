@@ -63,7 +63,20 @@ void fontSetCharWidth(int font, int char_width)
     fontInfo[font].char_width = char_width;
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetDefaultSize__Fi);
+void fontSetDefaultSize(int font)
+{
+    switch (font) {
+    case 0:
+        fontSetSize(font, 16);
+        fontSetSpacing(font, 2);
+        break;
+
+    case 1:
+        fontSetSize(font, 12);
+        fontSetSpacing(font, 1);
+        break;
+    }
+}
 
 void fontSetSpacing(int font, int spacing)
 {
