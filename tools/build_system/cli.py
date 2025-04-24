@@ -7,7 +7,7 @@ import logging
 import logging.config
 from pathlib import Path
 
-from .operations import clean, distclean, generate, split, check, progress, fix_gprel
+from .operations import clean, distclean, generate, split, check, progress
 from .env import Environment, Version
 from .log import get_logger_config
 
@@ -39,7 +39,6 @@ split.add_subparser(subparsers)
 generate.add_subparser(subparsers)
 check.add_subparser(subparsers)
 progress.add_subparser(subparsers)
-fix_gprel.add_subparser(subparsers)
 
 
 def cli(root: Path):

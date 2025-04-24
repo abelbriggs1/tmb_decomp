@@ -33,6 +33,7 @@ options:
   subalign: 4
   migrate_rodata_to_functions: False
   named_regs_for_c_funcs: False
+  use_gp_rel_macro_nonmatching: False
 
 segments:
   - name: header
