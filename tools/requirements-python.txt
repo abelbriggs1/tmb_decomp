@@ -7,5 +7,5 @@ pycparser
 pynacl
 toml
 asm-differ @ git+https://github.com/abelbriggs1/asm-differ@31ad6a9
-splat64[mips] >= 0.24.5, <1.0.0
+splat64[mips] >= 0.33.0, <1.0.0
 m2c @ git+https://github.com/matt-kempster/m2c@3788636

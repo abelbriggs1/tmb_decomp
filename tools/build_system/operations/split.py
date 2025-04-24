@@ -53,6 +53,4 @@ def split(env: Environment, clean_first: bool = False):
         distclean(env)
 
     LOG.info("Invoking `splat` to split the binary.")
-    splat_split.main(
-        config_path=[str(env.files.splat_yaml)], modes="all", verbose=False
-    )
+    splat_split.main(config_path=[env.files.splat_yaml], modes="all", verbose=False)

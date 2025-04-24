@@ -21,7 +21,7 @@ options:
   gp_value: 0x004FEE70
   use_legacy_include_asm: False
   section_order: [".text", ".data", ".rodata", ".lit4", ".sdata", ".sbss", ".bss"]
-  auto_all_sections: []
+  auto_link_sections: []
   create_undefined_funcs_auto: False
   create_undefined_syms_auto: False
   do_c_func_detection: True
@@ -32,7 +32,6 @@ options:
   ld_bss_is_noload: True
   subalign: 4
   migrate_rodata_to_functions: False
-  include_macro_inc: False
   named_regs_for_c_funcs: False
 
 segments:
