@@ -3,10 +3,6 @@
 
 #include "include_asm.h"
 
-#define NULL (void*)0
-#define EXTERN extern
-#define STATIC
-
 typedef signed char s8;
 typedef signed short s16;
 typedef signed int s32;

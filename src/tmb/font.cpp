@@ -1,9 +1,6 @@
-#include "common.h"
+#include <string.h>
 
-extern "C" {
-extern char* strchr(const char*, int);
-extern unsigned int strlen(const char*);
-}
+#include "common.h"
 
 #define NUM_FONTS 2
 

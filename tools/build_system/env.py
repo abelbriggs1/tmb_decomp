@@ -72,7 +72,11 @@ class EnvironmentDirectories:
             assets=root / "assets",
             nonmatchings=root / "asm/nonmatchings",
             includes=[Path("include")],
-            system_includes=[],
+            system_includes=[
+                Path("include/gcc"),
+                Path("include/gcc/gcc-lib"),
+                Path("include/sdk"),
+            ],
         )
 
 
@@ -259,7 +263,6 @@ class Environment:
         """
         flags = [
             *[f"-I{inc}" for inc in self.directories.includes],
-            *[f"-isystem {inc}" for inc in self.directories.system_includes],
             *self.toolchain.as_flags,
         ]
         return f"{self.toolchain.assembler_cmd} {' '.join(flags)}"
