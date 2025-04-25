@@ -35,7 +35,15 @@ INCLUDE_ASM("asm/nonmatchings/tmb/font", fontDmaFontData__Fv);
 void fontSetColorGifTag(int font);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetColorGifTag__Fi);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontDimColor__Fi);
+void fontDimColor(int font)
+{
+    fontInfo[font].r = fontInfo[font].r >> 1;
+    fontInfo[font].g = fontInfo[font].g >> 1;
+    fontInfo[font].b = fontInfo[font].b >> 1;
+    fontInfo[font].a = 128;
+
+    fontSetColorGifTag(font);
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetHilightColor__Fi);
 
