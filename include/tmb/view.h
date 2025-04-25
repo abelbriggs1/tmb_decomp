@@ -60,4 +60,8 @@ typedef struct _viewinfo { // 0x10
     /* 0xc */ ViewPorts oldView;
 } ViewInfo;
 
+int viewGetCurView();
+void viewGetCenter(int view, int* center_x, int* center_y);
+void viewGetWH(int view, int* width, int* height);
+
 #endif // _TMB_VIEW_H_
