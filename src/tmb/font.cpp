@@ -6,6 +6,9 @@
 
 #define NUM_FONTS 2
 
+#define PIXELS_TO_SUBPIXELS(val) ((val) << 4)
+#define SUBPIXELS_TO_PIXELS(val) ((val) >> 4)
+
 typedef struct _fontInfo {
     u16 unk1;
     u16 unk2;
@@ -69,7 +72,10 @@ INCLUDE_ASM("asm/nonmatchings/tmb/font", fontClearCutOut__Fv);
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCutOut__Fi);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetDefaultColor__Fi);
+void fontSetDefaultColor(int font)
+{
+    fontSetColor(font, 128, 128, 64);
+}
 
 void fontSetSize(int font, int size)
 {
@@ -124,11 +130,41 @@ int fontStringWidth(int font, char* str)
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSpritePrintXY__FiiiPc);
+void fontSpritePrintXY(int font, int x, int y, char* str)
+{
+    FontInfo* font_ptr = &fontInfo[font];
+    font_ptr->y_subpixel = PIXELS_TO_SUBPIXELS(y);
+    font_ptr->unk6 = PIXELS_TO_SUBPIXELS(x);
+    font_ptr->x_subpixel = PIXELS_TO_SUBPIXELS(x);
+    font_ptr->unk8 = 0;
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSpritePrintCenteredXY__FiiiPc);
+    fontSpritePrint(font, str);
+}
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSpritePrintCentered__FiPc);
+void fontSpritePrintCenteredXY(int font, int x, int y, char* str)
+{
+    FontInfo* font_ptr = &fontInfo[font];
+
+    font_ptr->unk8 = 1;
+
+    int width = fontStringWidth(font, str);
+    font_ptr->x_subpixel = PIXELS_TO_SUBPIXELS(x) - (width >> 1);
+    font_ptr->y_subpixel = PIXELS_TO_SUBPIXELS(y);
+    font_ptr->unk6 = PIXELS_TO_SUBPIXELS(x);
+
+    fontSpritePrint(font, str);
+}
+
+void fontSpritePrintCentered(int font, char* str)
+{
+    FontInfo* font_ptr = &fontInfo[font];
+
+    font_ptr->unk8 = 1;
+    int width = fontStringWidth(font, str);
+    font_ptr->x_subpixel = font_ptr->unk6 - (width >> 1);
+
+    fontSpritePrint(font, str);
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCharSizesToFitScreen__Fiiiff);
 
