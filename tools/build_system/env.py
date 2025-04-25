@@ -179,7 +179,7 @@ class EnvironmentToolchain:
             strip_cmd=f"{_CROSS}strip",
             c_preprocessor_cmd=f"{_CROSS}cpp",
             gp_value=0x004FEE70,
-            c_flags=["-O2", "-G8"],
+            c_flags=["-O2", "-G8", "-fno-exceptions"],
             cxx_flags=["-O2", "-G8", "-x c++", "-fno-exceptions"],
             as_flags=[
                 "-EL",

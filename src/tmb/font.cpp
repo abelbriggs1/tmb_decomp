@@ -63,6 +63,7 @@ void fontSetCharWidth(int font, int char_width)
     fontInfo[font].char_width = char_width;
 }
 
+void fontSetSpacing(int font, int spacing);
 void fontSetDefaultSize(int font)
 {
     switch (font) {
