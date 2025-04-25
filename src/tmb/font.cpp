@@ -6,7 +6,7 @@
 
 #define NUM_FONTS 2
 
-typedef struct {
+typedef struct _fontInfo {
     u16 unk1;
     u16 unk2;
     u16 char_width;
@@ -24,9 +24,9 @@ typedef struct {
     u8 b;
     u8 a;
     u32 unk8;
-} _fontInfo;
+} FontInfo;
 
-extern _fontInfo fontInfo[NUM_FONTS];
+extern FontInfo fontInfo[NUM_FONTS];
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontInit__F10_vramAddrs);
 
