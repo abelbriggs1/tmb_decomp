@@ -31,6 +31,22 @@ typedef struct _fontInfo {
 
 extern FontInfo fontInfo[NUM_FONTS];
 
+// Types for most of these variables are currently undetermined.
+extern int QuadCnt;
+extern int EndContext;
+extern int fontFirstFrame;
+extern int previousGifTagType;
+extern int previousGifTagLocation;
+extern int spriteTESTlocation;
+extern int spriteFBAlocation;
+extern int spritePRIMlocation;
+extern int numFontSprites;
+// extern void* fontLoadImage;
+// extern void* fontLoadClut;
+// extern void* font_texture_1;
+// extern void* font_texture_1_clut;
+// extern QwData packetBuf[];
+
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontInit__F10_vramAddrs);
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontDmaFontData__Fv);
