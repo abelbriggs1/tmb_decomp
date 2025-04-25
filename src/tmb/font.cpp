@@ -45,7 +45,15 @@ void fontDimColor(int font)
     fontSetColorGifTag(font);
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetHilightColor__Fi);
+void fontSetHilightColor(int font)
+{
+    fontInfo[font].r = 255;
+    fontInfo[font].g = 192;
+    fontInfo[font].b = 128;
+    fontInfo[font].a = 128;
+
+    fontSetColorGifTag(font);
+}
 
 void fontSetColor(int font, int r, int g, int b)
 {
