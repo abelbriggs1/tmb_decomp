@@ -84,4 +84,10 @@ typedef union { // 0x10
 
 typedef FVECTOR QUATERN;
 
+typedef enum _vramAddrs {
+    UNK_0x69840 = 0x69840,
+    UNK_0x82A00 = 0x82A00,
+    UNK_0xA8840 = 0xA8840
+} VramAddrs;
+
 #endif // _TMB_TYPES_H_
