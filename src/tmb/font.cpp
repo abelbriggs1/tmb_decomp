@@ -39,7 +39,15 @@ INCLUDE_ASM("asm/nonmatchings/tmb/font", fontDimColor__Fi);
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetHilightColor__Fi);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetColor__Fiiii);
+void fontSetColor(int font, int r, int g, int b)
+{
+    fontInfo[font].r = r;
+    fontInfo[font].g = g;
+    fontInfo[font].b = b;
+    fontInfo[font].a = 128;
+
+    fontSetColorGifTag(font);
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontClearCutOut__Fv);
 
