@@ -1,7 +1,8 @@
 #include <string.h>
 
 #include "common.h"
-#include "tmb/types.h"
+
+#include "tmb/font.h"
 
 #define NUM_FONTS 2
 
@@ -29,28 +30,21 @@ extern _fontInfo fontInfo[NUM_FONTS];
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontInit__F10_vramAddrs);
 
-void fontDmaFontData();
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontDmaFontData__Fv);
 
 void fontSetColorGifTag(int font);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetColorGifTag__Fi);
 
-void fontDimColor(int font);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontDimColor__Fi);
 
-void fontSetHilightColor(int font);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetHilightColor__Fi);
 
-void fontSetColor(int font, int r, int g, int b);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetColor__Fiiii);
 
-void fontClearCutOut();
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontClearCutOut__Fv);
 
-void fontSetCutOut(int font);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCutOut__Fi);
 
-void fontSetDefaultColor(int font);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetDefaultColor__Fi);
 
 void fontSetSize(int font, int size)
@@ -72,7 +66,6 @@ void fontSetCharWidth(int font, int char_width)
     fontInfo[font].char_width = char_width;
 }
 
-void fontSetSpacing(int font, int spacing);
 void fontSetDefaultSize(int font)
 {
     switch (font) {
@@ -107,37 +100,26 @@ int fontStringWidth(int font, char* str)
     }
 }
 
-void fontSpritePrintXY(int font, int x, int y, char* str);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSpritePrintXY__FiiiPc);
 
-void fontSpritePrintCenteredXY(int font, int x, int y, char* str);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSpritePrintCenteredXY__FiiiPc);
 
-void fontSpritePrintCentered(int font, char* str);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSpritePrintCentered__FiPc);
 
-void fontSetCharSizesToFitScreen(int font, int unk_2, int unk_3, float unk_4, float unk_5);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCharSizesToFitScreen__Fiiiff);
 
-void fontSetCharSizesInPixels(int font, int unk_2, int unk_3, int unk_4, int unk_5);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCharSizesInPixels__Fiiiii);
 
-void fontSetCharSizesInSubPixels(int font, int unk_2, int unk_3, int unk_4, int unk_5);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCharSizesInSubPixels__Fiiiii);
 
-void fontSetCursorAtColumnRow(int font, int unk_2, int unk_3);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCursorAtColumnRow__Fiii);
 
-void fontSetCursorAtRowColumn(int font, int unk_2, int unk_3);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCursorAtRowColumn__Fiii);
 
-void fontSetCursorAtPixel(int font, int x, int y);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCursorAtPixel__Fiii);
 
-void fontSetCursorAtSubPixel(int font, int x, int y);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCursorAtSubPixel__Fiii);
 
-void fontSpritePrint(int font, char* str);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSpritePrint__FiPc);
 
 void fontBuildPrim(int font, u8 unk_2, QwData* tags);
