@@ -1,8 +1,9 @@
 """
-Implementation of the "build" command.
+Implementation of the "generate" command.
 """
 
 import argparse
+import json
 import logging
 from pathlib import Path
 
@@ -25,8 +26,8 @@ def add_subparser(subparsers):
     """
     parser: argparse.ArgumentParser = subparsers.add_parser(
         "generate",
-        help="Generates the Ninja build script for the project.",
-        description="Generates the Ninja build script for the project.",
+        help="Generates the Ninja build script and objdiff config for the project.",
+        description="Generates the Ninja build script and objdiff config for the project.",
     )
     parser.set_defaults(func=_generate_cli)
 
@@ -43,7 +44,7 @@ def _generate_cli(env: Environment, args):
 
 def generate(env: Environment, clean_first: bool = True):
     """
-    Generate the Ninja build script for the project.
+    Generate the Ninja build script and objdiff config for the project.
     """
     if clean_first:
         LOG.info("Cleaning build artifacts.")
@@ -157,6 +158,25 @@ def generate(env: Environment, clean_first: bool = True):
             inputs=[str(env.files.ldmap)],
             implicit=[str(env.directories.build / "build.sha1")],
         )
+
+    # Generate the `objdiff` config.
+    objdiff_json: dict = {
+        "$schema": "https://raw.githubusercontent.com/encounter/objdiff/main/config.schema.json",
+        "custom_make": "ninja",
+        "custom_args": [],
+        "build_target": False,
+        "build_base": False,
+        "watch_patterns": [],
+    }
+    units = []
+    for entry in linker_entries:
+        if entry.object_path.suffix == ".o":
+            unit = {"target_path": str(entry.object_path)}
+            units.append(unit)
+
+    objdiff_json["units"] = units
+    with env.files.objdiff_config.open(mode="w") as cfg:
+        json.dump(objdiff_json, cfg, indent=4)
 
 
 def _add_build_rule(

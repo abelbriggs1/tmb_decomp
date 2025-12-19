@@ -2,34 +2,16 @@
 
 ## Developer Setup
 
-### Option 1: Standard (Debian/Ubuntu)
+This repository currently assumes that the user is running a Debian/Ubuntu-based
+Linux distribution. If you are a Windows user, you can use
+[Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/about)
+with Ubuntu.
 
-If you are natively running in a Debian/Ubuntu (or WSL2) environment, then you can simply
-install the required packages as detailed in [Requirements](README.md#requirements), then proceed with development.
-
-### Option 2: VSCode w/ Docker Dev Container (**Recommended**)
-
-If you are not running Debian/Ubuntu, you can use Visual Studio Code with the
-"Dev Containers" extension installed. This repository has full support for devcontainers.
-
-1. Install Docker and Visual Studio Code.
-2. Install the "Dev Containers" extension in VSCode.
-3. Open the repository in VSCode.
-4. Use `Ctrl+Shift+P` to open the command palette.
-5. In the command palette, search for the `Dev Containers: Rebuild Container` command and run it.
-
-If everything goes well, you should now have a completely isolated environment for
-development. The environment will be automatically set up with all dependencies installed,
-and VSCode will automatically activate your Python virtual environment in your terminal
-windows.
-
-Since the development environment is completely isolated from your system, this is
-the recommended development setup.
+To set up the repository, simply install the required packages as detailed in
+[Requirements](README.md#requirements).
 
 ## Repository Layout
 
-- `.devcontainer/`
-  - Contains the VSCode "Dev Containers" extension configuration and Dockerfile.
 - `asm/`
   - Contains raw MIPSEL R5900 Emotion Engine assembly files, split and disassembled
     from the original binary by the `splat` tool.

@@ -25,7 +25,9 @@ started to avoid any community fragmentation.
 ## Requirements
 
 This repository currently assumes that the user is running a Debian/Ubuntu-based
-Linux distribution. If you are a Windows user, you should use WSL2 with Ubuntu.
+Linux distribution. If you are a Windows user, you should use
+[Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/about)
+with Ubuntu.
 
 ### System Packages
 

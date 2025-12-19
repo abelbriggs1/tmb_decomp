@@ -2,26 +2,24 @@
 # See https://pre-commit.com/hooks.html for more hooks
 exclude: |
   ^tools/ee-gcc2.9/
-  ^tools/asm-differ/
-  ^tools/decomp-permuter/
-  ^tools/m2c/
+  ^tools/objdiff/
   ^tools/build_system/ninja_syntax.py
   ^include/gcc/
 
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
     -   id: check-yaml
     -   id: mixed-line-ending
 -   repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v20.1.0
+    rev: v21.1.8
     hooks:
     -   id: clang-format
 -   repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.6
+    rev: v0.14.10
     hooks:
     -   id: ruff
         args: [ --fix ]

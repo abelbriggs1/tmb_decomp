@@ -12,3 +12,4 @@ SCUS*.map
 nonmatchings/
 .ninja_log
 disks/
+objdiff.json

@@ -6,6 +6,5 @@ argcomplete
 pycparser
 pynacl
 toml
-asm-differ @ git+https://github.com/abelbriggs1/asm-differ@31ad6a9
 splat64[mips] >= 0.33.0, <1.0.0
-m2c @ git+https://github.com/matt-kempster/m2c@3788636
+m2c @ git+https://github.com/matt-kempster/m2c@a9e7a693a6347cc267a7d3c73d8eff18c1a5a806

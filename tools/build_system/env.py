@@ -104,6 +104,8 @@ class EnvironmentFiles:
     pre_elf: Path
     # Path to the final ELF file which should match the original binary.
     final_elf: Path
+    # Path to the `objdiff.json` created by the build.
+    objdiff_config: Path
 
     @staticmethod
     def for_version(
@@ -124,6 +126,7 @@ class EnvironmentFiles:
             disk=directories.disks / basename,
             pre_elf=directories.build / f"{basename}.elf",
             final_elf=directories.build / basename,
+            objdiff_config=directories.root / "objdiff.json",
         )
 
 
