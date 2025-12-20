@@ -3,6 +3,7 @@
 exclude: |
   ^tools/ee-gcc2.9/
   ^tools/objdiff/
+  ^tools/asm_differ/
   ^tools/build_system/ninja_syntax.py
   ^include/gcc/
 
