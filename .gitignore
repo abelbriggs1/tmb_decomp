@@ -14,3 +14,4 @@ nonmatchings/
 disks/
 objdiff.json
 *.rom
+ctx.h

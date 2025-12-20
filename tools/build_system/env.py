@@ -189,7 +189,7 @@ class EnvironmentToolchain:
             linker_cmd=f"{_CROSS}ld",
             objcopy_cmd=f"{_CROSS}objcopy",
             strip_cmd=f"{_CROSS}strip",
-            c_preprocessor_cmd=f"{_CROSS}cpp",
+            c_preprocessor_cmd=f"{_CROSS}gcc",
             gp_value=0x004FEE70,
             c_flags=["-O2", "-G8", "-fno-exceptions"],
             cxx_flags=["-O2", "-G8", "-x c++", "-fno-exceptions"],
@@ -247,6 +247,22 @@ class Environment:
         Determine if build artifacts currently exist in the repository.
         """
         return self.directories.build.is_dir()
+
+    def generate_c_preprocessor_cmd(self, m2ctx: bool = False) -> str:
+        """
+        Generate the full C preprocessor invocation for this environment, not including
+        input/output parameters.
+        """
+        flags = [
+            "-E",  # Preprocess only.
+            "-P",  # Do not generate #line directives.
+            "-dD",  # Preserve macro definitions in output.
+            *[f"-I{inc}" for inc in self.directories.includes],
+            *[f"-isystem {inc}" for inc in self.directories.system_includes],
+        ]
+        if m2ctx:
+            flags.append("-DM2CTX")
+        return f"{self.toolchain.c_preprocessor_cmd} {' '.join(flags)}"
 
     def generate_c_compiler_cmd(self) -> str:
         """
