@@ -95,9 +95,9 @@ def generate(env: Environment, clean_first: bool = True):
             command=f"{env.generate_linker_cmd()} -T $in -o $out",
         )
         ninja.rule(
-            name="elf",
-            description="ELF         $in",
-            command=f"{env.toolchain.objcopy_cmd} $in $out -O binary",
+            name="rom",
+            description="rom         $in",
+            command=f"{env.generate_objcopy_rom_cmd('0x3FBD00')} $in $out",
         )
         ninja.rule(
             name="check",
@@ -130,7 +130,7 @@ def generate(env: Environment, clean_first: bool = True):
 
         # Add the linker step.
         ninja.build(
-            outputs=[str(env.files.pre_elf)],
+            outputs=[str(env.files.final_elf)],
             rule="ld",
             inputs=[str(env.files.ldscript)],
             implicit=[str(obj) for obj in built_objects],
@@ -139,16 +139,16 @@ def generate(env: Environment, clean_first: bool = True):
 
         # Add the final object step.
         ninja.build(
-            outputs=[str(env.files.final_elf)],
-            rule="elf",
-            inputs=[str(env.files.pre_elf)],
+            outputs=[str(env.files.final_rom)],
+            rule="rom",
+            inputs=[str(env.files.final_elf)],
         )
 
         # Add a step to ensure the new binary matches.
         ninja.build(
             outputs=[str(env.directories.build / "build.sha1")],
             rule="check",
-            inputs=[str(env.files.final_elf)],
+            inputs=[str(env.files.final_rom)],
         )
 
         # Add a step to print binary progress if matching.

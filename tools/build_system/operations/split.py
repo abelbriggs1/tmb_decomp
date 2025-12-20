@@ -4,6 +4,7 @@ Implementation of the "split" command.
 
 import argparse
 import logging
+import subprocess
 
 import splat.scripts.split as splat_split
 
@@ -40,6 +41,24 @@ def _split_cli(env: Environment, args):
     LOG.info("Done splitting binary.")
 
 
+def _prepare_rom(env: Environment):
+    """
+    Create the "ROM" file for the original executable.
+    """
+    if not env.files.disk.is_file():
+        raise FileNotFoundError(
+            f"Missing required original binary file: `{env.files.disk}`"
+        )
+
+    if not env.files.disk_rom.is_file():
+        LOG.info("Creating ROM file for comparison: `%s`", str(env.files.disk_rom))
+        subprocess.run(
+            f"{env.generate_objcopy_rom_cmd('0x4FBD00')} {env.files.disk} {env.files.disk_rom}",
+            shell=True,
+            check=True,
+        )
+
+
 def split(env: Environment, clean_first: bool = False):
     """
     Split and disassemble the target binary.
@@ -51,6 +70,8 @@ def split(env: Environment, clean_first: bool = False):
     if clean_first:
         LOG.info("Cleaning the repository before splitting binary.")
         distclean(env)
+
+    _prepare_rom(env)
 
     LOG.info("Invoking `splat` to split the binary.")
     splat_split.main(config_path=[env.files.splat_yaml], modes="all", verbose=False)

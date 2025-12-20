@@ -63,7 +63,7 @@ def check(env: Environment, binary: Path) -> bool:
     """
     Determine whether the given binary matches the original binary in the environment.
     """
-    original_sha1 = sha1sum(env.files.disk)
+    original_sha1 = sha1sum(env.files.disk_rom)
     new_sha1 = sha1sum(binary)
 
     return original_sha1 == new_sha1
