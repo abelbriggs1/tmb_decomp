@@ -184,7 +184,15 @@ void fontSpritePrintCentered(int font, char* str)
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCharSizesToFitScreen__Fiiiff);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCharSizesInPixels__Fiiiii);
+void fontSetCharSizesInPixels(int font, int unk_2, int unk_3, int unk_4, int unk_5)
+{
+    FontInfo* info = &fontInfo[font];
+
+    info->size_lsh_6_div_5 = PIXELS_TO_SUBPIXELS(unk_2);
+    info->size_lsh_3 = PIXELS_TO_SUBPIXELS(unk_3);
+    info->spacing = PIXELS_TO_SUBPIXELS(unk_2 + unk_4);
+    info->unk5 = PIXELS_TO_SUBPIXELS(unk_3 + unk_5);
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCharSizesInSubPixels__Fiiiii);
 
