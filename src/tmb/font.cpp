@@ -183,10 +183,6 @@ void fontSpritePrintCentered(int font, char* str)
     fontSpritePrint(font, str);
 }
 
-// Matches on decomp.me with `EE GCC 2.9 build 991111` instead of `991111-01`.
-// On `991111-01`, some required `nop`s are removed.
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCharSizesToFitScreen__Fiiiff);
-/**
 void fontSetCharSizesToFitScreen(int font, int unk_2, int unk_3, float unk_4, float unk_5)
 {
     int center_x, center_y, view_width, view_height;
@@ -205,10 +201,9 @@ void fontSetCharSizesToFitScreen(int font, int unk_2, int unk_3, float unk_4, fl
     info->unk5 = temp2;
     info->spacing = temp1;
 
-    info->size_lsh_6_div_5 = (u16) (temp1 * unk_4);
-    info->size_lsh_3 = (u16) (temp2 * unk_5);
+    info->size_lsh_6_div_5 = (u16)(temp1 * unk_4);
+    info->size_lsh_3 = (u16)(temp2 * unk_5);
 }
- */
 
 void fontSetCharSizesInPixels(int font, int unk_2, int unk_3, int unk_4, int unk_5)
 {

@@ -269,7 +269,7 @@ scratch for TMB:
 
 1. Go to https://decomp.me/new.
 2. Under `Platform`, select `Playstation 2 - MIPS (little-endian)`.
-3. Under `Compiler`, select `EE GCC 2.9 build 991111-01` as the compiler with `Custom` preset.
+3. Under `Compiler`, select `EE GCC 2.9 build 991111` as the compiler with `Custom` preset.
 4. Under `Target assembly`, copy-paste the contents of the function you are matching
    from its corresponding file in `asm/nonmatchings/`.
 5. Under `Context`, add all typedefs from `include/common.h`.
