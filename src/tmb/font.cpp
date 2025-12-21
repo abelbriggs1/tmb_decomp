@@ -204,7 +204,16 @@ void fontSetCharSizesInSubPixels(int font, int unk_2, int unk_3, int unk_4, int 
     info->unk5 = unk_3 + unk_5;
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCursorAtColumnRow__Fiii);
+void fontSetCursorAtColumnRow(int font, int column, int row)
+{
+    FontInfo* info = &fontInfo[font];
+
+    int col_subpixel = column * info->spacing;
+
+    info->unk6 = col_subpixel;
+    info->x_subpixel = col_subpixel;
+    info->y_subpixel = row * info->unk5;
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCursorAtRowColumn__Fiii);
 
