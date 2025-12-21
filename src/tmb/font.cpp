@@ -1,6 +1,7 @@
 #include <string.h>
 
 #include "common.h"
+#include "tmb/view.h"
 
 #include "tmb/font.h"
 
@@ -182,7 +183,32 @@ void fontSpritePrintCentered(int font, char* str)
     fontSpritePrint(font, str);
 }
 
+// Matches on decomp.me with `EE GCC 2.9 build 991111` instead of `991111-01`.
+// On `991111-01`, some required `nop`s are removed.
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCharSizesToFitScreen__Fiiiff);
+/**
+void fontSetCharSizesToFitScreen(int font, int unk_2, int unk_3, float unk_4, float unk_5)
+{
+    int center_x, center_y, view_width, view_height;
+
+    FontInfo* info = &fontInfo[font];
+
+    viewGetCenter(viewGetCurView(), &center_x, &center_y);
+    viewGetWH(viewGetCurView(), &view_width, &view_height);
+
+    int width_subpix = PIXELS_TO_SUBPIXELS(view_width);
+    int height_subpix = PIXELS_TO_SUBPIXELS(view_height);
+
+    int temp1 = width_subpix / unk_2;
+    int temp2 = height_subpix / unk_3;
+
+    info->unk5 = temp2;
+    info->spacing = temp1;
+
+    info->size_lsh_6_div_5 = (u16) (temp1 * unk_4);
+    info->size_lsh_3 = (u16) (temp2 * unk_5);
+}
+ */
 
 void fontSetCharSizesInPixels(int font, int unk_2, int unk_3, int unk_4, int unk_5)
 {
@@ -215,11 +241,36 @@ void fontSetCursorAtColumnRow(int font, int column, int row)
     info->y_subpixel = row * info->unk5;
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCursorAtRowColumn__Fiii);
+void fontSetCursorAtRowColumn(int font, int row, int column)
+{
+    FontInfo* info = &fontInfo[font];
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCursorAtPixel__Fiii);
+    int col_subpixel = column * info->spacing;
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCursorAtSubPixel__Fiii);
+    info->unk6 = col_subpixel;
+    info->x_subpixel = col_subpixel;
+    info->y_subpixel = row * info->unk5;
+}
+
+void fontSetCursorAtPixel(int font, int x, int y)
+{
+    FontInfo* info = &fontInfo[font];
+
+    int temp = PIXELS_TO_SUBPIXELS(x);
+
+    info->unk6 = temp;
+    info->x_subpixel = temp;
+    info->y_subpixel = PIXELS_TO_SUBPIXELS(y);
+}
+
+void fontSetCursorAtSubPixel(int font, int x, int y)
+{
+    FontInfo* info = &fontInfo[font];
+
+    info->unk6 = x;
+    info->x_subpixel = x;
+    info->y_subpixel = y;
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSpritePrint__FiPc);
 

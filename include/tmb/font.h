@@ -22,7 +22,7 @@ void fontSetCharSizesToFitScreen(int font, int unk_2, int unk_3, float unk_4, fl
 void fontSetCharSizesInPixels(int font, int unk_2, int unk_3, int unk_4, int unk_5);
 void fontSetCharSizesInSubPixels(int font, int unk_2, int unk_3, int unk_4, int unk_5);
 void fontSetCursorAtColumnRow(int font, int column, int row);
-void fontSetCursorAtRowColumn(int font, int unk_2, int unk_3);
+void fontSetCursorAtRowColumn(int font, int row, int column);
 void fontSetCursorAtPixel(int font, int x, int y);
 void fontSetCursorAtSubPixel(int font, int x, int y);
 void fontSpritePrint(int font, char* str);
