@@ -71,7 +71,7 @@ def _generate_ninja_script(env: Environment, linker_entries: list[LinkerEntry]):
         ninja.rule(
             name="as",
             description="ASSEMBLE    $in",
-            command=f"{env.generate_assembler_cmd()} $in -o $out",
+            command=f"{env.generate_assembler_cmd()} $in -o $out && ./configure.py patchelf $out",
         )
         ninja.rule(
             name="ld",

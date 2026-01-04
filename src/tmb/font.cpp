@@ -6,6 +6,7 @@
 #include "tmb/font.h"
 
 #define NUM_FONTS 2
+#define NUM_PACKETS 3000
 
 #define PIXELS_TO_SUBPIXELS(val) ((val) << 4)
 #define SUBPIXELS_TO_PIXELS(val) ((val) >> 4)
@@ -30,23 +31,29 @@ typedef struct _fontInfo {
     u32 unk8;
 } FontInfo;
 
-extern FontInfo fontInfo[NUM_FONTS];
-
 // Types for most of these variables are currently undetermined.
-extern int QuadCnt;
-extern int EndContext;
-extern int fontFirstFrame;
-extern int previousGifTagType;
-extern int previousGifTagLocation;
-extern int spriteTESTlocation;
-extern int spriteFBAlocation;
-extern int spritePRIMlocation;
-extern int numFontSprites;
+// sdata
+static int fontFirstFrame = 1;
+static int spriteTESTlocation = 0;
+static int spriteFBAlocation = 0;
+static int spritePRIMlocation = 0;
+
+// sbss
+static int numFontSprites;
+static int QuadCnt;
+static int previousGifTagType;
+static int previousGifTagLocation;
+static int EndContext;
+
+// bss
+static FontInfo fontInfo[NUM_FONTS];
+static QwData fontPacketBuf[NUM_PACKETS];
+
+// Other font-related symbols, referenced in vutext.
 // extern void* fontLoadImage;
 // extern void* fontLoadClut;
 // extern void* font_texture_1;
 // extern void* font_texture_1_clut;
-// extern QwData packetBuf[];
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontInit__F10_vramAddrs);
 
@@ -85,9 +92,19 @@ void fontSetColor(int font, int r, int g, int b)
     fontSetColorGifTag(font);
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontClearCutOut__Fv);
+void fontClearCutOut()
+{
+    fontPacketBuf[spriteTESTlocation].ui64[0] = 0x3008d;
+    fontPacketBuf[spriteFBAlocation].ui64[0] = 0;
+    fontPacketBuf[spritePRIMlocation].ui64[0] = 0x156;
+}
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetCutOut__Fi);
+void fontSetCutOut(int cutout)
+{
+    fontPacketBuf[spriteTESTlocation].ui64[0] = ((u64)cutout << 4) | 0x3000d;
+    fontPacketBuf[spriteFBAlocation].ui64[0] = 1;
+    fontPacketBuf[spritePRIMlocation].ui64[0] = 0x116;
+}
 
 void fontSetDefaultColor(int font)
 {
@@ -267,9 +284,47 @@ void fontSetCursorAtSubPixel(int font, int x, int y)
     info->y_subpixel = y;
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSpritePrint__FiPc);
+void fontBuildPrim(int font, char unk_2, QwData* tags);
 
-void fontBuildPrim(int font, u8 unk_2, QwData* tags);
+// INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSpritePrint__FiPc);
+void fontSpritePrint(int font, char* str)
+{
+
+    FontInfo* info = &fontInfo[font];
+
+    while (*str != '\0') {
+        switch (*str) {
+        case ' ': // Whitespace
+            info->x_subpixel += info->spacing;
+            break;
+        case '\b': // Backspace
+            info->x_subpixel -= info->spacing;
+            break;
+        case '\n': // Newline
+            info->y_subpixel += info->unk5;
+            // Fallthrough
+        case '\r': // Carriage return
+            if (info->unk8 != 0) {
+                int width = fontStringWidth(font, (str + 1));
+                info->x_subpixel = info->unk6 - (width >> 1);
+            } else {
+                info->x_subpixel = info->unk6;
+            }
+            break;
+        case '\v': // Vertical tab
+            info->y_subpixel += info->unk5;
+            break;
+        default: // Standard characters
+            fontBuildPrim(font, *str, fontPacketBuf);
+            break;
+        }
+
+        str++;
+    }
+
+    info->unk8 = 0;
+}
+
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontBuildPrim__FicP6QwData);
 
 void fontInitPacket(QwData* tags, VramAddrs addr);

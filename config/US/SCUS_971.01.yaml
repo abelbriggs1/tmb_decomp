@@ -30,8 +30,8 @@ options:
   rodata_string_guesser_level: 2
   data_string_guesser_level: 2
   ld_bss_is_noload: True
-  subalign: 4
-  migrate_rodata_to_functions: False
+  subalign: null
+  migrate_rodata_to_functions: True
   named_regs_for_c_funcs: False
   use_gp_rel_macro_nonmatching: False
 
@@ -42,7 +42,6 @@ segments:
     vram: 0x00100000
     bss_size: 0x255E1C
     align: 4
-    subalign: 4
     subsegments:
       # ------------------------------------------------
       # .text segment (C/C++ code)
@@ -306,6 +305,8 @@ segments:
       # .rodata segment
       # ------------------------------------------------
       - [0x3E4780, rodata]
+      - [0x3F2230, .rodata, tmb/font]
+      - [0x3F22A0, rodata]
       # ------------------------------------------------
       # .gcc_except_table segment
       # ------------------------------------------------
@@ -320,6 +321,7 @@ segments:
       - [0x3FA900, sdata]
       - [0x3FAB3C, sdata, tmb/launch]
       - [0x3FAC14, sdata]
+      - [0x3FB840, .sdata, tmb/font]
       - [0x3FB850, sdata, tmb/hd]
       - [0x3FB86C, sdata, tmb/hdcar]
       - [0x3FB888, sdata, tmb/hdhat]
@@ -328,11 +330,15 @@ segments:
       # ------------------------------------------------
       # .sbss segment
       # ------------------------------------------------
-      - {type: sbss, vram: 0x004FBD00}
+      - {type: sbss, vram: 0x004FBD00, name: sbss1}
+      - {type: .sbss, vram: 0x004FBE34, name: tmb/font}
+      - {type: sbss, vram: 0x004FBE48, name: sbss2}
       # ------------------------------------------------
       # .bss segment
       # ------------------------------------------------
-      - {type: bss, vram: 0x004FC000}
+      - {type: bss, vram: 0x004FC000, name: bss1}
+      - {type: .bss, vram: 0x00504540, name: tmb/font}
+      - {type: bss, vram: 0x00510100, name: bss2}
 
   - [0x3FBD00] # end of file
   # ------------------------------------------------
