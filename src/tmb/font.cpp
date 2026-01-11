@@ -59,8 +59,38 @@ INCLUDE_ASM("asm/nonmatchings/tmb/font", fontInit__F10_vramAddrs);
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontDmaFontData__Fv);
 
-void fontSetColorGifTag(int font);
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetColorGifTag__Fi);
+void fontSetColorGifTag(int font)
+{
+    int tmp;
+
+    if (previousGifTagType != 1) {
+        previousGifTagType = 1;
+
+        fontPacketBuf[previousGifTagLocation].ui16[0] = numFontSprites;
+        numFontSprites = 0;
+
+        fontPacketBuf[QuadCnt].ui64[0] = 0x2400000000000001ull;
+        fontPacketBuf[QuadCnt].ui64[1] = 0x10;
+        previousGifTagLocation = QuadCnt;
+
+        tmp = QuadCnt;
+        tmp++;
+        QuadCnt = tmp;
+    } else {
+        tmp = QuadCnt;
+        tmp--;
+        QuadCnt = tmp;
+    }
+
+    fontPacketBuf[tmp].ui64[0] = 0x156;
+    fontPacketBuf[tmp].ui8[8] = fontInfo[font].r;
+    fontPacketBuf[tmp].ui8[9] = fontInfo[font].g;
+    fontPacketBuf[tmp].ui8[10] = fontInfo[font].b;
+    fontPacketBuf[tmp].ui8[11] = fontInfo[font].a;
+    fontPacketBuf[tmp].fVec[3] = 1.0f;
+
+    QuadCnt = ++tmp;
+}
 
 void fontDimColor(int font)
 {
@@ -166,36 +196,36 @@ int fontStringWidth(int font, char* str)
 
 void fontSpritePrintXY(int font, int x, int y, char* str)
 {
-    FontInfo* font_ptr = &fontInfo[font];
-    font_ptr->y_subpixel = PIXELS_TO_SUBPIXELS(y);
-    font_ptr->unk6 = PIXELS_TO_SUBPIXELS(x);
-    font_ptr->x_subpixel = PIXELS_TO_SUBPIXELS(x);
-    font_ptr->unk8 = 0;
+    FontInfo* info = &fontInfo[font];
+    info->y_subpixel = PIXELS_TO_SUBPIXELS(y);
+    info->unk6 = PIXELS_TO_SUBPIXELS(x);
+    info->x_subpixel = PIXELS_TO_SUBPIXELS(x);
+    info->unk8 = 0;
 
     fontSpritePrint(font, str);
 }
 
 void fontSpritePrintCenteredXY(int font, int x, int y, char* str)
 {
-    FontInfo* font_ptr = &fontInfo[font];
+    FontInfo* info = &fontInfo[font];
 
-    font_ptr->unk8 = 1;
+    info->unk8 = 1;
 
     int width = fontStringWidth(font, str);
-    font_ptr->x_subpixel = PIXELS_TO_SUBPIXELS(x) - (width >> 1);
-    font_ptr->y_subpixel = PIXELS_TO_SUBPIXELS(y);
-    font_ptr->unk6 = PIXELS_TO_SUBPIXELS(x);
+    info->x_subpixel = PIXELS_TO_SUBPIXELS(x) - (width >> 1);
+    info->y_subpixel = PIXELS_TO_SUBPIXELS(y);
+    info->unk6 = PIXELS_TO_SUBPIXELS(x);
 
     fontSpritePrint(font, str);
 }
 
 void fontSpritePrintCentered(int font, char* str)
 {
-    FontInfo* font_ptr = &fontInfo[font];
+    FontInfo* info = &fontInfo[font];
 
-    font_ptr->unk8 = 1;
+    info->unk8 = 1;
     int width = fontStringWidth(font, str);
-    font_ptr->x_subpixel = font_ptr->unk6 - (width >> 1);
+    info->x_subpixel = info->unk6 - (width >> 1);
 
     fontSpritePrint(font, str);
 }
@@ -286,7 +316,6 @@ void fontSetCursorAtSubPixel(int font, int x, int y)
 
 void fontBuildPrim(int font, char unk_2, QwData* tags);
 
-// INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSpritePrint__FiPc);
 void fontSpritePrint(int font, char* str)
 {
 
