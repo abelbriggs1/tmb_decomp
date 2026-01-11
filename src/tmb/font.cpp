@@ -354,7 +354,59 @@ void fontSpritePrint(int font, char* str)
     info->unk8 = 0;
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontBuildPrim__FicP6QwData);
+void fontBuildPrim(int font, char chr, QwData* prim)
+{
+    int x, y, width, height;
+    FontInfo* info = &fontInfo[font];
+
+    viewGetCenter(viewGetCurView(), &x, &y);
+    viewGetWH(viewGetCurView(), &width, &height);
+
+    // TODO: Assuming `(x, y)` points to the lower right corner of the viewport.
+    int center_subp_x = PIXELS_TO_SUBPIXELS(x) - (width * 8);
+    int center_subp_y = PIXELS_TO_SUBPIXELS(y) - (height * 8);
+
+    // Capitalize all letters (in accordance with TMB's visual style).
+    if (chr - 0x61u < 26) {
+        chr = chr - 32;
+    }
+
+    if (previousGifTagType != 2) {
+        previousGifTagType = 2;
+        previousGifTagLocation = QuadCnt;
+        prim[QuadCnt].ui64[0] = 0x4400000000000001ull;
+        prim[QuadCnt].ui64[1] = 0x53D3;
+        QuadCnt++;
+    }
+
+    // This appears to be aligning something to the nearest pixel.
+    // (One pixel is 16 subpixels - half a pixel is 8 subpixels.)
+    int chr_u = (chr - 33);
+    int tmp = (chr_u >> 3);
+    int tmp2 = info->unk1 * (chr_u - tmp * 8) + 8;
+    int tmp3 = info->unk2 * tmp + 8;
+
+    prim[QuadCnt].ui16[0] = tmp2;
+    prim[QuadCnt].ui16[1] = tmp3;
+
+    int tmp4 = info->x_subpixel + center_subp_x;
+    int tmp5 = info->y_subpixel + center_subp_y;
+
+    prim[QuadCnt].ui16[4] = tmp4;
+    prim[QuadCnt].ui16[5] = tmp5;
+    prim[QuadCnt].ui32[3] = 0xFFFFFF;
+    QuadCnt++;
+
+    prim[QuadCnt].ui16[0] = info->char_width + tmp2;
+    prim[QuadCnt].ui16[1] = info->unk4 + tmp3;
+    prim[QuadCnt].ui16[4] = info->size_lsh_6_div_5 + tmp4;
+    prim[QuadCnt].ui16[5] = info->size_lsh_3 + tmp5;
+    prim[QuadCnt].ui32[3] = 0xFFFFFF;
+    QuadCnt++;
+
+    numFontSprites++;
+    info->x_subpixel += info->spacing;
+}
 
 void fontInitPacket(QwData* tags, VramAddrs addr);
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontInitPacket__FP6QwData10_vramAddrs);
