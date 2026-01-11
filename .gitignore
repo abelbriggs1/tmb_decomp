@@ -13,5 +13,6 @@ nonmatchings/
 .ninja_log
 disks/
 objdiff.json
+permuter_settings.toml
 *.rom
-ctx.h
+ctx*

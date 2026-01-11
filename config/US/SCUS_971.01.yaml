@@ -34,6 +34,7 @@ options:
   migrate_rodata_to_functions: True
   named_regs_for_c_funcs: False
   use_gp_rel_macro_nonmatching: False
+  disassemble_all: True
 
 segments:
   - name: main

@@ -49,6 +49,8 @@ class EnvironmentDirectories:
     assets: Path
     # Directory for nonmatching code.
     nonmatchings: Path
+    # Directory for matching code.
+    matchings: Path
     # List of include directories. These should be relative to the root.
     includes: list[Path]
     # List of include directories which should be considered "system includes" by
@@ -71,6 +73,7 @@ class EnvironmentDirectories:
             src=root / "src",
             assets=root / "assets",
             nonmatchings=root / "asm/nonmatchings",
+            matchings=root / "asm/matchings",
             includes=[Path("include")],
             system_includes=[
                 Path("include/gcc"),
@@ -112,6 +115,8 @@ class EnvironmentFiles:
 
     # Path to the `objdiff.json` created by the build.
     objdiff_config: Path
+    # Path to the `permuter_config.toml` created by the build.
+    permuter_config: Path
 
     @staticmethod
     def for_version(
@@ -134,6 +139,7 @@ class EnvironmentFiles:
             final_elf=directories.build / f"{basename}.elf",
             final_rom=directories.build / f"{basename}.rom",
             objdiff_config=directories.root / "objdiff.json",
+            permuter_config=directories.root / "permuter_settings.toml",
         )
 
 

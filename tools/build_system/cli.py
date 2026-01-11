@@ -16,6 +16,7 @@ from .operations import (
     progress,
     ctx,
     patchelf,
+    permute,
 )
 from .env import Environment, Version
 from .log import get_logger_config
@@ -50,6 +51,7 @@ check.add_subparser(subparsers)
 progress.add_subparser(subparsers)
 ctx.add_subparser(subparsers)
 patchelf.add_subparser(subparsers)
+permute.add_subparser(subparsers)
 
 
 def cli(root: Path):
