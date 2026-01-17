@@ -148,7 +148,7 @@ segments:
       - [0xD6A78, asm, tmb/ilnk]
       - [0xD6BC0, asm, tmb/input]
       - [0xD9C30, asm, tmb/LightVolume]
-      - [0xDA1E8, asm, tmb/mathf]
+      - [0xDA1E8, cpp, tmb/mathf]
       - [0xDCB90, asm, tmb/mathv0] # Might need to be `hasm`, seems to be inline assembly.
       - [0xDCDC8, asm, tmb/memCard]
       - [0xDED00, asm, tmb/memorystack]
@@ -308,6 +308,8 @@ segments:
       - [0x3E4780, rodata]
       - [0x3F2230, .rodata, tmb/font]
       - [0x3F22A0, rodata]
+      - [0x3F2D30, .rodata, tmb/mathf]
+      - [0x3F2D90, rodata]
       # ------------------------------------------------
       # .gcc_except_table segment
       # ------------------------------------------------
