@@ -27,4 +27,14 @@ struct SemaParam { // 0x18
     /* 0x14 */ u_int option;
 };
 
+#if defined(__LANGUAGE_C_PLUS_PLUS) || defined(__cplusplus) || defined(c_plusplus)
+extern "C" {
+#endif
+
+void FlushCache(int);
+
+#if defined(__LANGUAGE_C_PLUS_PLUS) || defined(__cplusplus) || defined(c_plusplus)
+}
+#endif
+
 #endif // _EEKERNEL_H_
