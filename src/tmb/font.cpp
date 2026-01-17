@@ -1,5 +1,8 @@
 #include <string.h>
 
+#include <eekernel.h>
+#include <libgraph.h>
+
 #include "common.h"
 #include "tmb/view.h"
 
@@ -10,6 +13,11 @@
 
 #define PIXELS_TO_SUBPIXELS(val) ((val) << 4)
 #define SUBPIXELS_TO_PIXELS(val) ((val) >> 4)
+
+// Align and reduce an address to the nearest multiple of 64x32-bit words.
+// This is used to create the 'starting address' for GS texture or CLUT buffers.
+// TODO: Determine if SCE provided a macro for this.
+#define ADDR_TO_64W_UNITS(addr) ((s16)(((addr) << 10) >> 16))
 
 typedef struct _fontInfo {
     u16 unk1;
@@ -31,35 +39,115 @@ typedef struct _fontInfo {
     u32 unk8;
 } FontInfo;
 
-// Types for most of these variables are currently undetermined.
-// sdata
 static int fontFirstFrame = 1;
 static int spriteTESTlocation = 0;
 static int spriteFBAlocation = 0;
 static int spritePRIMlocation = 0;
 
-// sbss
 static int numFontSprites;
 static int QuadCnt;
 static int previousGifTagType;
 static int previousGifTagLocation;
 static int EndContext;
 
-// bss
+static sceGsLoadImage fontLoadImage;
+static sceGsLoadImage fontLoadClut;
 static FontInfo fontInfo[NUM_FONTS];
 static QwData fontPacketBuf[NUM_PACKETS];
 
-// Other font-related symbols, referenced in vutext.
-// extern void* fontLoadImage;
-// extern void* fontLoadClut;
-// extern void* font_texture_1;
-// extern void* font_texture_1_clut;
+// TODO: Figure out how to define data in `.vutext`.
+extern u8 font_texture_1_clut[];
+extern u8 font_texture_1[];
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontInit__F10_vramAddrs);
+static void fontSetColorGifTag(int font);
+static int fontStringWidth(int font, char* str);
+static void fontBuildPrim(int font, char chr, QwData* prim);
+static void fontInitPacket(QwData* tags, VramAddrs addr);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontDmaFontData__Fv);
+void fontInit(VramAddrs addr)
+{
+    FontInfo* font = &fontInfo[0];
 
-void fontSetColorGifTag(int font)
+    fontFirstFrame = 1;
+    font->unk1 = 0x100;
+    font->unk2 = 0x100;
+    font->char_width = 0xC0;
+    font->unk4 = 0xF0;
+    font->unk7 = 0x1400;
+    font->x_subpixel = 0;
+    font->y_subpixel = 0;
+    font->unk6 = 0;
+    font->unk8 = 0;
+    fontSetDefaultColor(0);
+    fontSetDefaultSize(0);
+
+    font = &fontInfo[1];
+    font->unk1 = 0x100;
+    font->unk2 = 0x100;
+    font->char_width = 0xC0;
+    font->unk4 = 240;
+    font->unk7 = 0x1400;
+    font->x_subpixel = 0;
+    font->y_subpixel = 0;
+    font->unk6 = 0;
+    font->unk8 = 0;
+    fontSetDefaultColor(1);
+    fontSetDefaultSize(1);
+
+    int img_addr = (addr - 0x840);
+    img_addr = img_addr < 0 ? (addr - 0x801) : img_addr;
+    int clut_addr = (addr - 0x40);
+    clut_addr = clut_addr < 0 ? (addr - 1) : clut_addr;
+
+    s16 img_vram_dst = ADDR_TO_64W_UNITS(img_addr);
+    s16 clut_vram_dst = ADDR_TO_64W_UNITS(clut_addr);
+
+    sceGsSetDefLoadImage(&fontLoadImage, img_vram_dst, 2, SCE_GS_PSMT4, 0, 0, 128, 128);
+    sceGsSetDefLoadImage(&fontLoadClut, clut_vram_dst, 1, SCE_GS_PSMCT32, 0, 0, 8, 2);
+    fontInitPacket(fontPacketBuf, addr);
+    QuadCnt = EndContext;
+}
+
+void fontDmaFontData()
+{
+    if (previousGifTagType != 0) {
+        if (fontFirstFrame != 0) {
+            sceGsSyncPath(0, 0);
+            sceGsExecLoadImage(&fontLoadImage, (u_long128*)font_texture_1);
+        }
+        sceGsSyncPath(0, 0);
+        FlushCache(0);
+        if (fontFirstFrame != 0) {
+            sceGsExecLoadImage(&fontLoadClut, (u_long128*)font_texture_1_clut);
+            sceGsSyncPath(0, 0);
+            fontFirstFrame = 0;
+        }
+
+        if (previousGifTagType == 2) {
+            fontPacketBuf[previousGifTagLocation].ui16[0] = numFontSprites;
+        }
+
+        fontPacketBuf[QuadCnt].ui64[0] = 0x1000000000008001ull;
+        fontPacketBuf[QuadCnt].ui64[1] = 0xE;
+        QuadCnt++;
+        fontPacketBuf[QuadCnt].ui64[0] = 0;
+        fontPacketBuf[QuadCnt].ui64[1] = 0x4A;
+        QuadCnt++;
+        FlushCache(0);
+
+        DPUT_D2_QWC(QuadCnt);
+        DPUT_D2_MADR((u32)(void*)fontPacketBuf);
+        DPUT_D_STAT(D_STAT_CIS2_M);
+        DPUT_D2_CHCR(D_CHCR_DIR_M | D_CHCR_STR_M);
+
+        previousGifTagType = 1;
+        numFontSprites = 0;
+        previousGifTagLocation = EndContext - 2;
+        QuadCnt = EndContext;
+    }
+}
+
+static void fontSetColorGifTag(int font)
 {
     int tmp;
 
@@ -180,7 +268,7 @@ void fontSetSpacing(int font, int spacing)
     fontInfo[font].spacing = fontInfo[font].size_lsh_6_div_5 + (spacing * 16);
 }
 
-int fontStringWidth(int font, char* str)
+static int fontStringWidth(int font, char* str)
 {
     int str_len;
 
@@ -314,8 +402,6 @@ void fontSetCursorAtSubPixel(int font, int x, int y)
     info->y_subpixel = y;
 }
 
-void fontBuildPrim(int font, char unk_2, QwData* tags);
-
 void fontSpritePrint(int font, char* str)
 {
 
@@ -354,7 +440,7 @@ void fontSpritePrint(int font, char* str)
     info->unk8 = 0;
 }
 
-void fontBuildPrim(int font, char chr, QwData* prim)
+static void fontBuildPrim(int font, char chr, QwData* prim)
 {
     int x, y, width, height;
     FontInfo* info = &fontInfo[font];
@@ -408,5 +494,62 @@ void fontBuildPrim(int font, char chr, QwData* prim)
     info->x_subpixel += info->spacing;
 }
 
-void fontInitPacket(QwData* tags, VramAddrs addr);
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontInitPacket__FP6QwData10_vramAddrs);
+// TODO: SCE may have provided a more ergonomic method of setting tags.
+static void fontInitPacket(QwData* tags, VramAddrs addr)
+{
+    int tag = 0;
+    u64 base1 = 0x2000000000000000ull;
+    u64 base2 = 0x5DD408000ull;
+    s64 img_addr = ADDR_TO_64W_UNITS(addr - 0x840);
+    s64 clut_addr = ADDR_TO_64W_UNITS(addr - 0x40);
+
+    tags[tag].ui64[1] = 0x0E;
+    tag++;
+    tags[tag].ui64[0] = 0;
+    tags[tag].ui64[1] = 0x3F;
+    tag++;
+    tags[tag].ui64[0] = (base1 | (clut_addr << 37)) | (img_addr | base2);
+    tags[tag].ui64[1] = 0x06;
+    tag++;
+    tags[tag].ui64[0] = 0x61;
+    tags[tag].ui64[1] = 0x14;
+    tag++;
+
+    spriteTESTlocation = tag;
+    tags[tag].ui64[0] = 0x3008D;
+    tags[tag].ui64[1] = 0x47;
+    tag++;
+    tags[tag].ui64[0] = 0x8000000044ull;
+    tags[tag].ui64[1] = 0x42;
+    tag++;
+
+    spriteFBAlocation = tag;
+    tags[tag].ui64[0] = 0;
+    tags[tag].ui64[1] = 0x4A;
+    tag++;
+    tags[tag].ui64[0] = 0;
+    tags[tag].ui64[1] = 0x49;
+    tag++;
+    tags[tag].ui64[0] = 1;
+    tags[tag].ui64[1] = 0x1A;
+    tag++;
+
+    tags[0].ui64[0] = 0x1000000000000008ull;
+
+    previousGifTagLocation = tag;
+    previousGifTagType = 1;
+    tags[tag].ui64[0] = 0x2400000000000001ull;
+    tags[tag].ui64[1] = 0x10;
+    tag++;
+
+    spritePRIMlocation = tag;
+    tags[tag].ui64[0] = 0x156;
+    tags[tag].ui8[8] = 0x80;
+    tags[tag].ui8[9] = 0x80;
+    tags[tag].ui8[10] = 0x40;
+    tags[tag].ui8[11] = 0x80;
+    tags[tag].fVec[3] = 1.0f;
+    tag++;
+
+    EndContext = tag;
+}

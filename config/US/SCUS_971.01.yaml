@@ -338,7 +338,7 @@ segments:
       # .bss segment
       # ------------------------------------------------
       - {type: bss, vram: 0x004FC000, name: bss1}
-      - {type: .bss, vram: 0x00504540, name: tmb/font}
+      - {type: .bss, vram: 0x00504480, name: tmb/font}
       - {type: bss, vram: 0x00510100, name: bss2}
 
   - [0x3FBD00] # end of file
