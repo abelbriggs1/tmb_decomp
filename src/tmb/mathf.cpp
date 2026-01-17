@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "tmb/types.h"
+
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMulVec__FPA3_fP8_fvectorT1);
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMulVec4x4__FPA3_fP8_fvectorT1);
@@ -24,11 +26,23 @@ INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfAddMatrixTP3x3__FPA3_fT0T0);
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfScaleMatrix3x3__FPA3_fT0f);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfCrossProduct__FP8_fvectorT0T0);
+void mathfCrossProduct(FVECTOR* result, FVECTOR* lhs, FVECTOR* rhs)
+{
+    result->x = lhs->y * rhs->z - lhs->z * rhs->y;
+    result->y = lhs->z * rhs->x - lhs->x * rhs->z;
+    result->z = lhs->x * rhs->y - lhs->y * rhs->x;
+}
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfDotProduct__FP8_fvectorT0);
+float mathfDotProduct(FVECTOR* lhs, FVECTOR* rhs)
+{
+    return (lhs->x * rhs->x) + (lhs->y * rhs->y) + (lhs->z * rhs->z);
+}
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfPlaneTest__FP6_planeP8_fvector);
+float mathfPlaneTest(Plane* plane, FVECTOR* dir)
+{
+    return ((plane->norm.x * dir->x) + (plane->norm.y * dir->y) + (plane->norm.z * dir->z))
+        - plane->d;
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfNormalize__FP8_fvectorT0);
 
@@ -44,13 +58,33 @@ INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMatricesToRotAxis__FP8_fvectorPA3
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMatrixToRotAxis__FP8_fvectorPA3_f);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfAddVector__FP8_fvectorT0T0);
+void mathfAddVector(FVECTOR* result, FVECTOR* lhs, FVECTOR* rhs)
+{
+    result->x = lhs->x + rhs->x;
+    result->y = lhs->y + rhs->y;
+    result->z = lhs->z + rhs->z;
+}
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfSubVector__FP8_fvectorT0T0);
+void mathfSubVector(FVECTOR* result, FVECTOR* lhs, FVECTOR* rhs)
+{
+    result->x = lhs->x - rhs->x;
+    result->y = lhs->y - rhs->y;
+    result->z = lhs->z - rhs->z;
+}
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfScaleVector__FP8_fvectorT0f);
+void mathfScaleVector(FVECTOR* result, FVECTOR* vec, float scalar)
+{
+    result->x = vec->x * scalar;
+    result->y = vec->y * scalar;
+    result->z = vec->z * scalar;
+}
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfCopyVector__FP8_fvectorT0);
+void mathfCopyVector(FVECTOR* result, FVECTOR* src)
+{
+    result->x = src->x;
+    result->y = src->y;
+    result->z = src->z;
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfCopyMatrixNotAligned__FPA3_fT0);
 
@@ -106,9 +140,20 @@ INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfPitchFromVector__FP8_fvector);
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMatrixFromNormal__FPA3_fP8_fvector);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfSetFVector__FP8_fvectorfff);
+void mathfSetFVector(FVECTOR* result, float x, float y, float z)
+{
+    result->x = x;
+    result->y = y;
+    result->z = z;
+}
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfSetFVector__FP8_fvectorffff);
+void mathfSetFVector(FVECTOR* result, float x, float y, float z, float w)
+{
+    result->x = x;
+    result->y = y;
+    result->z = z;
+    result->w = w;
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfOrthonormalize__FPA3_f);
 
