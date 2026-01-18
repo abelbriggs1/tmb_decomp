@@ -63,5 +63,7 @@ typedef struct _viewinfo { // 0x10
 int viewGetCurView();
 void viewGetCenter(int view, int* center_x, int* center_y);
 void viewGetWH(int view, int* width, int* height);
+FMATRIX* viewGetWorldToScreenMat(int view);
+FVECTOR* viewGetWeTrans(int view);
 
 #endif // _TMB_VIEW_H_

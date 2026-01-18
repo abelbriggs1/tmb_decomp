@@ -3,9 +3,11 @@
 #include "common.h"
 
 #include "tmb/types.h"
+#include "tmb/view.h"
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMulVec__FPA3_fP8_fvectorT1);
 
+void mathfMulVec4x4(FMATRIX mat, FVECTOR* vec, FVECTOR* result);
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMulVec4x4__FPA3_fP8_fvectorT1);
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMulTransVec__FPA3_A3_fP8_fvectorT1);
@@ -113,6 +115,7 @@ float mathfPlaneTest(Plane* plane, FVECTOR* dir)
         - plane->d;
 }
 
+void mathfNormalize(FVECTOR* result, FVECTOR* vec);
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfNormalize__FP8_fvectorT0);
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfNormalizeColumns__FPA3_f);
@@ -196,8 +199,10 @@ void mathfRotAxisToMatrix(FMATRIX result, FVECTOR* r)
     result[3][3] = 1.0f;
 }
 
+void mathfMatricesToRotAxis(FVECTOR* result, FMATRIX mat1, FMATRIX mat2);
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMatricesToRotAxis__FP8_fvectorPA3_fT1);
 
+void mathfMatrixToRotAxis(FVECTOR* result, FMATRIX mat);
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMatrixToRotAxis__FP8_fvectorPA3_f);
 
 void mathfAddVector(FVECTOR* result, FVECTOR* lhs, FVECTOR* rhs)
@@ -418,15 +423,44 @@ INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfManhatDist2D__FP8_fvectorT0);
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRPHFromMatrix__FPA3_fP8_fvector);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRotationFromPointToPoint__FP8_fvectorT0T0);
+void mathfRotationFromVector(FVECTOR* result, FVECTOR* point);
+void mathfRotationFromPointToPoint(FVECTOR* result, FVECTOR* p1, FVECTOR* p2)
+{
+    FVECTOR diff;
+
+    mathfSubVector(&diff, p2, p1);
+    mathfRotationFromVector(result, &diff);
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRotationFromVector__FP8_fvectorT0);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfHeadingFromPointToPoint__FP8_fvectorT0);
+float mathfHeadingFromVector(FVECTOR* vec);
+float mathfHeadingFromPointToPoint(FVECTOR* p1, FVECTOR* p2)
+{
+    FVECTOR diff;
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfHeadingFromVector__FP8_fvector);
+    if (p2 != NULL) {
+        mathfSubVector(&diff, p2, p1);
+    } else {
+        mathfCopyVector(&diff, p1);
+    }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfPitchFromPointToPoint__FP8_fvectorT0);
+    return mathfHeadingFromVector(&diff);
+}
+
+float mathfHeadingFromVector(FVECTOR* vec)
+{
+    return atan2f(vec->x, vec->y);
+}
+
+float mathfPitchFromVector(FVECTOR* vec);
+float mathfPitchFromPointToPoint(FVECTOR* p1, FVECTOR* p2)
+{
+    FVECTOR diff;
+
+    mathfSubVector(&diff, p2, p1);
+    return mathfPitchFromVector(&diff);
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfPitchFromVector__FP8_fvector);
 
@@ -447,7 +481,19 @@ void mathfSetFVector(FVECTOR* result, float x, float y, float z, float w)
     result->w = w;
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfOrthonormalize__FPA3_f);
+void mathfOrthonormalize(FMATRIX mat)
+{
+    FVECTOR* r0 = (FVECTOR*)mat[0];
+    FVECTOR* r1 = (FVECTOR*)mat[1];
+    FVECTOR* r2 = (FVECTOR*)mat[2];
+
+    mathfCrossProduct(r0, r1, r2);
+    mathfNormalize(r0, r0);
+    mathfCrossProduct(r1, r2, r0);
+    mathfNormalize(r1, r1);
+    mathfCrossProduct(r2, r0, r1);
+    mathfNormalize(r2, r2);
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfOrthonormalizeOverTime__FPA3_fPi);
 
@@ -459,11 +505,41 @@ INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRand__Fii);
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRandVector__FP8_fvectorf);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfTransform3dTo2d__FiP8_fvectorT1);
+// INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfTransform3dTo2d__FiP8_fvectorT1);
+void mathfTransform3dTo2d(int view, FVECTOR* vec, FVECTOR* result)
+{
+    FVECTOR* trans = viewGetWeTrans(view);
+    FMATRIX* screen_mat = viewGetWorldToScreenMat(view);
+
+    if (vec == NULL || result == NULL) {
+        return;
+    }
+
+    FVECTOR translated, transformed;
+    translated.x = vec->x + trans->x;
+    translated.y = vec->y + trans->y;
+    translated.z = vec->z + trans->z;
+    translated.w = 1.0f;
+
+    mathfMulVec4x4(*screen_mat, &translated, &transformed);
+
+    float mag = 1.0f / transformed.w;
+    result->x = transformed.x * mag;
+    result->y = transformed.y * mag;
+    result->z = transformed.w;
+    result->w = transformed.z * mag;
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMatrixFromCsAndPlane__FPA3_fP3_csP8_fvector);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRotAxisToQuaternion__FP8_fvectorT0);
+void mathfRotAxisToQuaternion(FVECTOR* result, FVECTOR* axis)
+{
+    float sine = sinf(axis->w * 0.5f);
+    result->x = sine * axis->x;
+    result->y = sine * axis->y;
+    result->z = sine * axis->z;
+    result->w = cosf(axis->w * 0.5f);
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfAxisAngleToQuaternion__FP8_fvectorT0);
 
@@ -471,12 +547,81 @@ INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfNormalizeQuaternion__FP8_fvectorT
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfNormalizeQuaternionFromW__FP8_fvectorT0);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfConcatQuaternions__FP8_fvectorT0T0);
+void mathfConcatQuaternions(FVECTOR* result, FVECTOR* lhs, FVECTOR* rhs)
+{
+    FVECTOR3 concat;
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfDeConcatQuaternions__FP8_fvectorT0T0);
+    concat.x = (rhs->w * lhs->x + rhs->x * lhs->w + rhs->y * lhs->z);
+    concat.x -= (rhs->z * lhs->y);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfQuaternionToMatrix4x4__FPA3_fP8_fvector);
+    concat.y = (rhs->w * lhs->y + rhs->y * lhs->w + rhs->z * lhs->x);
+    concat.y -= (rhs->x * lhs->z);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMatrixToQuaternion__FP8_fvectorPA3_f);
+    concat.z = (rhs->w * lhs->z + rhs->z * lhs->w + rhs->x * lhs->y);
+    concat.z -= (rhs->y * lhs->x);
+
+    float concat_w = (rhs->w * lhs->w - rhs->x * lhs->x) - (rhs->y * lhs->y);
+    concat_w -= (rhs->z * lhs->z);
+
+    result->x = concat.x;
+    result->y = concat.y;
+    result->z = concat.z;
+    result->w = concat_w;
+}
+
+void mathfQuaternionToMatrix4x4(FMATRIX result, FVECTOR* quat);
+
+void mathfDeConcatQuaternions(FVECTOR* result, FVECTOR* q1, FVECTOR* q2)
+{
+    FMATRIX q1_mat, q2_mat;
+    FVECTOR rot;
+
+    mathfQuaternionToMatrix4x4(q1_mat, q1);
+    mathfQuaternionToMatrix4x4(q2_mat, q2);
+    mathfMatricesToRotAxis(&rot, q1_mat, q2_mat);
+    mathfRotAxisToQuaternion(result, &rot);
+}
+
+void mathfQuaternionToMatrix4x4(FMATRIX result, FVECTOR* quat)
+{
+    float xx = quat->x * quat->x;
+    float yy = quat->y * quat->y;
+    float zz = quat->z * quat->z;
+
+    float xy = quat->x * quat->y;
+    float xz = quat->x * quat->z;
+    float yz = quat->y * quat->z;
+    float xw = quat->x * quat->w;
+    float yw = quat->y * quat->w;
+    float zw = quat->z * quat->w;
+
+    result[0][0] = 1.0f - (2.0f * (yy + zz));
+    result[0][1] = 2.0f * (xy + zw);
+    result[0][2] = 2.0f * (xz - yw);
+
+    result[1][0] = 2.0f * (xy - zw);
+    result[1][1] = 1.0f - (2.0f * (xx + zz));
+    result[1][2] = 2.0f * (yz + xw);
+
+    result[2][0] = 2.0f * (xz + yw);
+    result[2][1] = 2.0f * (yz - xw);
+    result[2][2] = 1.0f - (2.0f * (xx + yy));
+
+    result[0][3] = 0.0f;
+    result[1][3] = 0.0f;
+    result[2][3] = 0.0f;
+    result[3][0] = 0.0f;
+    result[3][1] = 0.0f;
+    result[3][2] = 0.0f;
+    result[3][3] = 1.0f;
+}
+
+void mathfMatrixToQuaternion(FVECTOR* result, FMATRIX mat)
+{
+    FVECTOR axis;
+
+    mathfMatrixToRotAxis(&axis, mat);
+    mathfRotAxisToQuaternion(result, &axis);
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfUnitizeQuaternion__FP8_fvectorT0f);
