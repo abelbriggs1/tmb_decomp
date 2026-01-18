@@ -10,7 +10,25 @@ INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMulVec__FPA3_fP8_fvectorT1);
 void mathfMulVec4x4(FMATRIX mat, FVECTOR* vec, FVECTOR* result);
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMulVec4x4__FPA3_fP8_fvectorT1);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMulTransVec__FPA3_A3_fP8_fvectorT1);
+void mathfMulTransVec(FMATRIX* mat, FVECTOR* vec, FVECTOR* result)
+{
+    asm volatile(
+        // Load the matrix rows as vectors. Keep in mind we're using the matrix
+        // transpose, so we treat the matrix rows as if they are the columns of
+        // the matrix instead.
+        "lqc2           $vf11, 0x00(%1)         \n\t" // $vf11 = (FVECTOR*) mat[0]
+        "lqc2           $vf15, 0x00(%2)         \n\t" // $vf15 = vec
+        "lqc2           $vf12, 0x10(%1)         \n\t" // $vf12 = (FVECTOR*) mat[1]
+        "lqc2           $vf13, 0x20(%1)         \n\t" // $vf13 = (FVECTOR*) mat[2]
+
+        // Multiply and add accordingly.
+        "vmulax.xyz     ACC, $vf11, $vf15x      \n\t" // $ACC.xyz = mat[0].xyz * vec.x
+        "vmadday.xyz    ACC, $vf12, $vf15y      \n\t" // $ACC.xyz += mat[1].xyz * vec.y
+        "vmaddz.xyz     $vf16, $vf13, $vf15z    \n\t" // $vf16.xyz = $ACC.xyz + (mat[2].xyz * vec.z)
+        "sqc2           $vf16, 0x00(%0)         \n\t" // result = $vf16
+        : "+r"(result)
+        : "r"(mat), "r"(vec));
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMulTransVecOld__FPA3_fP8_fvectorT1);
 
@@ -505,7 +523,6 @@ INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRand__Fii);
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRandVector__FP8_fvectorf);
 
-// INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfTransform3dTo2d__FiP8_fvectorT1);
 void mathfTransform3dTo2d(int view, FVECTOR* vec, FVECTOR* result)
 {
     FVECTOR* trans = viewGetWeTrans(view);
