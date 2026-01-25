@@ -33,11 +33,44 @@ To set up the repository, simply install the required packages as detailed in
 - `tools/`
   - Contains the compiler and build scripts for this repository.
 
+## Resources
+
+It's highly recommended to join some or all of the following Discord groups dedicated
+to decompilation if you'd like help or resources on decompilation. Many people here are
+experienced with reverse engineering and can help with a lot of issues.
+
+[PS1/PS2 Decompilation](https://discord.gg/VwCPdfbxgm)
+
+[`decomp.me`](https://discord.gg/fGjbfPeGTX)
+
+### `decomp.me`
+
+[decomp.me](https://decomp.me) is an online tool that allows you to collaborate with
+others on decompiling code through a web interface. It's very helpful for getting a
+visual representation of your code.
+
+This repository doesn't have any integration with `decomp.me` currently, so setting
+up scratches for TMB code can be annoying. Here's a very brief guide to creating a
+scratch for TMB:
+
+1. Go to https://decomp.me/new.
+2. Under `Platform`, select `Playstation 2 - MIPS (little-endian)`.
+3. Under `Compiler`, select `EE GCC 2.9 build 991111` as the compiler with `Custom` preset.
+4. Under `Target assembly`, copy-paste the contents of the function you are matching
+   from its corresponding file in `asm/nonmatchings/`.
+5. Under `Context`, add all typedefs from `include/common.h`.
+6. Click `Create scratch`.
+7. On the new page, in the `Options` tab of the left window, enter
+   `-O2 -G8 -x c++ -fno-exceptions` for the compiler flags.
+8. Decompile the code to your heart's content!
+
 ## General Workflow
 
 The following is a description of the general workflow a developer will use when
-decompiling a translation unit (TU). This workflow should be fleshed out more in
-the future to make it easier for others to contribute.
+decompiling a **translation unit (TU)**.
+
+This workflow assumes a basic grasp of C and C++ programming. You'll want to
+familiarize yourself with the language a bit if you haven't already.
 
 ### 1. Split / Migrate Code
 
@@ -50,21 +83,20 @@ yet, it should have a subsegment type of `asm`:
 ```yaml
   - name: main
     type: code
-    start: 0x1000
+    start: 0x0
     vram: 0x00100000
     bss_size: 0x255E1C
     align: 4
-    subalign: 4
     subsegments:
       # ------------------------------------------------
       # .text segment (C/C++ code)
       # ------------------------------------------------
-      - [0x1000, asm, gcc/_crt0]
-      - [0x10C0, asm, tmb/ai]
+      - [0x0000, asm, gcc/_crt0]
+      - [0x00C0, asm, tmb/ai]
 
       # ...
 
-      - [0xC4E48, asm, tmb/font]
+      - [0xC3E48, asm, tmb/font]
 
       # ...
 ```
@@ -72,7 +104,7 @@ yet, it should have a subsegment type of `asm`:
 To decompile this as C++, we need to change the subsegment type to `cpp`:
 
 ```yaml
-      - [0xC4E48, cpp, tmb/font]
+      - [0xC3E48, cpp, tmb/font]
 ```
 
 Now that we've changed the `splat` config, we need to rerun `splat` and regenerate
@@ -89,12 +121,6 @@ INCLUDE_ASM("asm/nonmatchings/tmb/font", fontInit__F10_vramAddrs);
 
 INCLUDE_ASM("asm/nonmatchings/tmb/font", fontDmaFontData__Fv);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetColorGifTag__Fi);
-
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontDimColor__Fi);
-
-INCLUDE_ASM("asm/nonmatchings/tmb/font", fontSetHilightColor__Fi);
-
 // ...
 ```
 
@@ -108,12 +134,25 @@ If we run `ninja` to build the repository, the binary should still match at this
 /workspace/build/SCUS_971.01: OK
 ```
 
+#### Finding `.rodata`
+
+Unfortunately, you may run into TUs which don't compile after migration to `cpp`.
+This is likely because one or more functions in the TU have a `switch()` statement.
+
+GCC compiles `switch()` statements into a [jump table](https://en.wikipedia.org/wiki/Branch_table).
+The jump table maps each `case` to the address to branch to. In TMB's case, the
+jump tables are always stored in the TU's `.rodata` section. In order to decompile
+the code, you'll need to split and decompile `.rodata` first.
+
+This is thankfully fairly easy. Check the [Split/Disassemble Data](#3-splitdisassemble-data)
+and [Decompiling Data](#4-decompile-data) sections for how to do this.
+
 ### 2. Decompile Code
 
 Now that we have a C++ file that's being included in the build, we need to replace
 the included assembly code with C++ code.
 
-**NOTE**: Currently, the repository doesn't include a decompiler to make this process easier.
+**NOTE**: Unfortunately, we don't have a decompiler which supports C++ currently.
 You'll want to analyze the binary in Ghidra using the `ghidra-emotionengine-reloaded`
 extension to get a decompiler view.
 
@@ -181,6 +220,35 @@ To summarize the general process, for each function in the file:
 3. Define and implement the C/C++ function.
 4. Compile and ensure the final binary still matches.
 
+#### Handling Variables
+
+We saw above that `fontSetCharWidth()` needed to reference a module-level variable `fontInfo`, which required the use of `extern`. How do we handle
+variables in general? What does `extern` mean? Where is `fontInfo` actually
+located?
+
+To understand this, you'll need to understand the difference between
+"declaring" a variable and "defining" it.
+- A **declared** variable _exists somewhere_.
+  - We know its type, but we don't know _where_ it is stored or what initial
+    value it might have.
+  - This is what `extern _fontInfo fontInfo[2];` accomplishes; it tells GCC
+    that `fontInfo` exists so we can reference it in our C++ code.
+- A **defined** variable exists _here_.
+  - This is what we get if we remove the `extern` qualifier:
+    `_fontInfo fontInfo[2];`.
+  - GCC now thinks the variable exists in this translation unit,
+    `tmb/font.cpp`, and allocates storage for the array.
+
+Variables have to be defined _somewhere_; otherwise, we get linker errors.
+When we're decompiling code with `extern` variables, the variables are
+actually defined by [symbol_addrs.txt](config/US/symbol_addrs.txt).
+This file maps each variable to its VRAM address/storage location in the
+final binary, so the linker knows how to relocate variables.
+
+#### Handling VU0 Instructions
+
+TODO
+
 #### Troubleshooting
 
 Let's say we made a mistake in our C++ code from earlier, and used the struct
@@ -215,7 +283,8 @@ ninja: build stopped: subcommand failed.
 How do we see what went wrong?
 
 The repository includes a tool called `asm-differ` that can help with this. Assuming
-we're in our Python virtual environment, we can run `asm-differ fontSetCharWidth__Fii`
+we're in our Python virtual environment, we can run
+`./tools/asm-differ/diff.py fontSetCharWidth__Fii`
 in the terminal to get a nice view of the two binaries:
 
 ```
@@ -241,42 +310,167 @@ Once we fix our code up, we get a matching build again:
 
 ### 3. Split/Disassemble Data
 
-TODO
+#### ELF Segments
+
+Let's look at what data the ELF segments actually correspond to:
+
+- `.rodata`
+  - Generally contains jump tables and some constants (including const strings).
+  - Example: `const char* foo = "test123";`
+- `.data`
+  - Contains non-constant variables defined with initial values.
+    In TMB, most of the data here is large `struct`s and `array`s.
+  - Example: `u8 foo[10] = { 0xDE, 0xAD, 0xBE, 0xEF, 0, 0, 0, 0, 0, 0 }`;
+- `.sdata`
+  - Same as `.data`, but all variables are 8 bytes or less in size.
+  - Example: `int fontFirstFrame = 1;`
+- `.bss`
+  - Contains non-constant variables with _no initial value_.
+    In TMB, most of the data here is large `struct`s and `array`s.
+  - Example: `sceGsLoadImage fontLoadImage;`
+- `.sbss`
+  - Same as `.bss`, but all variables are 8 bytes or less in size.
+  - Example: `int numFontSprites;`
+- `.lit4`
+  - Contains floating point literals which GCC decided were too much of a pain
+    to load into the code directly.
+    - Specifically **literals**, and not developer-defined variables.
+  - Example: `if (foo < 0.000088886f) {`
+    - The `0.000088886f` value would be found in the `.lit4` somewhere.
+- `.vutext`
+  - Contains data and code for the VU1 processor.
+  - You should ignore this for now. Use `extern` to access any data here if you
+    need it.
+
+#### Splitting Segments
+
+Thankfully, GCC makes this relatively easy on us. You can assume that
+**all of the TU's data will be bunched up together**. For example, all of
+`tmb/font.cpp`'s `sbss` variables will be grouped up somewhere inside of
+the `.sbss` segment of the final binary.
+
+Thus, when splitting a TU's data segment, you want to find two locations in
+the binary:
+1. The first variable from your TU in the data segment
+2. The last variable from your TU in the data segment
+
+You can reasonably assume that everything in-between should also be defined
+in your TU.
+
+The easiest way to do this is via Ghidra, as it allows you to check
+function->variable references.
+
+1. Open your Ghidra TMB project.
+2. Look at some variables in your TU. For this example, we'll use `tmb/mathf.cpp`
+   and try to split the `lit4` segment.
+   We see that `mathfRPHFromMatrix()` uses a `float` literal located at
+   VRAM `$004FA664`, image base `$3FA664`:
+   ```
+   FLOAT_004fa664        XREF[1]:     mathfRPHFromMatrix:001dbc64(R)
+   004fa664 77 cc 2b 32     float      9.9999999E-9
+   ```
+3. Now that we're in the middle of `tmb/mathf.cpp`'s `lit4`, we can start scrolling
+   up until we find the first variable _not_ used by a `mathf` function.
+   ```
+   FLOAT_004fa648        XREF[1]:     getLightVolWeight:001da0dc(R)
+   004fa648 ab aa aa 3e     float      0.33333334
+   FLOAT_004fa64c        XREF[1]:     mathfNormalize:001da7cc(R)
+   004fa64c 95 bf d6 33     float      1.0E-7
+   ```
+   `getLightVolWeight()` is a function from `LightVolume.cpp`. So we know now that
+   VRAM `$004FA64C`, image base `$3FA64C`, is the start of `tmb/mathf.cpp`'s `lit4` segment.
+4. Similarly, we can scroll down to find the first variable _not_ used by a `mathf`
+   function.
+   ```
+   FLOAT_004fa68c           XREF[1]:     mathfNormalizeQuaternionFromW:00
+   004fa68c 95 bf d6 33     float      1.0E-7
+   FLOAT_004fa690           XREF[1]:     utilGenerateRandomNormalizedVector
+   004fa690 db 0f c9 40     float      6.2831855
+   ```
+   `utilGenerateRandomNormalizedVector()` is from `particle.cpp`. So we know now that
+   VRAM `$004FA690`, image base `$3FA690`, is the end of `tmb/mathf.cpp`'s `lit4` segment.
+5. Find `lit4` in our `splat` configuration.
+   ```
+      # ------------------------------------------------
+      # .lit4 segment
+      # ------------------------------------------------
+      - [0x3F6E80, lit4]
+   ```
+6. Now that we know the borders, we can now split out `tmb/mathf`.
+   ```
+      # ------------------------------------------------
+      # .lit4 segment
+      # ------------------------------------------------
+      - [0x3F6E80, lit4]
+      - [0x3FA64C, lit4, tmb/mathf]
+      - [0x3FA690, lit4]
+   ```
+   Replace `tmb/mathf` with your TU. (It should have the same name as the
+   corresponding `cpp` segment.)
+7. Re-generate the build system with
+   `./configure.py distclean && ./configure.py generate`.
+
+Global variables may be referenced in multiple TUs, which will cause some
+ambiguity. Some global variables may not even be used in the location
+they're defined. You might need to experiment if a global variable is
+seemingly defined on a border.
+
+#### `.data` vs `data`, `.lit4` vs `lit4`, etc.
+
+It might not be clear what the difference between these two is in the `splat`
+config. Which should you use, and when?
+
+- `[name]` tells the linker that the **data is sourced from the original binary**.
+  Even if we give it a name here (`tmb/mathf`, in the above case), the data is
+  still taken from the original binary.
+- `.[name]` tells the linker that the **data is sourced from the decompiled TU**.
+  You don't want to use `.[name]` until you've [decompiled the data](#4-decompile-data)
+  first.
 
 ### 4. Decompile Data
 
-TODO
+We've found our data section. How do we migrate it to the C++ code?
 
-## Resources
+This will depend on the section type, but it's generally straightforward.
 
-It's highly recommended to join some or all of the following Discord groups dedicated
-to decompilation if you'd like help or resources on decompilation. Many people here are
-experienced with reverse engineering and can help with a lot of issues.
+If you've already decompiled the code to C++ and you were using `extern`
+on the variables, all you need to do is:
+- Remove the `extern` qualifier
+- Set the initial value of the variable, if it has one in the original binary.
+  (Check [ELF Segments](#elf-segments) for more info on that.)
+- Add the `static` qualifier if it's clearly not a global variable.
 
-[PS1/PS2 Decompilation](https://discord.gg/VwCPdfbxgm)
+Once you've done this, simply change the `splat` segment type by adding a `.`
+character in front of it:
 
-[`decomp.me`](https://discord.gg/fGjbfPeGTX)
+```
+      - [0x3FB840, .sdata, tmb/font]
+```
 
-### `decomp.me`
+Regenerate the build system with `./configure.py distclean && ./configure.py generate`.
+When you compile with `ninja`, the data from your C++ file should now be linked into
+the final binary. If you get `NONMATCHING` after this, you've likely declared
+variables in the wrong order in your C++ file, or your variables have the incorrect
+type/size.
 
-[decomp.me](https://decomp.me) is an online tool that allows you to collaborate with
-others on decompiling code through a web interface. It's very helpful for getting a
-visual representation of your code.
+#### `.rodata`
 
-This repository doesn't have any integration with `decomp.me` currently, so setting
-up scratches for TMB code can be annoying. Here's a very brief guide to creating a
-scratch for TMB:
+If you're here because your initial `cpp` split [wouldn't compile](#finding-rodata),
+you need to verify whether the `rodata` segment actually contains `const` values.
 
-1. Go to https://decomp.me/new.
-2. Under `Platform`, select `Playstation 2 - MIPS (little-endian)`.
-3. Under `Compiler`, select `EE GCC 2.9 build 991111` as the compiler with `Custom` preset.
-4. Under `Target assembly`, copy-paste the contents of the function you are matching
-   from its corresponding file in `asm/nonmatchings/`.
-5. Under `Context`, add all typedefs from `include/common.h`.
-6. Click `Create scratch`.
-7. On the new page, in the `Options` tab of the left window, enter
-   `-O2 -G8 -x c++ -fno-exceptions` for the compiler flags.
-8. Decompile the code to your heart's content!
+You can check this simply by scrolling through the data.
+- If the entire thing is composed of jump tables and addresses/pointers,
+  you're in luck; all you need to do is change the `splat` segment name from
+  `rodata` to `.rodata` and it should compile.
+- If the section contains more than jump tables, you'll need to define those
+  constants in the C++ file before you can compile.
+
+#### `.lit4`
+
+Because `.lit4` variables are actually literals and not developer-defined variables,
+migrating them is a bit more effort. You'll have to replace the usage of your
+`extern float` variables with the literals in each function, then hope everything
+lines up.
 
 ## GCC 2.9 991111 Compiler Behavior / Memes
 

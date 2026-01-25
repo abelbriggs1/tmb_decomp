@@ -73,6 +73,8 @@ To build the repository, you will need a digital copy of the Playstation 2 game
     root of the repository.
 5. Run `ninja` at the root of the repository.
   - If building is successful, the resulting binary will appear at `build/SCUS_971.01`.
+6. Whenever you modify the splat config, you should perform a `./configure.py distclean`
+   before regenerating the config with `./configure.py generate`.
 
 ## Contributing
 
