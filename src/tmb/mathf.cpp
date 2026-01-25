@@ -5,10 +5,84 @@
 #include "tmb/types.h"
 #include "tmb/view.h"
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMulVec__FPA3_fP8_fvectorT1);
+void mathfMulVec(FMATRIX mat, FVECTOR* vec, FVECTOR* result)
+{
+    asm volatile(
+        // Load the matrix rows as vectors.
+        "lqc2           $vf11, 0x00(%1)         \n\t" // $vf11 = (FVECTOR*) mat[0]
+        "lqc2           $vf15, 0x00(%2)         \n\t" // $vf15 = vec
+        "lqc2           $vf12, 0x10(%1)         \n\t" // $vf12 = (FVECTOR*) mat[1]
+        "lqc2           $vf13, 0x20(%1)         \n\t" // $vf13 = (FVECTOR*) mat[2]
 
-void mathfMulVec4x4(FMATRIX mat, FVECTOR* vec, FVECTOR* result);
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMulVec4x4__FPA3_fP8_fvectorT1);
+        // Transpose the matrix for the multiply operation.
+        // $vf11 = { mat[0].x, mat[1].x, mat[2].x }
+        // $vf12 = { mat[0].y, mat[1].y, mat[2].y }
+        // $vf13 = { mat[0].z, mat[1].z, mat[2].z }
+        "vmove.xyzw     $vf16, $vf11            \n\t" // $vf16 = (FVECTOR*) mat[0]
+        "vaddx.z        $vf11, $vf0, $vf13x     \n\t" // $vf11.z = mat[2].x
+        "vmove.xyzw     $vf17, $vf12            \n\t" // $vf16 = (FVECTOR*) mat[1]
+        "vaddy.z        $vf12, $vf0, $vf13y     \n\t" // $vf12.z = mat[2].y
+        "vaddz.x        $vf13, $vf0, $vf16z     \n\t" // $vf13.x = mat[0].z
+        "vnop                                   \n\t"
+        "vaddx.y        $vf11, $vf0, $vf17x     \n\t" // $vf11.y = mat[1].x
+        "vaddy.x        $vf12, $vf0, $vf16y     \n\t" // $vf12.x = mat[0].y
+        "vaddz.y        $vf13, $vf0, $vf17z     \n\t" // $vf13.y = mat[1].z
+        "vnop                                   \n\t"
+
+        // Perform the matrix multiply.
+        // ACC    =       { mat[0].x * vec.x, mat[1].x * vec.x, mat[2].x * vec.x }
+        "vmulax.xyz     ACC, $vf11, $vf15x      \n\t"
+        // ACC    = ACC + { mat[0].y * vec.y, mat[1].y * vec.y, mat[2].y * vec.y }
+        "vmadday.xyz    ACC, $vf12, $vf15y      \n\t"
+        // result = ACC + { mat[0].z * vec.z, mat[1].z * vec.z, mat[2].z * vec.z }
+        "vmaddz.xyz     $vf16, $vf13, $vf15z    \n\t"
+        "sqc2           $vf16, 0x00(%0)         \n\t"
+
+        : "+r"(result)
+        : "r"(mat), "r"(vec));
+}
+
+void mathfMulVec4x4(FMATRIX mat, FVECTOR* vec, FVECTOR* result)
+{
+    asm volatile(
+        // Load the matrix rows as vectors.
+        "lqc2           $vf11, 0x00(%1)         \n\t" // $vf11 = (FVECTOR*) mat[0]
+        "lqc2           $vf15, 0x00(%2)         \n\t" // $vf15 = vec
+        "lqc2           $vf12, 0x10(%1)         \n\t" // $vf12 = (FVECTOR*) mat[1]
+        "lqc2           $vf13, 0x20(%1)         \n\t" // $vf13 = (FVECTOR*) mat[2]
+        "lqc2           $vf14, 0x30(%1)         \n\t" // $vf14 = (FVECTOR*) mat[3]
+
+        // Perform all of the multiply ops for each field of the result vector.
+        "vmul.xyz       $vf11, $vf11, $vf15     \n\t" // $vf11 = mat[0].xyz * vec.xyz
+        "vmul.xyz       $vf12, $vf12, $vf15     \n\t" // $vf12 = mat[1].xyz * vec.xyz
+        "vmul.xyz       $vf13, $vf13, $vf15     \n\t" // $vf13 = mat[2].xyz * vec.xyz
+        "vmul.xyz       $vf14, $vf14, $vf15     \n\t" // $vf14 = mat[3].xyz * vec.xyz
+
+        // Perform horizontal adds across each vector in order to sum up
+        // all of the terms for each field.
+        "vaddw.z        $vf11, $vf11, $vf11w    \n\t" // $vf11.z = $vf11.z + $vf11.w
+        "vaddx.w        $vf12, $vf12, $vf12x    \n\t" // $vf12.w = $vf12.w + $vf12.x
+        "vaddy.x        $vf13, $vf13, $vf13y    \n\t" // $vf13.x = $vf13.x + $vf13.y
+        "vaddz.y        $vf14, $vf14, $vf14z    \n\t" // $vf14.y = $vf14.y + $vf14.z
+
+        "vaddz.y        $vf11, $vf11, $vf11z    \n\t" // $vf11.y = $vf11.y + $vf11.z + $vf11.w
+        "vaddw.z        $vf12, $vf12, $vf12w    \n\t" // $vf12.z = $vf12.z + $vf12.w + $vf12.x
+        "vaddx.w        $vf13, $vf13, $vf13x    \n\t" // $vf13.w = $vf13.w + $vf13.x + $vf13.y
+        "vaddy.x        $vf14, $vf14, $vf14y    \n\t" // $vf14.x = $vf14.x + $vf14.y + $vf14.z
+
+        // Finish up the horizontal adds and store them such that
+        // `result.x = $vf11.x + $vf11.y + $vf11.z + $vf11.w`,
+        // `result.y = $vf12.x + $vf12.y + $vf12.z + $vf12.w`,
+        // and so on.
+        "vaddy.x        $vf16, $vf11, $vf11y    \n\t"
+        "vaddz.y        $vf16, $vf12, $vf12z    \n\t"
+        "vaddw.z        $vf16, $vf13, $vf13w    \n\t"
+        "vaddx.w        $vf16, $vf14, $vf14x    \n\t"
+        "sqc2           $vf16, 0x00(%0)         \n\t"
+
+        : "+r"(result)
+        : "r"(mat), "r"(vec));
+}
 
 void mathfMulTransVec(FMATRIX* mat, FVECTOR* vec, FVECTOR* result)
 {
@@ -30,9 +104,45 @@ void mathfMulTransVec(FMATRIX* mat, FVECTOR* vec, FVECTOR* result)
         : "r"(mat), "r"(vec));
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMulTransVecOld__FPA3_fP8_fvectorT1);
+void mathfMulTransVecOld(FMATRIX* mat, FVECTOR* vec, FVECTOR* result)
+{
+    asm volatile(
+        // Identical to `mathfMulTransVec()`;
+        // see that function for documentation.
+        "lqc2           $vf11, 0x00(%1)         \n\t"
+        "lqc2           $vf15, 0x00(%2)         \n\t"
+        "lqc2           $vf12, 0x10(%1)         \n\t"
+        "lqc2           $vf13, 0x20(%1)         \n\t"
+        "vmulax.xyz     ACC, $vf11, $vf15x      \n\t"
+        "vmadday.xyz    ACC, $vf12, $vf15y      \n\t"
+        "vmaddz.xyz     $vf16, $vf13, $vf15z    \n\t"
+        "sqc2           $vf16, 0x00(%0)         \n\t"
+        : "+r"(result)
+        : "r"(mat), "r"(vec));
+}
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMulTransVec4x4__FPA3_fP8_fvectorT1);
+void mathfMulTransVec4x4(FMATRIX* mat, FVECTOR* vec, FVECTOR* result)
+{
+    asm volatile(
+        // Load the matrix rows as vectors. Keep in mind we're using the matrix
+        // transpose, so we treat the matrix rows as if they are the columns of
+        // the matrix instead.
+        "lqc2           $vf11, 0x00(%1)         \n\t" // $vf11 = (FVECTOR*) mat[0]
+        "lqc2           $vf15, 0x00(%2)         \n\t" // $vf15 = vec
+        "lqc2           $vf12, 0x10(%1)         \n\t" // $vf12 = (FVECTOR*) mat[1]
+        "lqc2           $vf13, 0x20(%1)         \n\t" // $vf13 = (FVECTOR*) mat[2]
+        "lqc2           $vf14, 0x30(%1)         \n\t" // $vf14 = (FVECTOR*) mat[4]
+
+        // Multiply and add accordingly.
+        "vmulax.xyzw    ACC, $vf11, $vf15x      \n\t" // $ACC.xyzw =  mat[0].xyzw * vec.x
+        "vmadday.xyzw   ACC, $vf12, $vf15y      \n\t" // $ACC.xyzw += mat[1].xyzw * vec.y
+        "vmaddaz.xyzw   ACC, $vf13, $vf15z      \n\t" // $ACC.xyzw += mat[2].xyzw * vec.z
+        "vmaddw.xyzw    $vf16, $vf14, $vf0w     \n\t"
+        // result = $ACC.xyzw + (mat[3].xyzw * vec.w)
+        "sqc2           $vf16, 0x00(%0)         \n\t"
+        : "+r"(result)
+        : "r"(mat), "r"(vec));
+}
 
 void mathfMulMatrix(FMATRIX result, FMATRIX lhs, FMATRIX rhs)
 {
@@ -220,8 +330,14 @@ void mathfRotAxisToMatrix(FMATRIX result, FVECTOR* r)
 void mathfMatricesToRotAxis(FVECTOR* result, FMATRIX mat1, FMATRIX mat2);
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMatricesToRotAxis__FP8_fvectorPA3_fT1);
 
-void mathfMatrixToRotAxis(FVECTOR* result, FMATRIX mat);
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMatrixToRotAxis__FP8_fvectorPA3_f);
+void mathfUnitMatrix(FMATRIX result);
+void mathfMatrixToRotAxis(FVECTOR* result, FMATRIX mat)
+{
+    FMATRIX unit;
+
+    mathfUnitMatrix(unit);
+    mathfMatricesToRotAxis(result, unit, mat);
+}
 
 void mathfAddVector(FVECTOR* result, FVECTOR* lhs, FVECTOR* rhs)
 {
@@ -260,8 +376,9 @@ void mathfCopyMatrixNotAligned(FMATRIX result, FMATRIX mat)
     }
 }
 
+// Identical to `mathfCopyMatrixNotAligned()`.
 // This was likely originally intended to be vectorized or turned into a
-// fast `memcpy()`, since it's identical to `mathfCopyMatrixNotAligned()`.
+// fast `memcpy()`.
 void mathfCopyMatrix(FMATRIX result, FMATRIX mat)
 {
     for (int y = 0; y < 4; y++) {
@@ -290,8 +407,35 @@ void mathfUnitMatrix(FMATRIX result)
     }
 }
 
-void mathfUnitMatrixAsm(FMATRIX result);
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfUnitMatrixAsm__FPA3_f);
+void mathfUnitMatrixAsm(FMATRIX result)
+{
+    asm volatile(
+        // Start with the unit vector.
+        "qmfc2.i        $2, $vf0               \n\t" // $v0 = { 0.0f, 0.0f, 0.0f, 1.0f }
+
+        // Rotate it to the right (bitwise) by one 32-bit word.
+        // Keep in mind that a vector is stored in bits as:
+        //   { x = 0:31, y = 32:63, z = 64:95, w = 96:127 }
+        // So rotating to the right by 1 swizzles `xyzw` -> `yzwx`.
+        "vmr32.xyzw     $vf11, $vf0            \n\t"
+        "qmfc2.i        $3, $vf11              \n\t" // $v1 = { 0.0f, 0.0f, 1.0f, 0.0f }
+
+        // Keep rotating the same vector to give us the unix matrix pieces.
+        "prot3w         $4, $3                 \n\t" // $a0 = { 0.0f, 1.0f, 0.0f, 0.0f }
+        "prot3w         $5, $4                 \n\t" // $a1 = { 1.0f, 0.0f, 0.0f, 0.0f }
+
+        // Store the unit matrix.
+        "sq             $2, 0x30(%0)           \n\t" // result[3] = { 0.0f, 0.0f, 0.0f, 1.0f }
+        "sq             $3, 0x20(%0)           \n\t" // result[2] = { 0.0f, 0.0f, 1.0f, 0.0f }
+        "sq             $4, 0x10(%0)           \n\t" // result[1] = { 0.0f, 1.0f, 0.0f, 0.0f }
+        "sq             $5, 0x00(%0)           \n\t" // result[0] = { 1.0f, 0.0f, 0.0f, 0.0f }
+        : "+r"(result)
+        :
+        // $6 ($a2) isn't used at all, but clobbering it is required to match.
+        // Incog might have used it when first writing the code, then optimized
+        // so that it was no longer necessary.
+        : "$2", "$3", "$4", "$5", "$6", "memory");
+}
 
 // TODO: Come back and comment on these once we know how TMB orients vectors
 // in world space. Also make sure the variable names are actually correct.
@@ -435,9 +579,72 @@ float mathfDist3Squared(FVECTOR* lhs, FVECTOR* rhs)
     return (dx * dx) + (dy * dy) + (dz * dz);
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfManhatDist__FP8_fvectorT0);
+float mathfManhatDist(FVECTOR* origin, FVECTOR* dst)
+{
+    float max, med, min;
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfManhatDist2D__FP8_fvectorT0);
+    if (dst == NULL) {
+        // Assume `origin` is a ray.
+        max = fabsf(origin->x);
+        med = fabsf(origin->y);
+        min = fabsf(origin->z);
+    } else {
+        // Assume `origin` is a point.
+        max = fabsf(dst->x - origin->x);
+        med = fabsf(dst->y - origin->y);
+        min = fabsf(dst->z - origin->z);
+    }
+
+    // The Manhattan distance method here is described by Jack Ritter as
+    // `A Fast Approximation To 3D Euclidean Distance` on pg. 432 of "Graphics Gems"
+    // (edited by Andrew Glassner).
+    //
+    // `dx, dy, dz` are sorted by their absolute quantity, then plugged into the formula:
+    //    `max + ((11/32) * med) + ((1/4) * min)`
+    // According to Ritter, this has an error of +-8% vs. the true Euclidean distance.
+    float temp;
+    if (max < med) {
+        temp = max;
+        max = med;
+        med = temp;
+    }
+    if (max < min) {
+        temp = max;
+        max = min;
+        min = temp;
+    }
+    if (med < min) {
+        temp = med;
+        med = min;
+        min = temp;
+    }
+    return max + (med * 0.34375f) + (min * 0.25f);
+}
+
+float mathfManhatDist2D(FVECTOR* origin, FVECTOR* dst)
+{
+    float max, min;
+
+    if (dst == NULL) {
+        // Assume `origin` is a ray.
+        max = fabsf(origin->x);
+        min = fabsf(origin->y);
+    } else {
+        // Assume `origin` is a point.
+        max = fabsf(dst->x - origin->x);
+        min = fabsf(dst->y - origin->y);
+    }
+
+    // See `mathfManhatDist()` for more information about the algorithm here.
+    // This is just a 2D simplification.
+    float temp;
+    if (max < min) {
+        temp = max;
+        max = min;
+        min = temp;
+    }
+    return max + (min * 0.34375f);
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRPHFromMatrix__FPA3_fP8_fvector);
 
