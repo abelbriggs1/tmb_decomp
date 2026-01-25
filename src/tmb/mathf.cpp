@@ -558,23 +558,44 @@ INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfViewScreenMatrix__FPA3_fT0T0fffff
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfDumpMatrix__FPA3_f);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfDist2__FP8_fvectorT0);
-
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfDist3__FP8_fvectorT0);
-
-float mathfDist2Squared(FVECTOR* lhs, FVECTOR* rhs)
+float mathfDist2(FVECTOR* origin, FVECTOR* dst)
 {
-    float dx = rhs->x - lhs->x;
-    float dy = rhs->y - lhs->y;
+    if (dst == NULL) {
+        // Assume `origin` is a ray.
+        return sqrtf(origin->x * origin->x + origin->y * origin->y);
+    }
+
+    float dx = (dst->x - origin->x);
+    float dy = (dst->y - origin->y);
+    return sqrtf(dx * dx + dy * dy);
+}
+
+float mathfDist3(FVECTOR* origin, FVECTOR* dst)
+{
+    if (dst == NULL) {
+        // Assume `origin` is a ray.
+        return sqrtf(origin->x * origin->x + origin->y * origin->y + origin->z * origin->z);
+    }
+
+    float dx = (dst->x - origin->x);
+    float dy = (dst->y - origin->y);
+    float dz = (dst->z - origin->z);
+    return sqrtf(dx * dx + dy * dy + dz * dz);
+}
+
+float mathfDist2Squared(FVECTOR* origin, FVECTOR* dst)
+{
+    float dx = dst->x - origin->x;
+    float dy = dst->y - origin->y;
 
     return (dx * dx) + (dy * dy);
 }
 
-float mathfDist3Squared(FVECTOR* lhs, FVECTOR* rhs)
+float mathfDist3Squared(FVECTOR* origin, FVECTOR* dst)
 {
-    float dx = rhs->x - lhs->x;
-    float dy = rhs->y - lhs->y;
-    float dz = rhs->z - lhs->z;
+    float dx = dst->x - origin->x;
+    float dy = dst->y - origin->y;
+    float dz = dst->z - origin->z;
 
     return (dx * dx) + (dy * dy) + (dz * dz);
 }
@@ -657,7 +678,12 @@ void mathfRotationFromPointToPoint(FVECTOR* result, FVECTOR* p1, FVECTOR* p2)
     mathfRotationFromVector(result, &diff);
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRotationFromVector__FP8_fvectorT0);
+void mathfRotationFromVector(FVECTOR* result, FVECTOR* vec)
+{
+    result->x = atan2f(vec->z, sqrtf(vec->x * vec->x + vec->y * vec->y));
+    result->y = 0.0f;
+    result->z = atan2f(vec->x, vec->y);
+}
 
 float mathfHeadingFromVector(FVECTOR* vec);
 float mathfHeadingFromPointToPoint(FVECTOR* p1, FVECTOR* p2)
@@ -848,4 +874,18 @@ void mathfMatrixToQuaternion(FVECTOR* result, FMATRIX mat)
     mathfRotAxisToQuaternion(result, &axis);
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfUnitizeQuaternion__FP8_fvectorT0f);
+void mathfUnitizeQuaternion(FVECTOR* result, FVECTOR* quat, float mag)
+{
+    result->x = quat->x * mag;
+    result->y = quat->y * mag;
+    result->z = quat->z * mag;
+
+    float norm
+        = sqrtf(1.0f - (result->x * result->x + result->y * result->y + result->z * result->z));
+
+    if (quat->w > 0.0f) {
+        result->w = norm;
+    } else {
+        result->w = -norm;
+    }
+}
