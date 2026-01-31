@@ -472,91 +472,11 @@ migrating them is a bit more effort. You'll have to replace the usage of your
 `extern float` variables with the literals in each function, then hope everything
 lines up.
 
-## GCC 2.9 991111 Compiler Behavior / Memes
+## Matching Patterns
 
-This section documents some interesting behaviors of the `GCC 2.9 991111` compiler used in TMB.
-These quirks may be useful if you're struggling to match a function due to regalloc
-or other minor issues.
+If you're having trouble matching code, you might want to check out the
+[Decompedia page for GCC](https://decomp.wiki/en/compilers/GCC).
 
-### Register Allocation
-
-#### Branch-Invariant Code
-
-Some branch folding optimizations can influence GCC's register allocation.
-Take `mathfDist2()` from `tmb/mathf.cpp`:
-
-```c++
-float mathfDist2(FVECTOR* origin, FVECTOR* dst)
-{
-    float dx, dy;
-    if (dst == NULL) {
-        dx = origin->x;
-        dy = origin->y;
-    } else {
-        dx = (dst->x - origin->x);
-        dy = (dst->y - origin->y);
-    }
-    return sqrtf(dx * dx + dy * dy);
-}
-```
-
-A diff shows that this won't match; we've clearly got the right number of registers,
-which means our temp variables are probably fine. However, the registers are being
-swapped unexpectedly.
-
-```
-TARGET                                                   CURRENT (80)
-db9d8:    addiu   sp,sp,-0x10                            db9d8:    addiu   sp,sp,-0x10
-db9dc:    bnez    a1,db9f0 ~>                            db9dc:    bnez    a1,db9f0 ~>
-db9e0:    sd      ra,0(sp)                               db9e0:    sd      ra,0(sp)
-db9e4:    lwc1    $f1,4(a0)                       r      db9e4:    lwc1    $f3,4(a0)
-db9e8:    b       dba08 ~>                               db9e8:    b       dba08 ~>
-db9ec:    lwc1    $f0,0(a0)                              db9ec:    lwc1    $f0,0(a0)
-db9f0: ~> lwc1    $f1,4(a1)                       r      db9f0: ~> lwc1    $f3,4(a1)
-db9f4:    lwc1    $f3,4(a0)                       r      db9f4:    lwc1    $f1,4(a0)
-db9f8:    lwc1    $f0,0(a1)                       r      db9f8:    lwc1    $f2,0(a1)
-db9fc:    lwc1    $f2,0(a0)                       r      db9fc:    lwc1    $f0,0(a0)
-dba00:    sub.s   $f1,$f1,$f3                     r      dba00:    sub.s   $f3,$f3,$f1
-dba04:    sub.s   $f0,$f0,$f2                     r      dba04:    sub.s   $f0,$f2,$f0
-dba08: ~> mul.s   $f1,$f1,$f1                     r      dba08: ~> mul.s   $f1,$f0,$f0
-dba0c:    mul.s   $f0,$f0,$f0                     r      dba0c:    mul.s   $f0,$f3,$f3
-dba10:    add.s   $f12,$f0,$f1                    r      dba10:    add.s   $f12,$f1,$f0
-```
-
-However, it's possible that the two branches originally duplicated some code
-(the `sqrtf()` call in this case). GCC would have pulled the code out and executed
-it after the branch.
-
-```c++
-float mathfDist2(FVECTOR* origin, FVECTOR* dst)
-{
-    float result;
-    if (dst == NULL) {
-        float dx = origin->x;
-        float dy = origin->y;
-        result = sqrtf(dx * dx + dy * dy);
-    } else {
-        float dx = (dst->x - origin->x);
-        float dy = (dst->y - origin->y);
-        result = sqrtf(dx * dx + dy * dy);
-    }
-    return result;
-}
-```
-
-This code matches exactly to the original once compiled, though it is quite ugly.
-We can simplify it:
-
-```c++
-float mathfDist2(FVECTOR* origin, FVECTOR* dst)
-{
-    if (dst == NULL) {
-        return sqrtf(origin->x * origin->x + origin->y * origin->y);
-    }
-    float dx = (dst->x - origin->x);
-    float dy = (dst->y - origin->y);
-    return sqrtf(dx * dx + dy * dy);
-}
-```
-
-This also matches the original code.
+This page lists a large number of optimization patterns which GCC can
+apply to the code, and may be helpful when dealing with particularly
+stubborn mismatches (regalloc, extra registers, etc).
