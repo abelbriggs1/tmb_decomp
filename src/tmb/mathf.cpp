@@ -5,6 +5,21 @@
 #include "tmb/types.h"
 #include "tmb/view.h"
 
+// #define PI 3.1415927f
+// #define PI_D2 1.5707964f
+// TODO: Once `lit4` is migrated, get rid of `pi_var`
+// and just use `3.1415927f`.
+#define DEGREES_TO_RADIANS(angle, pi_var) (((angle) * pi_var) / 180.0f);
+
+// lit4 variables; will be removed and replaced with
+// literals when TU is fully matched.
+extern float D_004FA64C; // 0.0000001f
+extern float D_004FA650; // 0.0000001f
+extern float D_004FA660; // 3.1415927f
+extern float D_004FA664; // 9.9999999E-9f
+extern float D_004FA668; // 1.5707964f
+extern float D_004FA66C; // -1.5707964f
+
 void mathfMulVec(FMATRIX mat, FVECTOR* vec, FVECTOR* result)
 {
     asm volatile(
@@ -243,10 +258,49 @@ float mathfPlaneTest(Plane* plane, FVECTOR* dir)
         - plane->d;
 }
 
-void mathfNormalize(FVECTOR* result, FVECTOR* vec);
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfNormalize__FP8_fvectorT0);
+float mathfNormalize(FVECTOR* result, FVECTOR* vec)
+{
+    float norm = sqrtf((vec->x * vec->x) + (vec->y * vec->y) + (vec->z * vec->z));
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfNormalizeColumns__FPA3_f);
+    if (norm < D_004FA64C) {
+        result->x = 0.0f;
+        result->y = 0.0f;
+        result->z = 1.0f;
+        return 0.0f;
+    }
+
+    float unit_norm = 1.0f / norm;
+    result->x = vec->x * unit_norm;
+    result->y = vec->y * unit_norm;
+    result->z = vec->z * unit_norm;
+
+    return norm;
+}
+
+void mathfNormalizeColumns(FMATRIX mat)
+{
+    const float THRESHOLD = D_004FA650;
+
+    for (int x = 0; x < 3; x++) {
+        float* col_x = &mat[0][x];
+        float* col_y = &mat[1][x];
+        float* col_z = &mat[2][x];
+
+        float norm_sq = (*col_x * *col_x) + (*col_y * *col_y) + (*col_z * *col_z);
+        float norm = sqrtf(norm_sq);
+
+        if (norm < THRESHOLD) {
+            *col_x = 0.0f;
+            *col_y = 0.0f;
+            *col_z = 1.0f;
+        } else {
+            float unit_norm = 1.0f / norm;
+            *col_x = *col_x * unit_norm;
+            *col_y = *col_y * unit_norm;
+            *col_z = *col_z * unit_norm;
+        }
+    }
+}
 
 void mathfTransposeMatrix(FMATRIX result, FMATRIX mat)
 {
@@ -552,7 +606,22 @@ void mathfRotMatrixRPHNoTrans(FMATRIX result, FVECTOR* angle)
     result[2][2] = cos_pitch * cos_roll;
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfHPtoVector__FP8_fvectorff);
+void mathfHPtoVector(FVECTOR* result, float head, float pitch)
+{
+    const float PI = D_004FA660;
+
+    float head_rad = DEGREES_TO_RADIANS(head, PI);
+    float sin_head = sinf(head_rad);
+    float cos_head = cosf(head_rad);
+
+    float pitch_rad = DEGREES_TO_RADIANS(pitch, PI);
+    float sin_pitch = sinf(pitch_rad);
+    float cos_pitch = cosf(pitch_rad);
+
+    result->x = cos_pitch * sin_head;
+    result->y = cos_pitch * cos_head;
+    result->z = sin_pitch;
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfViewScreenMatrix__FPA3_fT0T0fffffffffff);
 
@@ -667,7 +736,28 @@ float mathfManhatDist2D(FVECTOR* origin, FVECTOR* dst)
     return max + (min * 0.34375f);
 }
 
+// This function cannot be matched until `.lit4` is migrated
+// due to a `nop` added by the literal substitution.
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRPHFromMatrix__FPA3_fP8_fvector);
+// void mathfRPHFromMatrix(FMATRIX mat, FVECTOR* result)
+// {
+//     float temp = (mat[1][0] * mat[1][0]) + (mat[1][1] * mat[1][1]);
+//     if (temp > D_004FA664) {
+//         result->x = atan2f(mat[1][2], sqrtf(temp));
+//         result->y = atan2f(-mat[0][2], mat[2][2]);
+//         result->z = atan2f(mat[1][0], mat[1][1]);
+//         return;
+//     }
+
+//     if (mat[1][2] > 0.0f) {
+//         result->x = 1.5707964; // pi / 2
+//         result->z = atan2f(-mat[0][1], -mat[2][1]);
+//     } else {
+//         result->x = -1.5707964; // -pi / 2
+//         result->z = atan2f(-mat[0][1], mat[2][1]);
+//     }
+//     result->y = 0.0f;
+// }
 
 void mathfRotationFromVector(FVECTOR* result, FVECTOR* point);
 void mathfRotationFromPointToPoint(FVECTOR* result, FVECTOR* p1, FVECTOR* p2)
