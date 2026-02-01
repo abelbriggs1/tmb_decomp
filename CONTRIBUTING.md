@@ -245,6 +245,78 @@ actually defined by [symbol_addrs.txt](config/US/symbol_addrs.txt).
 This file maps each variable to its VRAM address/storage location in the
 final binary, so the linker knows how to relocate variables.
 
+#### Handling `float` literals
+
+Some functions will make use of floating-point literals, like `3.1415927f`.
+GCC pulls these out into the `.lit4` section, where they are referenced
+as normal variables in the compiled code.
+
+You won't be able to use literals in the code unless you've already migrated
+the `.lit4` section, so you'll need to reference these as `extern float`s:
+
+```c++
+extern float D_004FA64C; // 0.0000001f
+
+float mathfNormalize(FVECTOR* result, FVECTOR* vec)
+{
+    float norm = sqrtf((vec->x * vec->x) + (vec->y * vec->y) + (vec->z * vec->z));
+
+    if (norm < D_004FA64C) {
+        result->x = 0.0f;
+        result->y = 0.0f;
+        result->z = 1.0f;
+        return 0.0f;
+    }
+
+    // ...
+}
+```
+
+However, the way GCC pulls these literals out can cause side effects in the codegen,
+particularly if the literal is used near a branch delay slot:
+
+```c++
+extern float D_004FA670; // 0.0099999998f
+
+float mathfPitchFromVector(FVECTOR* vec)
+{
+    float magnitude = mathfManhatDist(vec, NULL);
+
+    if (magnitude == 0.0f) {
+        magnitude = D_004FA670;
+    }
+    return atan2f(vec->z, magnitude);
+}
+```
+
+```
+TARGET                                                   CURRENT (230)
+dbeb8:    mtc1    zero,$f1                               dbeb8:    mtc1    zero,$f1
+dbebc:    nop                                            dbebc:    nop
+dbec0:    c.eq.s  $f0,$f1                                dbec0:    c.eq.s  $f0,$f1
+dbec4:    nop                                            dbec4:    nop
+dbec8:    bc1f    dbed4 ~>                        |      dbec8:    bc1tl   dbed0 ~>
+dbecc:    lwc1    $f12,8(s0)                      |      dbecc:    lwc1    $f0,-0x4800(gp)
+dbed0:    lwc1    $f0,-0x4800(gp)                 |      dbed0: ~> lwc1    $f12,8(s0)
+```
+
+In this case, substituting the literal fixes the instruction swap and produces an exact match:
+
+```c++
+float mathfPitchFromVector(FVECTOR* vec)
+{
+    float magnitude = mathfManhatDist(vec, NULL);
+
+    if (magnitude == 0.0f) {
+        magnitude = 0.0099999998f;
+    }
+    return atan2f(vec->z, magnitude);
+}
+```
+
+Unfortunately, there's usually no workaround for this problem. You'll have to comment these
+functions out and wait until the `.lit4` section has been split, then add the literals.
+
 #### Handling VU0 Instructions
 
 TODO

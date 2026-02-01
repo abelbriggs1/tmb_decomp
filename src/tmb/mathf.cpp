@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdlib.h>
 
 #include "common.h"
 
@@ -11,6 +12,16 @@
 // and just use `3.1415927f`.
 #define DEGREES_TO_RADIANS(angle, pi_var) (((angle) * pi_var) / 180.0f);
 
+// Helper macros for calculating the Euclidean norm of 2D or 3D vectors.
+#define NORM_2D_SQ(vec) (((vec)->x * (vec)->x) + ((vec)->y * (vec)->y))
+#define NORM_3D_SQ(vec) (((vec)->x * (vec)->x) + ((vec)->y * (vec)->y) + ((vec)->z * (vec)->z))
+#define NORM_2D_SQ_VAR(x, y) (((x) * (x)) + ((y) * (y)))
+#define NORM_3D_SQ_VAR(x, y, z) (((x) * (x)) + ((y) * (y)) + ((z) * (z)))
+#define NORM_2D(vec) (sqrtf(NORM_2D_SQ((vec))))
+#define NORM_3D(vec) (sqrtf(NORM_3D_SQ((vec))))
+#define NORM_2D_VAR(x, y) (sqrtf(NORM_2D_SQ_VAR((x), (y))))
+#define NORM_3D_VAR(x, y, z) (sqrtf(NORM_3D_SQ_VAR((x), (y), (z))))
+
 // lit4 variables; will be removed and replaced with
 // literals when TU is fully matched.
 extern float D_004FA64C; // 0.0000001f
@@ -19,6 +30,8 @@ extern float D_004FA660; // 3.1415927f
 extern float D_004FA664; // 9.9999999E-9f
 extern float D_004FA668; // 1.5707964f
 extern float D_004FA66C; // -1.5707964f
+extern float D_004FA670; // 0.0099999998f
+extern float D_004FA674; // 0.000001f
 
 void mathfMulVec(FMATRIX mat, FVECTOR* vec, FVECTOR* result)
 {
@@ -260,7 +273,7 @@ float mathfPlaneTest(Plane* plane, FVECTOR* dir)
 
 float mathfNormalize(FVECTOR* result, FVECTOR* vec)
 {
-    float norm = sqrtf((vec->x * vec->x) + (vec->y * vec->y) + (vec->z * vec->z));
+    float norm = NORM_3D(vec);
 
     if (norm < D_004FA64C) {
         result->x = 0.0f;
@@ -286,8 +299,7 @@ void mathfNormalizeColumns(FMATRIX mat)
         float* col_y = &mat[1][x];
         float* col_z = &mat[2][x];
 
-        float norm_sq = (*col_x * *col_x) + (*col_y * *col_y) + (*col_z * *col_z);
-        float norm = sqrtf(norm_sq);
+        float norm = NORM_3D_VAR(*col_x, *col_y, *col_z);
 
         if (norm < THRESHOLD) {
             *col_x = 0.0f;
@@ -631,25 +643,25 @@ float mathfDist2(FVECTOR* origin, FVECTOR* dst)
 {
     if (dst == NULL) {
         // Assume `origin` is a ray.
-        return sqrtf(origin->x * origin->x + origin->y * origin->y);
+        return NORM_2D(origin);
     }
 
     float dx = (dst->x - origin->x);
     float dy = (dst->y - origin->y);
-    return sqrtf(dx * dx + dy * dy);
+    return NORM_2D_VAR(dx, dy);
 }
 
 float mathfDist3(FVECTOR* origin, FVECTOR* dst)
 {
     if (dst == NULL) {
         // Assume `origin` is a ray.
-        return sqrtf(origin->x * origin->x + origin->y * origin->y + origin->z * origin->z);
+        return NORM_3D(origin);
     }
 
     float dx = (dst->x - origin->x);
     float dy = (dst->y - origin->y);
     float dz = (dst->z - origin->z);
-    return sqrtf(dx * dx + dy * dy + dz * dz);
+    return NORM_3D_VAR(dx, dy, dz);
 }
 
 float mathfDist2Squared(FVECTOR* origin, FVECTOR* dst)
@@ -657,7 +669,7 @@ float mathfDist2Squared(FVECTOR* origin, FVECTOR* dst)
     float dx = dst->x - origin->x;
     float dy = dst->y - origin->y;
 
-    return (dx * dx) + (dy * dy);
+    return NORM_2D_SQ_VAR(dx, dy);
 }
 
 float mathfDist3Squared(FVECTOR* origin, FVECTOR* dst)
@@ -666,7 +678,7 @@ float mathfDist3Squared(FVECTOR* origin, FVECTOR* dst)
     float dy = dst->y - origin->y;
     float dz = dst->z - origin->z;
 
-    return (dx * dx) + (dy * dy) + (dz * dz);
+    return NORM_3D_SQ_VAR(dx, dy, dz);
 }
 
 float mathfManhatDist(FVECTOR* origin, FVECTOR* dst)
@@ -770,7 +782,7 @@ void mathfRotationFromPointToPoint(FVECTOR* result, FVECTOR* p1, FVECTOR* p2)
 
 void mathfRotationFromVector(FVECTOR* result, FVECTOR* vec)
 {
-    result->x = atan2f(vec->z, sqrtf(vec->x * vec->x + vec->y * vec->y));
+    result->x = atan2f(vec->z, NORM_2D(vec));
     result->y = 0.0f;
     result->z = atan2f(vec->x, vec->y);
 }
@@ -803,9 +815,56 @@ float mathfPitchFromPointToPoint(FVECTOR* p1, FVECTOR* p2)
     return mathfPitchFromVector(&diff);
 }
 
+// This function cannot be matched until `.lit4` is migrated.
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfPitchFromVector__FP8_fvector);
+// float mathfPitchFromVector(FVECTOR* vec)
+// {
+//     float magnitude = mathfManhatDist(vec, NULL);
 
+//     if (magnitude == 0.0f) {
+//         magnitude = D_004FA670;
+//     }
+//     return atan2f(vec->z, magnitude);
+// }
+
+// This function cannot be matched until `.lit4` is migrated.
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMatrixFromNormal__FPA3_fP8_fvector);
+// void mathfMatrixFromNormal(FMATRIX result, FVECTOR* normal)
+// {
+//     result[1][0] = normal->x;
+//     result[1][1] = normal->y;
+//     result[1][2] = normal->z;
+
+//     float norm_2d = NORM_2D(normal);
+//     if (norm_2d > D_004FA674) {
+//         float unit_y = normal->y / norm_2d;
+//         result[0][0] = unit_y;
+
+//         float unit_x = -normal->x / norm_2d;
+//         result[0][1] = unit_x;
+
+//         result[2][0] = unit_x * normal->z;
+//         result[2][1] = -unit_y * normal->z;
+//     } else {
+//         result[0][0] = 1.0f;
+//         result[0][1] = 0.0f;
+//         result[2][0] = 0.0f;
+//         result[2][1] = -result[1][2];
+//     }
+
+//     result[2][2] = norm_2d;
+
+//     // This is actually needed to match the code.
+//     float zero = 0.0f;
+//     result[2][3] = zero;
+//     result[1][3] = zero;
+//     result[0][3] = zero;
+//     result[3][2] = zero;
+//     result[3][1] = zero;
+//     result[3][0] = zero;
+//     result[0][2] = zero;
+//     result[3][3] = 1.0f;
+// }
 
 void mathfSetFVector(FVECTOR* result, float x, float y, float z)
 {
@@ -836,7 +895,50 @@ void mathfOrthonormalize(FMATRIX mat)
     mathfNormalize(r2, r2);
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfOrthonormalizeOverTime__FPA3_fPi);
+void mathfOrthonormalizeOverTime(FMATRIX mat, int* time)
+{
+    FVECTOR *lhs, *rhs, *out;
+    int cur_time = *time;
+
+    switch (cur_time) {
+    case 0:
+        lhs = (FVECTOR*)mat[1];
+        rhs = (FVECTOR*)mat[2];
+        out = (FVECTOR*)mat[0];
+        mathfCrossProduct(out, lhs, rhs);
+        cur_time = *time;
+        break;
+    case 1:
+        mathfNormalize((FVECTOR*)mat[0], (FVECTOR*)mat[0]);
+        cur_time = *time;
+        break;
+    case 2:
+        lhs = (FVECTOR*)mat[2];
+        rhs = (FVECTOR*)mat[0];
+        out = (FVECTOR*)mat[1];
+        mathfCrossProduct(out, lhs, rhs);
+        cur_time = *time;
+        break;
+    case 3:
+        mathfNormalize((FVECTOR*)mat[1], (FVECTOR*)mat[1]);
+        cur_time = *time;
+        break;
+    case 4:
+        lhs = (FVECTOR*)mat[0];
+        rhs = (FVECTOR*)mat[1];
+        out = (FVECTOR*)mat[2];
+        mathfCrossProduct(out, lhs, rhs);
+        cur_time = *time;
+        break;
+    case 5:
+        mathfNormalize((FVECTOR*)mat[2], (FVECTOR*)mat[2]);
+        *time = -1;
+        cur_time = -1;
+        break;
+    }
+
+    *time = cur_time + 1;
+}
 
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRandInit__Fi);
 
@@ -970,8 +1072,7 @@ void mathfUnitizeQuaternion(FVECTOR* result, FVECTOR* quat, float mag)
     result->y = quat->y * mag;
     result->z = quat->z * mag;
 
-    float norm
-        = sqrtf(1.0f - (result->x * result->x + result->y * result->y + result->z * result->z));
+    float norm = sqrtf(1.0f - NORM_3D_SQ(result));
 
     if (quat->w > 0.0f) {
         result->w = norm;
