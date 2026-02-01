@@ -79,6 +79,8 @@ class EnvironmentDirectories:
                 Path("include/gcc"),
                 Path("include/gcc/gcc-lib"),
                 Path("include/sdk"),
+                Path("include/sdk/common"),
+                Path("include/sdk/ee"),
             ],
         )
 
