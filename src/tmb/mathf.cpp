@@ -1,6 +1,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include "libcdvd.h"
+
 #include "common.h"
 
 #include "tmb/types.h"
@@ -12,15 +14,19 @@
 // and just use `3.1415927f`.
 #define DEGREES_TO_RADIANS(angle, pi_var) (((angle) * pi_var) / 180.0f);
 
-// Helper macros for calculating the Euclidean norm of 2D or 3D vectors.
+// Helper macros for calculating the Euclidean norm of vectors.
 #define NORM_2D_SQ(vec) (((vec)->x * (vec)->x) + ((vec)->y * (vec)->y))
 #define NORM_3D_SQ(vec) (((vec)->x * (vec)->x) + ((vec)->y * (vec)->y) + ((vec)->z * (vec)->z))
+#define NORM_4D_SQ(vec)                                                                            \
+    (((vec)->x * (vec)->x) + ((vec)->y * (vec)->y) + ((vec)->z * (vec)->z) + ((vec)->w * (vec)->w))
 #define NORM_2D_SQ_VAR(x, y) (((x) * (x)) + ((y) * (y)))
 #define NORM_3D_SQ_VAR(x, y, z) (((x) * (x)) + ((y) * (y)) + ((z) * (z)))
 #define NORM_2D(vec) (sqrtf(NORM_2D_SQ((vec))))
 #define NORM_3D(vec) (sqrtf(NORM_3D_SQ((vec))))
 #define NORM_2D_VAR(x, y) (sqrtf(NORM_2D_SQ_VAR((x), (y))))
 #define NORM_3D_VAR(x, y, z) (sqrtf(NORM_3D_SQ_VAR((x), (y), (z))))
+
+#define MROW2VEC(mat, row) ((FVECTOR*)(mat[(row)]))
 
 // lit4 variables; will be removed and replaced with
 // literals when TU is fully matched.
@@ -32,6 +38,12 @@ extern float D_004FA668; // 1.5707964f
 extern float D_004FA66C; // -1.5707964f
 extern float D_004FA670; // 0.0099999998f
 extern float D_004FA674; // 0.000001f
+extern float D_004FA678; // 6.2831855f
+extern float D_004FA67C; // 0.95999998f
+extern float D_004FA680; // 0.008726646f
+extern float D_004FA684; // 1.000001f
+extern float D_004FA688; // 0.99999905f
+extern float D_004FA68C; // 1.0E7;
 
 void mathfMulVec(FMATRIX mat, FVECTOR* vec, FVECTOR* result)
 {
@@ -748,8 +760,7 @@ float mathfManhatDist2D(FVECTOR* origin, FVECTOR* dst)
     return max + (min * 0.34375f);
 }
 
-// This function cannot be matched until `.lit4` is migrated
-// due to a `nop` added by the literal substitution.
+// This function cannot be matched until `.lit4` is migrated.
 INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRPHFromMatrix__FPA3_fP8_fvector);
 // void mathfRPHFromMatrix(FMATRIX mat, FVECTOR* result)
 // {
@@ -883,9 +894,9 @@ void mathfSetFVector(FVECTOR* result, float x, float y, float z, float w)
 
 void mathfOrthonormalize(FMATRIX mat)
 {
-    FVECTOR* r0 = (FVECTOR*)mat[0];
-    FVECTOR* r1 = (FVECTOR*)mat[1];
-    FVECTOR* r2 = (FVECTOR*)mat[2];
+    FVECTOR* r0 = MROW2VEC(mat, 0);
+    FVECTOR* r1 = MROW2VEC(mat, 1);
+    FVECTOR* r2 = MROW2VEC(mat, 2);
 
     mathfCrossProduct(r0, r1, r2);
     mathfNormalize(r0, r0);
@@ -902,36 +913,36 @@ void mathfOrthonormalizeOverTime(FMATRIX mat, int* time)
 
     switch (cur_time) {
     case 0:
-        lhs = (FVECTOR*)mat[1];
-        rhs = (FVECTOR*)mat[2];
-        out = (FVECTOR*)mat[0];
+        lhs = MROW2VEC(mat, 1);
+        rhs = MROW2VEC(mat, 2);
+        out = MROW2VEC(mat, 0);
         mathfCrossProduct(out, lhs, rhs);
         cur_time = *time;
         break;
     case 1:
-        mathfNormalize((FVECTOR*)mat[0], (FVECTOR*)mat[0]);
+        mathfNormalize(MROW2VEC(mat, 0), MROW2VEC(mat, 0));
         cur_time = *time;
         break;
     case 2:
-        lhs = (FVECTOR*)mat[2];
-        rhs = (FVECTOR*)mat[0];
-        out = (FVECTOR*)mat[1];
+        lhs = MROW2VEC(mat, 2);
+        rhs = MROW2VEC(mat, 0);
+        out = MROW2VEC(mat, 1);
         mathfCrossProduct(out, lhs, rhs);
         cur_time = *time;
         break;
     case 3:
-        mathfNormalize((FVECTOR*)mat[1], (FVECTOR*)mat[1]);
+        mathfNormalize(MROW2VEC(mat, 1), MROW2VEC(mat, 1));
         cur_time = *time;
         break;
     case 4:
-        lhs = (FVECTOR*)mat[0];
-        rhs = (FVECTOR*)mat[1];
-        out = (FVECTOR*)mat[2];
+        lhs = MROW2VEC(mat, 0);
+        rhs = MROW2VEC(mat, 1);
+        out = MROW2VEC(mat, 2);
         mathfCrossProduct(out, lhs, rhs);
         cur_time = *time;
         break;
     case 5:
-        mathfNormalize((FVECTOR*)mat[2], (FVECTOR*)mat[2]);
+        mathfNormalize(MROW2VEC(mat, 2), MROW2VEC(mat, 2));
         *time = -1;
         cur_time = -1;
         break;
@@ -940,13 +951,66 @@ void mathfOrthonormalizeOverTime(FMATRIX mat, int* time)
     *time = cur_time + 1;
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRandInit__Fi);
+void mathfRandInit(int seed)
+{
+    if (!seed) {
+        // Read the system clock to determine the seed.
+        sceCdCLOCK clk;
+        if (sceCdReadClock(&clk)) {
+            seed = (int)clk.second + (int)clk.minute * 60;
+        }
+    }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRandf__Fff);
+    srand(seed);
+}
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRand__Fii);
+float mathfRandf(float lower, float upper)
+{
+    float tmp = upper;
+    if (upper < lower) {
+        tmp = lower;
+        lower = upper;
+        upper = tmp;
+    }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRandVector__FP8_fvectorf);
+    tmp = (float)(rand() & 0x3FFF);
+    float result = (upper - lower) * tmp * 6.1035156E-05f;
+    return lower + result;
+}
+
+int mathfRand(int lower, int upper)
+{
+    if (lower == upper) {
+        return upper;
+    }
+
+    if (upper <= lower) {
+        return lower;
+    }
+
+    return (int)mathfRandf((float)lower, (float)upper + 1.0f);
+}
+
+// This function is unused in the NTSC binary.
+void mathfRandVector(FVECTOR* result, float unk)
+{
+    // Generate a random value in the interval `[2.0f, 4.0f]`.
+    int r1 = rand() & 0x7FFFFF | 0x40000000;
+    float r1_f = *(float*)&r1;
+
+    float unk1 = (r1_f - 4.0f) * unk + 1.0f;
+    float unk1_sq = sqrtf(1.0f - (unk1 * unk1));
+
+    // Generate a random value in the interval `[1.0f, 2.0f]`.
+    int r2 = rand() & 0x7FFFFF | 0x3F800000;
+    float r2_f = *(float*)&r2;
+
+    float unk2 = (r2_f - 1.0f) * D_004FA678;
+
+    result->x = sinf(unk2) * unk1_sq;
+    result->y = unk1;
+    result->z = cosf(unk2) * unk1_sq;
+}
 
 void mathfTransform3dTo2d(int view, FVECTOR* vec, FVECTOR* result)
 {
@@ -972,7 +1036,34 @@ void mathfTransform3dTo2d(int view, FVECTOR* vec, FVECTOR* result)
     result->w = transformed.z * mag;
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMatrixFromCsAndPlane__FPA3_fP3_csP8_fvector);
+void mathfMatrixFromCsAndPlane(FMATRIX result, CS* cs, FVECTOR* plane)
+{
+    FVECTOR temp;
+
+    FVECTOR* r0 = MROW2VEC(result, 0);
+    FVECTOR* r1 = MROW2VEC(result, 1);
+    FVECTOR* r2 = MROW2VEC(result, 2);
+
+    mathfCopyVector(r2, plane);
+    mathfCrossProduct(r0, r1, r2);
+
+    if (fabsf(result[0][0]) + fabsf(result[0][1]) + fabsf(result[0][2]) < D_004FA67C) {
+        mathfCrossProduct(r1, MROW2VEC(cs->mat, 0), r2);
+        mathfNormalize(r1, r1);
+        mathfCrossProduct(&temp, r2, r1);
+        result[0][2] = temp.z;
+        mathfNormalize(r0, r0);
+        mathfCrossProduct(r1, r0, r2);
+        mathfNormalize(r1, r1);
+    } else {
+        mathfNormalize(r0, r0);
+        mathfCrossProduct(&temp, r2, r0);
+        result[1][2] = temp.z;
+        mathfNormalize(r1, r1);
+        mathfCrossProduct(r0, r1, r2);
+        mathfNormalize(r0, r0);
+    }
+}
 
 void mathfRotAxisToQuaternion(FVECTOR* result, FVECTOR* axis)
 {
@@ -983,11 +1074,51 @@ void mathfRotAxisToQuaternion(FVECTOR* result, FVECTOR* axis)
     result->w = cosf(axis->w * 0.5f);
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfAxisAngleToQuaternion__FP8_fvectorT0);
+// This function is unused in the NTSC binary.
+void mathfAxisAngleToQuaternion(FVECTOR* result, FVECTOR* axis)
+{
+    const float mult = D_004FA680;
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfNormalizeQuaternion__FP8_fvectorT0);
+    float sine = sinf(axis->w * mult);
+    result->x = sine * axis->x;
+    result->y = sine * axis->y;
+    result->z = sine * axis->z;
+    result->w = cosf(axis->w * mult);
+}
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfNormalizeQuaternionFromW__FP8_fvectorT0);
+// This function is unused in the NTSC binary.
+void mathfNormalizeQuaternion(FVECTOR* result, FVECTOR* quat)
+{
+    float norm = NORM_4D_SQ(quat);
+
+    if (D_004FA684 <= norm || norm <= D_004FA688) {
+        float unit_norm = 1.0f / sqrtf(norm);
+        result->x = quat->x * unit_norm;
+        result->y = quat->y * unit_norm;
+        result->z = quat->z * unit_norm;
+        result->w = quat->w * unit_norm;
+    }
+}
+
+// This function is unused in the NTSC binary.
+void mathfNormalizeQuaternionFromW(FVECTOR* result, FVECTOR* quat)
+{
+    float norm = NORM_3D_SQ(quat);
+
+    if (norm < D_004FA68C) {
+        result->x = 0.0f;
+        result->y = 0.0f;
+        result->z = sqrtf(1.0f - (quat->w * quat->w));
+        result->w = quat->w;
+        return;
+    }
+
+    float unit_norm = sqrtf((1.0f - (quat->w * quat->w)) / norm);
+    result->x = quat->x * unit_norm;
+    result->y = quat->y * unit_norm;
+    result->z = quat->z * unit_norm;
+    result->w = quat->w;
+}
 
 void mathfConcatQuaternions(FVECTOR* result, FVECTOR* lhs, FVECTOR* rhs)
 {
