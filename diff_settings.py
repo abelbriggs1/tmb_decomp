@@ -5,3 +5,4 @@ def apply(config, args):
     config["mapfile"] = "build/SCUS_971.01.map"
     config["source_directories"] = ["."]
     config["objdump_executable"] = "mips-linux-gnu-objdump"
+    config["make_command"] = ["ninja"]

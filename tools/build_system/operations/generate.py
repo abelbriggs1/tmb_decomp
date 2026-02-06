@@ -112,35 +112,44 @@ def _generate_ninja_script(env: Environment, linker_entries: list[LinkerEntry]):
             if entry.object_path.suffix == ".o":
                 built_objects.add(entry.object_path)
 
+        # The environment uses absolute paths, but we want to use relative paths
+        # for the Ninja script. This is to allow `asm-differ` to auto-build
+        # the binary after any source changes.
+        local_final_elf = env.files.final_elf.relative_to(env.directories.root)
+        local_final_rom = env.files.final_rom.relative_to(env.directories.root)
+        local_ldscript = env.files.ldscript.relative_to(env.directories.root)
+        local_ldmap = env.files.ldmap.relative_to(env.directories.root)
+        local_build_dir = env.directories.build.relative_to(env.directories.root)
+
         # Add the linker step.
         ninja.build(
-            outputs=[str(env.files.final_elf)],
+            outputs=[str(local_final_elf)],
             rule="ld",
-            inputs=[str(env.files.ldscript)],
+            inputs=[str(local_ldscript)],
             implicit=[str(obj) for obj in built_objects],
-            implicit_outputs=[str(env.files.ldmap)],
+            implicit_outputs=[str(local_ldmap)],
         )
 
         # Add the final object step.
         ninja.build(
-            outputs=[str(env.files.final_rom)],
+            outputs=[str(local_final_rom)],
             rule="rom",
-            inputs=[str(env.files.final_elf)],
+            inputs=[str(local_final_elf)],
         )
 
         # Add a step to ensure the new binary matches.
         ninja.build(
-            outputs=[str(env.directories.build / "build.sha1")],
+            outputs=[str(local_build_dir / "build.sha1")],
             rule="check",
-            inputs=[str(env.files.final_rom)],
+            inputs=[str(local_final_rom)],
         )
 
         # Add a step to print binary progress if matching.
         ninja.build(
-            outputs=[str(env.directories.build / "progress.txt")],
+            outputs=[str(local_build_dir / "progress.txt")],
             rule="progress",
-            inputs=[str(env.files.ldmap)],
-            implicit=[str(env.directories.build / "build.sha1")],
+            inputs=[str(local_ldmap)],
+            implicit=[str(local_build_dir / "build.sha1")],
         )
 
 
