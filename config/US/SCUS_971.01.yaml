@@ -62,7 +62,7 @@ segments:
       - [0x15110, asm, tmb/city]
       - [0x151D8, asm, tmb/clapper]
       - [0x15B48, asm, tmb/collis]
-      - [0x1C718, asm, tmb/combo]
+      - [0x1C718, cpp, tmb/combo]
       - [0x1F8E8, asm, tmb/db]
       - [0x20020, asm, tmb/death2]
       - [0x20078, asm, tmb/death3]
@@ -336,8 +336,10 @@ segments:
       # .sbss segment
       # ------------------------------------------------
       - {type: sbss, vram: 0x004FBD00, name: sbss1}
+      - {type: sbss, vram: 0x004FBD08, name: tmb/combo}
+      - {type: sbss, vram: 0x004FBD44, name: sbss2}
       - {type: .sbss, vram: 0x004FBE34, name: tmb/font}
-      - {type: sbss, vram: 0x004FBE48, name: sbss2}
+      - {type: sbss, vram: 0x004FBE48, name: sbss3}
       # ------------------------------------------------
       # .bss segment
       # ------------------------------------------------
