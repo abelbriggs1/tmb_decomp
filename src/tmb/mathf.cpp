@@ -1,17 +1,19 @@
+#include "tmb/mathf.h"
+
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "libcdvd.h"
 
 #include "common.h"
 
-#include "tmb/types.h"
 #include "tmb/view.h"
 
-// #define PI 3.1415927f
-// #define PI_D2 1.5707964f
-// TODO: Once `lit4` is migrated, get rid of `pi_var`
-// and just use `3.1415927f`.
+#define PI_M2 6.2831855f // 2pi
+#define PI 3.1415927f // pi
+#define PI_D2 1.5707964f // pi / 2
+
 #define DEGREES_TO_RADIANS(angle, pi_var) (((angle) * pi_var) / 180.0f);
 
 // Helper macros for calculating the Euclidean norm of vectors.
@@ -26,24 +28,8 @@
 #define NORM_2D_VAR(x, y) (sqrtf(NORM_2D_SQ_VAR((x), (y))))
 #define NORM_3D_VAR(x, y, z) (sqrtf(NORM_3D_SQ_VAR((x), (y), (z))))
 
+// Allow some `row` of a matrix `mat` to be referenced as an `FVECTOR`.
 #define MROW2VEC(mat, row) ((FVECTOR*)(mat[(row)]))
-
-// lit4 variables; will be removed and replaced with
-// literals when TU is fully matched.
-extern float D_004FA64C; // 0.0000001f
-extern float D_004FA650; // 0.0000001f
-extern float D_004FA660; // 3.1415927f
-extern float D_004FA664; // 9.9999999E-9f
-extern float D_004FA668; // 1.5707964f
-extern float D_004FA66C; // -1.5707964f
-extern float D_004FA670; // 0.0099999998f
-extern float D_004FA674; // 0.000001f
-extern float D_004FA678; // 6.2831855f
-extern float D_004FA67C; // 0.95999998f
-extern float D_004FA680; // 0.008726646f
-extern float D_004FA684; // 1.000001f
-extern float D_004FA688; // 0.99999905f
-extern float D_004FA68C; // 1.0E7;
 
 void mathfMulVec(FMATRIX mat, FVECTOR* vec, FVECTOR* result)
 {
@@ -144,7 +130,8 @@ void mathfMulTransVec(FMATRIX* mat, FVECTOR* vec, FVECTOR* result)
         : "r"(mat), "r"(vec));
 }
 
-void mathfMulTransVecOld(FMATRIX* mat, FVECTOR* vec, FVECTOR* result)
+// Unused in the NTSC binary.
+static void mathfMulTransVecOld(FMATRIX* mat, FVECTOR* vec, FVECTOR* result)
 {
     asm volatile(
         // Identical to `mathfMulTransVec()`;
@@ -161,6 +148,7 @@ void mathfMulTransVecOld(FMATRIX* mat, FVECTOR* vec, FVECTOR* result)
         : "r"(mat), "r"(vec));
 }
 
+// Unused in the NTSC binary.
 void mathfMulTransVec4x4(FMATRIX* mat, FVECTOR* vec, FVECTOR* result)
 {
     asm volatile(
@@ -238,6 +226,7 @@ void mathfMulMatrixTP3x3(FMATRIX result, FMATRIX lhs, FMATRIX rhs)
     }
 }
 
+// Unused in the NTSC binary.
 void mathfAddMatrix3x3(FMATRIX result, FMATRIX lhs, FMATRIX rhs)
 {
     for (int y = 0; y < 3; y++) {
@@ -287,7 +276,7 @@ float mathfNormalize(FVECTOR* result, FVECTOR* vec)
 {
     float norm = NORM_3D(vec);
 
-    if (norm < D_004FA64C) {
+    if (norm < 1.0E-7f) {
         result->x = 0.0f;
         result->y = 0.0f;
         result->z = 1.0f;
@@ -304,7 +293,7 @@ float mathfNormalize(FVECTOR* result, FVECTOR* vec)
 
 void mathfNormalizeColumns(FMATRIX mat)
 {
-    const float THRESHOLD = D_004FA650;
+    const float THRESHOLD = 1.0E-7F;
 
     for (int x = 0; x < 3; x++) {
         float* col_x = &mat[0][x];
@@ -337,7 +326,7 @@ void mathfTransposeMatrix(FMATRIX result, FMATRIX mat)
 
 // This function is unused in the NTSC binary, and the algorithm doesn't seem
 // to be correct.
-void mathfInverseMatrix(FMATRIX result, FMATRIX mat)
+static void mathfInverseMatrix(FMATRIX result, FMATRIX mat)
 {
     for (int i = 0; i < 2; i++) {
         float column_dot
@@ -405,11 +394,79 @@ void mathfRotAxisToMatrix(FMATRIX result, FVECTOR* r)
     result[3][3] = 1.0f;
 }
 
-void mathfMatricesToRotAxis(FVECTOR* result, FMATRIX mat1, FMATRIX mat2);
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMatricesToRotAxis__FP8_fvectorPA3_fT1);
+void mathfMatricesToRotAxis(FVECTOR* result, FMATRIX mat1, FMATRIX mat2)
+{
+    FMATRIX m;
+    float norms[4];
 
-void mathfUnitMatrix(FMATRIX result);
-void mathfMatrixToRotAxis(FVECTOR* result, FMATRIX mat)
+    // NOTE: Reuse of loop variables is required to match.
+    int y, x;
+    for (y = 0; y < 3; y++) {
+        for (x = 0; x < 3; x++) {
+            m[y][x] = mat1[y][x] - mat2[y][x];
+        }
+    }
+
+    for (y = 0; y < 3; y++) {
+        FVECTOR* row = MROW2VEC(m, y);
+        norms[y] = NORM_3D_SQ(row);
+    }
+
+    y = 0;
+    x = 1;
+    if (norms[y] < norms[x]) {
+        y = 1;
+        x = 0;
+    }
+    if (norms[y] < norms[2]) {
+        x = y;
+        y = 2;
+    } else {
+        if (norms[x] < norms[2]) {
+            x = 2;
+        }
+    }
+
+    if (norms[y] < 0.000001f) {
+        // There's a zero vector, bail out.
+        result->x = 0.0f;
+        result->y = 0.0f;
+        result->z = 1.0f;
+        result->w = 0.0f;
+        return;
+    }
+
+    FVECTOR t4, t3, t2, t1;
+    mathfCrossProduct(result, MROW2VEC(m, y), MROW2VEC(m, x));
+    mathfNormalize(result, result);
+
+    float mag = mathfDotProduct(result, MROW2VEC(mat1, y));
+    mathfScaleVector(&t4, result, mag);
+    mathfAddVector(&t3, MROW2VEC(mat1, y), MROW2VEC(mat2, y));
+    mathfScaleVector(&t3, &t3, 0.5f);
+    mathfSubVector(&t1, &t4, &t3);
+    mathfSubVector(&t2, MROW2VEC(mat1, y), &t3);
+
+    float t1_n_sq = NORM_3D_SQ(&t1);
+    float t2_n_sq = NORM_3D_SQ(&t2);
+
+    if (t1_n_sq < 0.000001f) {
+        result->w = PI;
+        return;
+    }
+
+    FVECTOR t5;
+    mathfCrossProduct(&t5, &t1, &t2);
+    mathfAddVector(&t5, &t5, result);
+    if (NORM_3D_SQ(&t5) < 0.99998999f) {
+        result->x = -result->x;
+        result->y = -result->y;
+        result->z = -result->z;
+    }
+    result->w = 2 * atanf(sqrtf(t2_n_sq / t1_n_sq));
+}
+
+static void mathfMatrixToRotAxis(FVECTOR* result, FMATRIX mat)
 {
     FMATRIX unit;
 
@@ -632,8 +689,6 @@ void mathfRotMatrixRPHNoTrans(FMATRIX result, FVECTOR* angle)
 
 void mathfHPtoVector(FVECTOR* result, float head, float pitch)
 {
-    const float PI = D_004FA660;
-
     float head_rad = DEGREES_TO_RADIANS(head, PI);
     float sin_head = sinf(head_rad);
     float cos_head = cosf(head_rad);
@@ -647,9 +702,74 @@ void mathfHPtoVector(FVECTOR* result, float head, float pitch)
     result->z = sin_pitch;
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfViewScreenMatrix__FPA3_fT0T0fffffffffff);
+// TODO: Properly document this function. Most of the comments and variable
+// names are guesswork. This function seemingly creates a projection matrix,
+// but some of the parameters don't appear to match up with canonical projection
+// matrix definitions.
+//
+// NOTE: According to Ghidra, in the NTSC binary, the only caller of this function
+// (`viewSetFov()`) passes unused matrices for the `clip` and `fov` pointers;
+// the results don't seem to be used at all.
+void mathfViewScreenMatrix(FMATRIX screen, FMATRIX clip, FMATRIX fov, float vp_dist, float x_aspect,
+    float y_aspect, float center_x, float center_y, float unk_min1, float unk_max1, float near,
+    float far, float screen_width, float screen_height)
+{
+    float tmp10 = ((-unk_max1 * near) + (unk_min1 * far)) / (-near + far);
+    float tmp11 = ((far * near) * (-unk_min1 + unk_max1)) / (-near + far);
 
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfDumpMatrix__FPA3_f);
+    float test = (near * 1024.0f) / vp_dist;
+
+    // Handle the screen (projection?) matrix.
+    FMATRIX m1, m2;
+    mathfUnitMatrix(m2);
+    // Scale by the view plane distance.
+    m2[0][0] = vp_dist;
+    m2[1][1] = vp_dist;
+    m2[2][2] = 0.0f;
+    m2[3][3] = 0.0f;
+    m2[3][2] = 1.0f;
+    m2[2][3] = 1.0f;
+    mathfUnitMatrix(m1);
+    // Scale by aspect ratio.
+    m1[0][0] = x_aspect;
+    m1[1][1] = y_aspect;
+    m1[2][2] = tmp11;
+    // Translate to the center.
+    m1[0][3] = center_x;
+    m1[1][3] = center_y;
+    m1[2][3] = tmp10;
+    mathfMulMatrix(screen, m1, m2);
+
+    mathfUnitMatrix(clip);
+    float tmp14 = (far + near) / (far - near);
+    float tmp16 = (-2.0f * (far * near)) / (far - near);
+    float nh = (near * screen_height) / vp_dist; // screen_height = t - b
+    float nw = (near * screen_width); // screen_width = r - l
+    clip[0][0] = (2 * near) / (2 * test);
+    clip[1][1] = (2 * near) / (2 * test);
+    clip[2][2] = tmp14;
+    clip[2][3] = tmp16;
+    clip[3][2] = 1.0f;
+    clip[3][3] = 0.0f;
+
+    test = nw / vp_dist;
+    mathfUnitMatrix(fov);
+    fov[0][0] = (2 * near) / (2 * test);
+    fov[1][1] = (2 * near) / (2 * nh);
+    fov[2][2] = tmp14;
+    fov[2][3] = tmp16;
+    fov[3][2] = 1.0f;
+    fov[3][3] = 0.0f;
+}
+
+// Unused in the NTSC binary.
+void mathfDumpMatrix(FMATRIX mat)
+{
+    printf("%6.3f %6.3f %6.3f %6.3f\n", mat[0][0], mat[0][1], mat[0][2], mat[0][3]);
+    printf("%6.3f %6.3f %6.3f %6.3f\n", mat[1][0], mat[1][1], mat[1][2], mat[1][3]);
+    printf("%6.3f %6.3f %6.3f %6.3f\n", mat[2][0], mat[2][1], mat[2][2], mat[2][3]);
+    printf("%6.3f %6.3f %6.3f %6.3f\n\n", mat[3][0], mat[3][1], mat[3][2], mat[3][3]);
+}
 
 float mathfDist2(FVECTOR* origin, FVECTOR* dst)
 {
@@ -760,29 +880,26 @@ float mathfManhatDist2D(FVECTOR* origin, FVECTOR* dst)
     return max + (min * 0.34375f);
 }
 
-// This function cannot be matched until `.lit4` is migrated.
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfRPHFromMatrix__FPA3_fP8_fvector);
-// void mathfRPHFromMatrix(FMATRIX mat, FVECTOR* result)
-// {
-//     float temp = (mat[1][0] * mat[1][0]) + (mat[1][1] * mat[1][1]);
-//     if (temp > D_004FA664) {
-//         result->x = atan2f(mat[1][2], sqrtf(temp));
-//         result->y = atan2f(-mat[0][2], mat[2][2]);
-//         result->z = atan2f(mat[1][0], mat[1][1]);
-//         return;
-//     }
+void mathfRPHFromMatrix(FMATRIX mat, FVECTOR* result)
+{
+    float temp = (mat[1][0] * mat[1][0]) + (mat[1][1] * mat[1][1]);
+    if (temp > 9.9999999E-9f) {
+        result->x = atan2f(mat[1][2], sqrtf(temp));
+        result->y = atan2f(-mat[0][2], mat[2][2]);
+        result->z = atan2f(mat[1][0], mat[1][1]);
+        return;
+    }
 
-//     if (mat[1][2] > 0.0f) {
-//         result->x = 1.5707964; // pi / 2
-//         result->z = atan2f(-mat[0][1], -mat[2][1]);
-//     } else {
-//         result->x = -1.5707964; // -pi / 2
-//         result->z = atan2f(-mat[0][1], mat[2][1]);
-//     }
-//     result->y = 0.0f;
-// }
+    if (mat[1][2] > 0.0f) {
+        result->x = PI_D2;
+        result->z = atan2f(-mat[0][1], -mat[2][1]);
+    } else {
+        result->x = -PI_D2;
+        result->z = atan2f(-mat[0][1], mat[2][1]);
+    }
+    result->y = 0.0f;
+}
 
-void mathfRotationFromVector(FVECTOR* result, FVECTOR* point);
 void mathfRotationFromPointToPoint(FVECTOR* result, FVECTOR* p1, FVECTOR* p2)
 {
     FVECTOR diff;
@@ -798,7 +915,6 @@ void mathfRotationFromVector(FVECTOR* result, FVECTOR* vec)
     result->z = atan2f(vec->x, vec->y);
 }
 
-float mathfHeadingFromVector(FVECTOR* vec);
 float mathfHeadingFromPointToPoint(FVECTOR* p1, FVECTOR* p2)
 {
     FVECTOR diff;
@@ -817,7 +933,6 @@ float mathfHeadingFromVector(FVECTOR* vec)
     return atan2f(vec->x, vec->y);
 }
 
-float mathfPitchFromVector(FVECTOR* vec);
 float mathfPitchFromPointToPoint(FVECTOR* p1, FVECTOR* p2)
 {
     FVECTOR diff;
@@ -826,56 +941,52 @@ float mathfPitchFromPointToPoint(FVECTOR* p1, FVECTOR* p2)
     return mathfPitchFromVector(&diff);
 }
 
-// This function cannot be matched until `.lit4` is migrated.
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfPitchFromVector__FP8_fvector);
-// float mathfPitchFromVector(FVECTOR* vec)
-// {
-//     float magnitude = mathfManhatDist(vec, NULL);
+float mathfPitchFromVector(FVECTOR* vec)
+{
+    float magnitude = mathfManhatDist(vec, NULL);
 
-//     if (magnitude == 0.0f) {
-//         magnitude = D_004FA670;
-//     }
-//     return atan2f(vec->z, magnitude);
-// }
+    if (magnitude == 0.0f) {
+        magnitude = 0.0099999998f;
+    }
+    return atan2f(vec->z, magnitude);
+}
 
-// This function cannot be matched until `.lit4` is migrated.
-INCLUDE_ASM("asm/nonmatchings/tmb/mathf", mathfMatrixFromNormal__FPA3_fP8_fvector);
-// void mathfMatrixFromNormal(FMATRIX result, FVECTOR* normal)
-// {
-//     result[1][0] = normal->x;
-//     result[1][1] = normal->y;
-//     result[1][2] = normal->z;
+void mathfMatrixFromNormal(FMATRIX result, FVECTOR* normal)
+{
+    result[1][0] = normal->x;
+    result[1][1] = normal->y;
+    result[1][2] = normal->z;
 
-//     float norm_2d = NORM_2D(normal);
-//     if (norm_2d > D_004FA674) {
-//         float unit_y = normal->y / norm_2d;
-//         result[0][0] = unit_y;
+    float norm_2d = NORM_2D(normal);
+    if (norm_2d > 0.000001f) {
+        float unit_y = normal->y / norm_2d;
+        result[0][0] = unit_y;
 
-//         float unit_x = -normal->x / norm_2d;
-//         result[0][1] = unit_x;
+        float unit_x = -normal->x / norm_2d;
+        result[0][1] = unit_x;
 
-//         result[2][0] = unit_x * normal->z;
-//         result[2][1] = -unit_y * normal->z;
-//     } else {
-//         result[0][0] = 1.0f;
-//         result[0][1] = 0.0f;
-//         result[2][0] = 0.0f;
-//         result[2][1] = -result[1][2];
-//     }
+        result[2][0] = unit_x * normal->z;
+        result[2][1] = -unit_y * normal->z;
+    } else {
+        result[0][0] = 1.0f;
+        result[0][1] = 0.0f;
+        result[2][0] = 0.0f;
+        result[2][1] = -result[1][2];
+    }
 
-//     result[2][2] = norm_2d;
+    result[2][2] = norm_2d;
 
-//     // This is actually needed to match the code.
-//     float zero = 0.0f;
-//     result[2][3] = zero;
-//     result[1][3] = zero;
-//     result[0][3] = zero;
-//     result[3][2] = zero;
-//     result[3][1] = zero;
-//     result[3][0] = zero;
-//     result[0][2] = zero;
-//     result[3][3] = 1.0f;
-// }
+    // This is actually needed to match the code.
+    float zero = 0.0f;
+    result[2][3] = zero;
+    result[1][3] = zero;
+    result[0][3] = zero;
+    result[3][2] = zero;
+    result[3][1] = zero;
+    result[3][0] = zero;
+    result[0][2] = zero;
+    result[3][3] = 1.0f;
+}
 
 void mathfSetFVector(FVECTOR* result, float x, float y, float z)
 {
@@ -1005,7 +1116,7 @@ void mathfRandVector(FVECTOR* result, float unk)
     int r2 = rand() & 0x7FFFFF | 0x3F800000;
     float r2_f = *(float*)&r2;
 
-    float unk2 = (r2_f - 1.0f) * D_004FA678;
+    float unk2 = (r2_f - 1.0f) * PI_M2;
 
     result->x = sinf(unk2) * unk1_sq;
     result->y = unk1;
@@ -1047,7 +1158,7 @@ void mathfMatrixFromCsAndPlane(FMATRIX result, CS* cs, FVECTOR* plane)
     mathfCopyVector(r2, plane);
     mathfCrossProduct(r0, r1, r2);
 
-    if (fabsf(result[0][0]) + fabsf(result[0][1]) + fabsf(result[0][2]) < D_004FA67C) {
+    if (fabsf(result[0][0]) + fabsf(result[0][1]) + fabsf(result[0][2]) < 0.95999998f) {
         mathfCrossProduct(r1, MROW2VEC(cs->mat, 0), r2);
         mathfNormalize(r1, r1);
         mathfCrossProduct(&temp, r2, r1);
@@ -1077,13 +1188,11 @@ void mathfRotAxisToQuaternion(FVECTOR* result, FVECTOR* axis)
 // This function is unused in the NTSC binary.
 void mathfAxisAngleToQuaternion(FVECTOR* result, FVECTOR* axis)
 {
-    const float mult = D_004FA680;
-
-    float sine = sinf(axis->w * mult);
+    float sine = sinf(axis->w * 0.008726646f);
     result->x = sine * axis->x;
     result->y = sine * axis->y;
     result->z = sine * axis->z;
-    result->w = cosf(axis->w * mult);
+    result->w = cosf(axis->w * 0.008726646f);
 }
 
 // This function is unused in the NTSC binary.
@@ -1091,7 +1200,7 @@ void mathfNormalizeQuaternion(FVECTOR* result, FVECTOR* quat)
 {
     float norm = NORM_4D_SQ(quat);
 
-    if (D_004FA684 <= norm || norm <= D_004FA688) {
+    if (1.000001f <= norm || norm <= 0.99999905f) {
         float unit_norm = 1.0f / sqrtf(norm);
         result->x = quat->x * unit_norm;
         result->y = quat->y * unit_norm;
@@ -1105,7 +1214,7 @@ void mathfNormalizeQuaternionFromW(FVECTOR* result, FVECTOR* quat)
 {
     float norm = NORM_3D_SQ(quat);
 
-    if (norm < D_004FA68C) {
+    if (norm < 1.0E-7f) {
         result->x = 0.0f;
         result->y = 0.0f;
         result->z = sqrtf(1.0f - (quat->w * quat->w));
@@ -1141,8 +1250,6 @@ void mathfConcatQuaternions(FVECTOR* result, FVECTOR* lhs, FVECTOR* rhs)
     result->z = concat.z;
     result->w = concat_w;
 }
-
-void mathfQuaternionToMatrix4x4(FMATRIX result, FVECTOR* quat);
 
 void mathfDeConcatQuaternions(FVECTOR* result, FVECTOR* q1, FVECTOR* q2)
 {

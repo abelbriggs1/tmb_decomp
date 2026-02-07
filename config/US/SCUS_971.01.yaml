@@ -318,7 +318,7 @@ segments:
       # .lit4 segment
       # ------------------------------------------------
       - [0x3F6E80, lit4]
-      - [0x3FA64C, lit4, tmb/mathf]
+      - [0x3FA64C, .lit4, tmb/mathf]
       - [0x3FA690, lit4]
       # ------------------------------------------------
       # .sdata segment
