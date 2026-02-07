@@ -172,7 +172,7 @@ glabel fontSetCharWidth__Fii
 .size fontSetCharWidth__Fii, . - fontSetCharWidth__Fii
 ```
 
-A decompiler like Ghidra or M2C will give us a more sane C equivalent:
+A decompiler like Ghidra will give us a more sane C equivalent:
 
 ```c
 fontInfo[param_1].field2_0x4 = (short)param_2;
@@ -213,16 +213,112 @@ If we compile with `ninja` again, we have a successful build!
 /workspace/build/SCUS_971.01: OK
 ```
 
+#### Mismatches
+
+Let's say we made a mistake in our C++ code from earlier, and used the struct
+field at offset `0x2` instead:
+
+```cpp
+typedef struct {
+    u8 unk[0x2];
+    u16 field1_0x2;
+    u16 field2_0x4;
+    u8 unk2[0x1A];
+} _fontInfo;
+
+extern _fontInfo fontInfo[2];
+
+void fontSetCharWidth(int param_1, int param_2)
+{
+    fontInfo[param_1].field1_0x2 = param_2;
+}
+```
+
+Our mistake makes the new binary non-matching, and the `ninja` build will fail:
+
+```
+[4/5] CHECK       /workspace/build/SCUS_971.01
+FAILED: /workspace/build/build.sha1
+./configure.py check --binary /workspace/build/SCUS_971.01 --output /workspace/build/build.sha1
+/workspace/build/SCUS_971.01: NONMATCHING
+ninja: build stopped: subcommand failed.
+```
+
+How do we see what went wrong?
+
+The repository includes a tool called `asm-differ` that can help with this. Assuming
+we're in our Python virtual environment, we can run
+`./tools/asm-differ/diff.py fontSetCharWidth__Fii`
+in the terminal to get a nice view of the two binaries:
+
+```
+TARGET                                                   CURRENT (5)
+c5380:    lui     v0,0x50                                c5380:    lui     v0,0x50
+c5384:    sll     a0,a0,0x5                              c5384:    sll     a0,a0,0x5
+c5388:    addiu   v0,v0,0x4540                           c5388:    addiu   v0,v0,0x4540
+c538c:    addu    a0,a0,v0                               c538c:    addu    a0,a0,v0
+c5390:    jr      ra                                     c5390:    jr      ra
+c5394:    sh      a1,4(a0)                        i      c5394:    sh      a1,2(a0)
+```
+
+We can see the `sh` ("Store Half Word") instruction at the end of the function is
+storing to `field1_0x2` instead of `field2_0x4`. (The diff view in the terminal has
+colored text to better illustrate the difference.)
+
+Once we fix our code up, we get a matching build again:
+
+```
+[4/5] CHECK       /workspace/build/SCUS_971.01
+/workspace/build/SCUS_971.01: OK
+```
+
+#### Workflow
+
 To summarize the general process, for each function in the file:
 
 1. Comment out the `INCLUDE_ASM` macro for the function.
 2. Declare any necessary structures/extern symbols for the function.
 3. Define and implement the C/C++ function.
 4. Compile and ensure the final binary still matches.
+   - If the result is non-matching, use a diffing tool to find the
+     differences, and iteratively change the source code until it
+     matches.
+
+When writing your code, you'll need a way to compare the generated
+assembly to the original binary. There are two methods:
+
+- Use [`decomp.me`](#decompme).
+- Use `asm-differ`, as discussed in [Mismatches](#mismatches).
+
+`asm-differ` is capable of watching the source code and updating
+in real-time as you modify it. Here are some useful parameters
+for that:
+
+- `-w -m`: Makes `asm-differ` watch the source code and auto-run `ninja`
+  after any updates to it.
+- `-U [NUM]`: Filters 100% matching instructions out of the output with
+  `NUM` lines of context.
+  - Useful for large functions where you've partially matched.
+- `-U [NUM]`: Filters matching instructions (ignoring regalloc)
+  out of the output with `NUM` lines of context.
+  - Useful for large functions where you've partially matched.
+- `-3`: Opens a 3-way diff which saves the output of the last change
+  to your code.
+  - Great for understanding specific code changes.
+
+#### Matching Patterns
+
+If you're having trouble matching code, you might want to check out the
+[Decompedia page for GCC](https://decomp.wiki/en/compilers/GCC).
+
+This page lists a large number of optimization patterns which GCC can
+apply to the code, and may be helpful when dealing with particularly
+stubborn mismatches (regalloc, extra registers, etc).
 
 #### Handling Variables
 
-We saw above that `fontSetCharWidth()` needed to reference a module-level variable `fontInfo`, which required the use of `extern`. How do we handle
+We saw above that `fontSetCharWidth()` needed to reference a module-level variable
+`fontInfo`, which required the use of `extern`. How do we handle
 variables in general? What does `extern` mean? Where is `fontInfo` actually
 located?
 
@@ -321,64 +417,67 @@ functions out and wait until the `.lit4` section has been split, then add the li
 
 TODO
 
-#### Troubleshooting
 
-Let's say we made a mistake in our C++ code from earlier, and used the struct
-field at offset `0x2` instead:
+#### `small-data section exceeds 64KB` errors
 
-```cpp
-typedef struct {
-    u8 unk[0x2];
-    u16 field1_0x2;
-    u16 field2_0x4;
-    u8 unk2[0x1A];
-} _fontInfo;
-
-extern _fontInfo fontInfo[2];
-
-void fontSetCharWidth(int param_1, int param_2)
-{
-    fontInfo[param_1].field1_0x2 = param_2;
-}
-```
-
-Our mistake makes the new binary non-matching, and the `ninja` build will fail:
+These usually manifest as a linker error similar to the following:
 
 ```
-[4/5] CHECK       /workspace/build/SCUS_971.01
-FAILED: /workspace/build/build.sha1
-./configure.py check --binary /workspace/build/SCUS_971.01 --output /workspace/build/build.sha1
-/workspace/build/SCUS_971.01: NONMATCHING
+[2/5] LINK        /tmb-decomp/config/US/SCUS_971.01.ld
+FAILED: /tmb-decomp/build/SCUS_971.01.elf /tmb-decomp/build/SCUS_971.01.map
+mips-linux-gnu-ld -EL -T /tmb-decomp/config/US/undefined_syms_auto.txt -T /tmb-decomp/config/US/undefined_funcs.txt -Map /tmb-decomp/build/SCUS_971.01.map -nostdlib -T /tmb-decomp/config/US/SCUS_971.01.ld -o /tmb-decomp/build/SCUS_971.01.elf
+mips-linux-gnu-ld: small-data section exceeds 64KB; lower small-data size limit (see option -G)
+build/asm/tmb/ai.s.o: in function `aiInit__7Vehicle':
+(.text+0x158): relocation truncated to fit: R_MIPS_GPREL16 against `D_004F6E80'
+build/asm/tmb/ai.s.o: in function `aiInitDynamics__7Vehicle':
+(.text+0x2cc): relocation truncated to fit: R_MIPS_GPREL16 against `D_004F6E84'
+(.text+0x4a8): additional relocation overflows omitted from the output
 ninja: build stopped: subcommand failed.
 ```
 
-How do we see what went wrong?
+Unfortunately, this is a somewhat useless error message (GCC is pretty bad in this regard).
 
-The repository includes a tool called `asm-differ` that can help with this. Assuming
-we're in our Python virtual environment, we can run
-`./tools/asm-differ/diff.py fontSetCharWidth__Fii`
-in the terminal to get a nice view of the two binaries:
+`ld` will move sections up or down in the binary to pack everything together, and this
+includes the small-data sections indexed by `$gp`. However, `$gp`'s value will _not_ be
+moved with the sections, because it's hard-coded in the linker script (by `splat`).
+
+`$gp` was originally set to the mid-point of the small-data sections, and `GPREL`
+relocations are limited to the range of a `signed short`: `[-0x8000, 0x7FFF]`.
+If the sections are moved too far away from the `$gp` value, the distance won't fit.
+
+To summarize, **your non-matching code/data has some large difference in size** compared
+to the original binary. Either it's too big, or too small.
+
+Here are some of the common causes:
+
+- You're incrementally trying to match a very large function.
+  - You'll need to fill out most of the function (even if it doesn't match)
+    before you can compile.
+- You're migrating a data section and missed some variables.
+
+#### `.[SECTION] referenced in section ".text"` errors
 
 ```
-TARGET                                                   CURRENT (5)
-c5380:    lui     v0,0x50                                c5380:    lui     v0,0x50
-c5384:    sll     a0,a0,0x5                              c5384:    sll     a0,a0,0x5
-c5388:    addiu   v0,v0,0x4540                           c5388:    addiu   v0,v0,0x4540
-c538c:    addu    a0,a0,v0                               c538c:    addu    a0,a0,v0
-c5390:    jr      ra                                     c5390:    jr      ra
-c5394:    sh      a1,4(a0)                        i      c5394:    sh      a1,2(a0)
+[2/5] LINK        /tmb-decomp/config/US/SCUS_971.01.ld
+FAILED: /tmb-decomp/build/SCUS_971.01.elf /tmb-decomp/build/SCUS_971.01.map
+mips-linux-gnu-ld -EL -T /tmb-decomp/config/US/undefined_syms_auto.txt -T /tmb-decomp/config/US/undefined_funcs.txt -Map /tmb-decomp/build/SCUS_971.01.map -nostdlib -T /tmb-decomp/config/US/SCUS_971.01.ld -o /tmb-decomp/build/SCUS_971.01.elf
+`.sdata' referenced in section `.text' of build/src/tmb/mathf.cpp.o: defined in discarded section `.sdata' of build/src/tmb/mathf.cpp.o
+`.sdata' referenced in section `.text' of build/src/tmb/mathf.cpp.o: defined in discarded section `.sdata' of build/src/tmb/mathf.cpp.o
+`.sdata' referenced in section `.text' of build/src/tmb/mathf.cpp.o: defined in discarded section `.sdata' of build/src/tmb/mathf.cpp.o
+`.sdata' referenced in section `.text' of build/src/tmb/mathf.cpp.o: defined in discarded section `.sdata' of build/src/tmb/mathf.cpp.o
+ninja: build stopped: subcommand failed.
 ```
 
-We can see the `sh` ("Store Half Word") instruction at the end of the function is
-storing to `field1_0x2` instead of `field2_0x4`. (The diff view in the terminal has
-colored text to better illustrate the difference.)
+This error indicates you're trying to [define a variable](#handling-variables)
+in the C++ code before you've [migrated](#3-splitdisassemble-data) and [decompiled](#4-decompile-data)
+the associated data section. The C++ is trying to reference the local variable,
+but the linker is still using the variable's location in the original binary.
 
-Once we fix our code up, we get a matching build again:
+This is commonly caused by:
 
-```
-[4/5] CHECK       /workspace/build/SCUS_971.01
-/workspace/build/SCUS_971.01: OK
-```
+- Forgetting to use `extern` on a declared variable.
+- Using a non-trivial `float` literal before decompiling `.lit4`.
+- Using a `const char*` string literal as a variable, or before migrating `.rodata`.
 
 ### 3. Split/Disassemble Data
 
@@ -543,12 +642,3 @@ Because `.lit4` variables are actually literals and not developer-defined variab
 migrating them is a bit more effort. You'll have to replace the usage of your
 `extern float` variables with the literals in each function, then hope everything
 lines up.
-
-## Matching Patterns
-
-If you're having trouble matching code, you might want to check out the
-[Decompedia page for GCC](https://decomp.wiki/en/compilers/GCC).
-
-This page lists a large number of optimization patterns which GCC can
-apply to the code, and may be helpful when dealing with particularly
-stubborn mismatches (regalloc, extra registers, etc).
