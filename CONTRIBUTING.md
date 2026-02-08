@@ -64,6 +64,19 @@ scratch for TMB:
    `-O2 -G8 -x c++ -fno-exceptions` for the compiler flags.
 8. Decompile the code to your heart's content!
 
+## Importing TMB into Ghidra
+
+If you'd like to import TMB into Ghidra for analysis, here are a few things
+to know:
+
+- You'll need to install [ghidra-emotionengine-reloaded](https://github.com/chaoticgd/ghidra-emotionengine-reloaded) beforehand.
+- When you perform initial analysis on the binary:
+  1. In the Analysis window, select the `Demangler GNU` analyzer.
+  2. In the `Options`, enable `Use Deprecated Demangler`.
+  3. In the `Options`, change `Demangler Format` to `GNU` (**not** `GNUv3`!)
+
+This will let you import the binary with proper symbols.
+
 ## General Workflow
 
 The following is a description of the general workflow a developer will use when
@@ -341,6 +354,122 @@ actually defined by [symbol_addrs.txt](config/US/symbol_addrs.txt).
 This file maps each variable to its VRAM address/storage location in the
 final binary, so the linker knows how to relocate variables.
 
+#### Handling `struct`s
+
+Functions and variables aren't the only things that make up TMB's code,
+of course. As we saw with the `font.cpp` code above, you'll have to deal
+with both `struct`s and C++ `class`es. This isn't too difficult, thankfully.
+
+The best way to analyze struct usage is via Ghidra's decompiler. If there's
+a structure in use, you'll see variable references like this:
+
+```c++
+void hierCacheForAsm(undefined4 param_1,undefined4 param_2,int param_3,undefined4 *param_4)
+{
+  DAT_11004000 = param_1;
+  DAT_110040a0 = *(undefined4 *)(param_3 + 0x20);
+  DAT_110040a4 = *(undefined4 *)(param_3 + 0x24);
+  DAT_110040a8 = *(undefined4 *)(param_3 + 0x28);
+  DAT_110040ac = *(undefined4 *)(param_3 + 0x2c);
+  DAT_110040b0 = (int)*(undefined8 *)(param_3 + 0x70);
+  // ...
+  DAT_11004150 = param_4[8];
+  DAT_11004154 = param_4[9];
+  DAT_11004158 = param_4[10];
+  DAT_1100415c = param_4[0xb];
+  // ...
+}
+```
+
+We can see that `param_3` is having offsets added to it before it is casted
+and dereferenced as a pointer, which indicates some kind of `struct` pointer.
+`param_4` is also likely to be a `struct` pointer, although the references
+are less obvious because Ghidra decompiles the references as array accesses.
+
+Once you know a struct is in use, you should create one. You don't actually
+need to know the purpose of the `struct` variables immediately; you can create
+a struct and slowly fill it out with variables once you know their types:
+
+```c
+typedef struct {
+  u8 unk1[0xC4]; // offset 0x00
+  int known_data; // offset 0xC4
+  u8 unk2[0x28]; // offset 0xC8
+} Foo; // size `0xF0`
+```
+
+It's generally useful to know a `struct`'s size.  If the `struct` is a member
+of another `struct`, you can locate the members around it to determine
+its bounds. There may be padding around it, so this won't always be accurate.
+
+Otherwise, the size is typically made clear by code patterns in `init`
+functions or C++ constructors:
+
+- A `memset(ptr, 0x0, size)` call with a pointer to your `struct`.
+- An inlined `memset` which loops over some size and sets everything to `0x0`.
+
+The decompiler won't always be accurate. Sometimes, if the `struct` has
+a set location in memory, you'll get incorrect references.
+For example, here's `fontSetCharWidth()` from earlier:
+
+```c++
+// 001c4380 50 00 02 3c     lui        v0,0x50
+// 001c4384 40 21 04 00     sll        a0,a0,0x5
+// 001c4388 40 45 42 24     addiu      v0=>fontInfo,v0,0x4540   = ??
+// 001c438c 21 20 82 00     addu       a0,a0,v0
+// 001c4390 08 00 e0 03     jr         ra
+// 001c4394 04 00 85 a4     _sh        a1,0x4(a0)=>DAT_00504544 = ??
+
+void fontSetCharWidth__Fii(int param_1, undefined2 param_2)
+{
+  // The full `fontInfo` array starts at `0x00504540`.
+  // This is equivalent to `(&DAT_00504540)[4 + (param_1 * 0x10)]
+  (&DAT_00504544)[param_1 * 0x10] = param_2;
+  return;
+}
+```
+
+There are two things incorrect here:
+
+- `sll a0,a0,0x5` multiplies `param_1` by `0x20`, not `0x10`!
+  - The decompiler output is simply wrong here. It should be
+    `(&DAT_00504544)[param_1 * 0x20]`.
+- We can clearly see that the address of `fontInfo` is loaded first
+  in the ASM. We should be indexing from there.
+
+#### Handling `class`es and member functions
+
+Due to the age of TMB's compiler, `class`es are mostly syntactic sugar around
+`struct`s, so they can be decompiled [the same way](#handling-structs).
+TMB makes little use of constructors, inheritance, and other C++ features.
+
+Note that all non-static `class` member functions implicitly accept `this`
+as their first argument (in the `$a0` register). This is handled for you
+when decompiling the code as long as you obey C++ syntax.
+
+Ghidra doesn't support C++, so member functions will need `this` to be
+explicitly specified:
+
+```c++
+void TimedFireSound::initTimedFireSound
+               (TimedFireSound *this,float param_2,float param_3,float param_4,int param_5,
+               int param_6)
+{
+  undefined4 uVar1;
+
+  *(undefined4 *)this = 0;
+  *(undefined4 *)(this + 0xc) = 0;
+  *(float *)(this + 0x20) = param_2;
+  *(float *)(this + 0x24) = param_3;
+  *(float *)(this + 0x28) = param_4;
+  *(int *)(this + 4) = param_5;
+  *(int *)(this + 8) = param_6;
+  uVar1 = timerGetFieldCount();
+  *(undefined4 *)(this + 0x10) = uVar1;
+  return;
+}
+```
+
 #### Handling `float` literals
 
 Some functions will make use of floating-point literals, like `3.1415927f`.
@@ -454,6 +583,10 @@ Here are some of the common causes:
   - You'll need to fill out most of the function (even if it doesn't match)
     before you can compile.
 - You're migrating a data section and missed some variables.
+
+If your function is smaller than it should be, you can work around
+this issue by using the `PAD_ZEROES()` macro provided in
+`include/common.h`.
 
 #### `.[SECTION] referenced in section ".text"` errors
 
