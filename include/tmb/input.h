@@ -22,5 +22,6 @@
 // clang-format on
 
 int inputGetInput(int mask, int pad_num);
+int inputFixAnalogValue(int mode, int pad);
 
 #endif // _TMB_INPUT_H_

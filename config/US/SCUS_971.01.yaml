@@ -336,7 +336,7 @@ segments:
       # .sbss segment
       # ------------------------------------------------
       - {type: sbss, vram: 0x004FBD00, name: sbss1}
-      - {type: sbss, vram: 0x004FBD08, name: tmb/combo}
+      - {type: .sbss, vram: 0x004FBD08, name: tmb/combo}
       - {type: sbss, vram: 0x004FBD44, name: sbss2}
       - {type: .sbss, vram: 0x004FBE34, name: tmb/font}
       - {type: sbss, vram: 0x004FBE48, name: sbss3}
