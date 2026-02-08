@@ -84,7 +84,6 @@ public:
         u8 buf[4];
         int as_word;
     } secret_buf;
-
     int cur_frame;
     int delta_time;
     int unlock_all_pt1_entered;
@@ -94,19 +93,18 @@ public:
 
 private:
     // Directional input buffers.
-    int upPressed_buf[COMBO_BUF_SIZE];
-    int downPressed_buf[COMBO_BUF_SIZE];
-    int leftPressed_buf[COMBO_BUF_SIZE];
-    int rightPressed_buf[COMBO_BUF_SIZE];
-    int upPressedAnalog_buf[COMBO_BUF_SIZE];
-    int downPressedAnalog_buf[COMBO_BUF_SIZE];
-    int leftPressedAnalog_buf[COMBO_BUF_SIZE];
-    int rightPressedAnalog_buf[COMBO_BUF_SIZE];
+    bool upPressed_buf[COMBO_BUF_SIZE];
+    bool downPressed_buf[COMBO_BUF_SIZE];
+    bool leftPressed_buf[COMBO_BUF_SIZE];
+    bool rightPressed_buf[COMBO_BUF_SIZE];
+    bool upPressedAnalog_buf[COMBO_BUF_SIZE];
+    bool downPressedAnalog_buf[COMBO_BUF_SIZE];
+    bool leftPressedAnalog_buf[COMBO_BUF_SIZE];
+    bool rightPressedAnalog_buf[COMBO_BUF_SIZE];
 
 public:
     int pad_data;
-
-    // TODO: There might be more data after this.
+    u8 unk_0x7B8[0x2C];
 
 public:
     void Init(int pad_idx);
@@ -126,6 +124,6 @@ private:
     void CheckSpecRightCombo();
     void ClearSecretCode();
     void ClearCombo();
-}; // size 0x9BC (?)
+}; // size 0x7E4
 
 #endif // _TMB_COMBO_H_

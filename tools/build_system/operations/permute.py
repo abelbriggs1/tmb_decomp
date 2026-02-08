@@ -109,7 +109,7 @@ def permute(env: Environment, src_file: Path, func_name: str):
         else:
             cmd = env.generate_c_compiler_cmd()
 
-        f.write(f'#!bin/bash\n{cmd} "$@"')
+        f.write(f'#!/usr/bin/bash\n{cmd} "$@"')
     compile_script.chmod(compile_script.stat().st_mode | stat.S_IEXEC)
 
     # Add the source file after context processing.
