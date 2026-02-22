@@ -6,6 +6,12 @@
 
 #define COMBO_BUF_SIZE (1 * FRAME_RATE)
 
+// Denotes the number of frames between inputs accepted for a combo (leniency).
+// If the gap is too high, the combo will not activate.
+// Different combos have different leniency.
+#define COMBO_INPUT_GAP_SHORT 15
+#define COMBO_INPUT_GAP_LONG 20
+
 // clang-format off
 
 // Defines for secret code inputs.

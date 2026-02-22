@@ -76,7 +76,7 @@ def permute(env: Environment, src_file: Path, func_name: str):
     Set up `decomp-permuter` for a specific function.
     """
     if src_file.suffix == ".cpp":
-        raise NotImplementedError("`decomp-permuter` does not support C++.")
+        LOG.warning("Permuter does not support C++. You'll need to modify your code.")
     # TODO: Properly handle name mangling and overloads.
 
     perm_dir = Path("nonmatchings")
@@ -104,10 +104,10 @@ def permute(env: Environment, src_file: Path, func_name: str):
     # Create the `compile.sh` file.
     compile_script = perm_dir / "compile.sh"
     with compile_script.open("w", encoding="utf-8") as f:
-        if src_file.suffix == ".cpp":
-            cmd = env.generate_cxx_compiler_cmd()
-        else:
-            cmd = env.generate_c_compiler_cmd()
+        # if src_file.suffix == ".cpp":
+        #    cmd = env.generate_cxx_compiler_cmd()
+        # else:
+        cmd = env.generate_c_compiler_cmd()
 
         f.write(f'#!/usr/bin/bash\n{cmd} "$@"')
     compile_script.chmod(compile_script.stat().st_mode | stat.S_IEXEC)

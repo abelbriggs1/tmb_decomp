@@ -199,7 +199,188 @@ void Combo::Update(Vehicle* vehicle)
     }
 }
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckShieldCombo__5Combo);
+#define SCAN_DPAD_START(leniency, buf)                                                             \
+    do {                                                                                           \
+        total_this_window = 1;                                                                     \
+        prev = this->cur_frame - 1;                                                                \
+        int _test = prev + COMBO_BUF_SIZE;                                                         \
+        if (prev < 0)                                                                              \
+            prev = _test;                                                                          \
+        total_frames++;                                                                            \
+        _test = buf[prev];                                                                         \
+        if (_test) {                                                                               \
+            do {                                                                                   \
+                total_this_window++;                                                               \
+                if (total_this_window >= (leniency))                                               \
+                    break;                                                                         \
+                total_frames++;                                                                    \
+                prev = this->cur_frame - total_this_window;                                        \
+                _test = prev + COMBO_BUF_SIZE;                                                     \
+                if (prev < 0)                                                                      \
+                    prev = _test;                                                                  \
+                _test = (buf)[prev];                                                               \
+            } while (_test);                                                                       \
+            if (total_this_window >= (leniency))                                                   \
+                break;                                                                             \
+            success = true;                                                                        \
+            now = prev;                                                                            \
+        } else {                                                                                   \
+            success = true;                                                                        \
+            now = prev;                                                                            \
+        }                                                                                          \
+    } while (0);
+
+#define SCAN_ANALOG_START(leniency, buf)                                                           \
+    do {                                                                                           \
+        total_this_window = 1;                                                                     \
+        prev = this->cur_frame - 1;                                                                \
+        if (prev < 0)                                                                              \
+            prev += COMBO_BUF_SIZE;                                                                \
+        total_frames++;                                                                            \
+        if (!((buf)[prev])) {                                                                      \
+            do {                                                                                   \
+                total_this_window++;                                                               \
+                if (total_this_window >= (leniency))                                               \
+                    break;                                                                         \
+                total_frames++;                                                                    \
+                prev = this->cur_frame - total_this_window;                                        \
+                if (prev < 0)                                                                      \
+                    prev += COMBO_BUF_SIZE;                                                        \
+            } while (!(buf)[prev]);                                                                \
+            if (total_this_window >= (leniency))                                                   \
+                break;                                                                             \
+            success = true;                                                                        \
+            now = prev;                                                                            \
+        } else {                                                                                   \
+            success = true;                                                                        \
+            now = prev;                                                                            \
+        }                                                                                          \
+    } while (0);
+
+#define SCAN_NEXT_EDGE(leniency, edge_expr, buf)                                                   \
+    do {                                                                                           \
+        success = false;                                                                           \
+        total_this_window = 1;                                                                     \
+        prev = now - 1;                                                                            \
+        int _test = prev + COMBO_BUF_SIZE;                                                         \
+        if (prev < 0)                                                                              \
+            prev = _test;                                                                          \
+        total_frames++;                                                                            \
+        _test = (buf)[prev];                                                                       \
+        if (edge_expr) {                                                                           \
+            do {                                                                                   \
+                total_this_window++;                                                               \
+                if (total_this_window >= (leniency))                                               \
+                    break;                                                                         \
+                prev = now - total_this_window;                                                    \
+                _test = prev + COMBO_BUF_SIZE;                                                     \
+                if (prev < 0)                                                                      \
+                    prev = _test;                                                                  \
+                total_frames++;                                                                    \
+                _test = (buf)[prev];                                                               \
+            } while (edge_expr);                                                                   \
+            if (total_this_window >= (leniency))                                                   \
+                break;                                                                             \
+            success = true;                                                                        \
+            now = prev;                                                                            \
+        } else {                                                                                   \
+            success = true;                                                                        \
+            now = prev;                                                                            \
+        }                                                                                          \
+    } while (0);
+
+#define SCAN_NEGATIVE_FINAL(leniency, buf)                                                         \
+    do {                                                                                           \
+        success = false;                                                                           \
+        total_this_window = 1;                                                                     \
+        prev = now - 1;                                                                            \
+        int _test = prev + COMBO_BUF_SIZE;                                                         \
+        if (prev < 0)                                                                              \
+            prev = _test;                                                                          \
+        total_frames++;                                                                            \
+        _test = (buf)[prev];                                                                       \
+        if (!_test) {                                                                              \
+            do {                                                                                   \
+                total_this_window++;                                                               \
+                if (total_this_window >= (leniency))                                               \
+                    break;                                                                         \
+                prev = now - total_this_window;                                                    \
+                _test = prev + COMBO_BUF_SIZE;                                                     \
+                if (prev < 0)                                                                      \
+                    prev = _test;                                                                  \
+                total_frames++;                                                                    \
+                _test = (buf)[prev];                                                               \
+            } while (!_test);                                                                      \
+            if (total_this_window >= (leniency))                                                   \
+                break;                                                                             \
+            success = true;                                                                        \
+        } else {                                                                                   \
+            success = true;                                                                        \
+        }                                                                                          \
+    } while (0);
+
+#define SCAN_POSITIVE_EDGE(leniency, buf) SCAN_NEXT_EDGE(leniency, (_test), buf)
+#define SCAN_NEGATIVE_EDGE(leniency, buf) SCAN_NEXT_EDGE(leniency, (!_test), buf)
+
+void Combo::CheckShieldCombo()
+{
+    int prev;
+    int total_this_window;
+
+    int total_frames = 0;
+    int now = this->cur_frame;
+    bool success = false;
+
+    if (downPressed) {
+        SCAN_DPAD_START(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
+        if (success) {
+            SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
+            if (success) {
+                SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
+                if (success) {
+                    SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->rightPressed_buf)
+                    if (success) {
+                        SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->rightPressed_buf)
+                        if (success) {
+                            SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->rightPressed_buf)
+                            if (success && total_frames < COMBO_BUF_SIZE) {
+                                this->state = COMBO_TYPE_SHIELD;
+                                this->ClearCombo();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (leftButtonPressed && this->check_codes) {
+        SCAN_ANALOG_START(COMBO_INPUT_GAP_SHORT, this->downPressedAnalog_buf)
+        if (success) {
+            SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressedAnalog_buf)
+            if (success) {
+                SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressedAnalog_buf)
+                if (success) {
+                    SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressedAnalog_buf)
+                    if (success) {
+                        SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->rightPressedAnalog_buf)
+                        if (success) {
+                            SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->rightPressedAnalog_buf)
+                            if (success) {
+                                SCAN_NEGATIVE_EDGE(
+                                    COMBO_INPUT_GAP_SHORT, this->rightPressedAnalog_buf)
+                                if (success && total_frames < COMBO_BUF_SIZE) {
+                                    this->state = COMBO_TYPE_SHIELD;
+                                    this->ClearCombo();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckCloakCombo__5Combo);
 
@@ -220,10 +401,238 @@ INCLUDE_ASM(
 
 INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckGasCanCombo__5Combo);
 
+// Attempt to find the next edge of some input whose most recent edge is
+// located at `buffer[now]`.
+
+// this->cur_frame requires a use somewhere later in the function to fix
+// the regswap
 INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckSpecUpCombo__5Combo);
+// void Combo::CheckSpecUpCombo()
+// {
+//     // - s3: `this`
+//     // - s2: `success`
+//     // - s1: `total_frames`
+//     // - s0: `now`
+//     int prev;
+//     int total_this_window;
+
+//     int total_frames = 0;
+//     int now = this->cur_frame;
+//     bool success = false;
+
+//     if (upPressed && this->check_codes) {
+//         SCAN_DPAD_START(COMBO_INPUT_GAP_SHORT, this->upPressed_buf)
+//         if (success) {
+//             SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->upPressed_buf)
+//             if (success) {
+//                 SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->upPressed_buf)
+//                 if (success) {
+//                     SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_SHORT, this->upPressed_buf)
+//                     if (success && total_frames < COMBO_BUF_SIZE) {
+//                         this->state = COMBO_TYPE_SPEC_UP;
+//                         this->ClearCombo();
+//                     }
+//                 }
+//             }
+//         }
+//     }
+
+//     if (leftButtonPressed && this->check_codes) {
+//         SCAN_ANALOG_START(COMBO_INPUT_GAP_SHORT, this->upPressedAnalog_buf)
+//         if (success) {
+//             SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->upPressedAnalog_buf)
+//             if (success) {
+//                 SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_LONG, this->upPressedAnalog_buf)
+//                 if (success) {
+//                     SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_LONG, this->upPressedAnalog_buf)
+//                     if (success) {
+//                         SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_LONG, this->upPressedAnalog_buf)
+//                         if (success && total_frames < COMBO_BUF_SIZE) {
+//                             this->state = COMBO_TYPE_SPEC_UP;
+//                             this->ClearCombo();
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
 
 INCLUDE_ASM(
     "/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckSpecDownCombo__5Combo);
+// void Combo::CheckSpecDownCombo()
+// {
+//     // - s3: `this`
+//     // - s2: `success`
+//     // - s1: `total_frames`
+//     // - s0: `now`
+//     int prev;
+//     int total_this_window;
+
+//     int total_frames = 0;
+//     int now = this->cur_frame;
+//     bool success = false;
+
+//     if (downPressed && this->check_codes) {
+//         SCAN_DPAD_START(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
+//         if (success) {
+//             SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
+//             if (success) {
+//                 SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
+//                 if (success) {
+//                     SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
+//                     if (success && total_frames < COMBO_BUF_SIZE) {
+//                         this->state = COMBO_TYPE_SPEC_DOWN;
+//                         this->ClearCombo();
+//                     }
+//                 }
+//             }
+//         }
+//     }
+
+//     // If `cur_frame` is used later, it will be moved to `t0`.
+//     //
+//     // If `total_this_window` and `prev` assignments are moved outside
+//     // the `do_while`, the registers will be correct, but the instructions
+//     // will be irreversibly swapped.
+//     if (leftButtonPressed && this->check_codes) {
+//         do {\
+//             total_this_window = 1;\
+//             prev = this->cur_frame - 1;\
+//             if (prev < 0) prev += COMBO_BUF_SIZE; \
+//             total_frames++;\
+//             if (!((this->downPressedAnalog_buf)[prev])) {\
+//                 do {\
+//                     total_this_window++;\
+//                     if (total_this_window >= (COMBO_INPUT_GAP_SHORT)) break;\
+//                     total_frames++;\
+//                     prev = this->cur_frame - total_this_window;\
+//                     if (prev < 0) prev += COMBO_BUF_SIZE;\
+//                 } while (!(this->downPressedAnalog_buf)[prev]);\
+//                 if (total_this_window >= (COMBO_INPUT_GAP_SHORT)) break;\
+//                 success = true;\
+//                 now = prev;\
+//             } else {\
+//                 success = true;\
+//                 now = prev;\
+//             }\
+//         } while (0);
+//         if (success) {
+//             do {\
+//                 success = false;\
+//                 total_this_window = 1;\
+//                 prev = now - 1;\
+//                 int _test = prev + COMBO_BUF_SIZE;\
+//                 if (prev < 0) prev = _test; \
+//                 total_frames++;\
+//                 _test = (this->downPressedAnalog_buf)[prev];\
+//                 if (_test) {\
+//                     do {\
+//                         total_this_window++;\
+//                         if (total_this_window >= (COMBO_INPUT_GAP_SHORT)) break;\
+//                         prev = now - total_this_window;\
+//                         _test = prev + COMBO_BUF_SIZE;\
+//                         if (prev < 0) prev = _test;\
+//                         total_frames++;\
+//                         _test = (this->downPressedAnalog_buf)[prev];\
+//                     } while (_test);\
+//                     if (total_this_window >= (COMBO_INPUT_GAP_SHORT)) break;\
+//                     success = true;\
+//                     now = prev;\
+//                 } else {\
+//                     success = true;\
+//                     now = prev;\
+//                 }\
+//             } while (0);
+//             if (success) {
+//                 do {\
+//                     success = false;\
+//                     total_this_window = 1;\
+//                     prev = now - 1;\
+//                     int _test = prev + COMBO_BUF_SIZE;\
+//                     if (prev < 0) prev = _test; \
+//                     total_frames++;\
+//                     _test = (this->downPressedAnalog_buf)[prev];\
+//                     if (!_test) {\
+//                         do {\
+//                             total_this_window++;\
+//                             if (total_this_window >= (COMBO_INPUT_GAP_LONG)) break;\
+//                             prev = now - total_this_window;\
+//                             _test = prev + COMBO_BUF_SIZE;\
+//                             if (prev < 0) prev = _test;\
+//                             total_frames++;\
+//                             _test = (this->downPressedAnalog_buf)[prev];\
+//                         } while (!_test);\
+//                         if (total_this_window >= (COMBO_INPUT_GAP_LONG)) break;\
+//                         success = true;\
+//                         now = prev;\
+//                     } else {\
+//                         success = true;\
+//                         now = prev;\
+//                     }\
+//                 } while (0);
+//                 if (success) {
+//                     do {\
+//                         success = false;\
+//                         total_this_window = 1;\
+//                         prev = now - 1;\
+//                         int _test = prev + COMBO_BUF_SIZE;\
+//                         if (prev < 0) prev = _test; \
+//                         total_frames++;\
+//                         _test = (this->downPressedAnalog_buf)[prev];\
+//                         if (_test) {\
+//                             do {\
+//                                 total_this_window++;\
+//                                 if (total_this_window >= (COMBO_INPUT_GAP_LONG)) break;\
+//                                 prev = now - total_this_window;\
+//                                 _test = prev + COMBO_BUF_SIZE;\
+//                                 if (prev < 0) prev = _test;\
+//                                 total_frames++;\
+//                                 _test = (this->downPressedAnalog_buf)[prev];\
+//                             } while (_test);\
+//                             if (total_this_window >= (COMBO_INPUT_GAP_LONG)) break;\
+//                             success = true;\
+//                             now = prev;\
+//                         } else {\
+//                             success = true;\
+//                             now = prev;\
+//                         }\
+//                     } while (0);
+//                     if (success) {
+//                         do {\
+//                             success = false;\
+//                             total_this_window = 1;\
+//                             prev = now - 1;\
+//                             int _test = prev + COMBO_BUF_SIZE;\
+//                             if (prev < 0) prev = _test; \
+//                             total_frames++;\
+//                             _test = (this->downPressedAnalog_buf)[prev];\
+//                             if (!_test) {\
+//                                 do {\
+//                                     total_this_window++;\
+//                                     if (total_this_window >= (COMBO_INPUT_GAP_LONG)) break;\
+//                                     prev = now - total_this_window;\
+//                                     _test = prev + COMBO_BUF_SIZE;\
+//                                     if (prev < 0) prev = _test; \
+//                                     total_frames++;\
+//                                     _test = (this->downPressedAnalog_buf)[prev];\
+//                                 } while (!_test);\
+//                                 if (total_this_window >= (COMBO_INPUT_GAP_LONG)) break;\
+//                                 success = true;\
+//                             } else {\
+//                                 success = true;
+//                             }
+//                         } while (0);
+//                         if (success && total_frames < COMBO_BUF_SIZE) {
+//                             this->state = COMBO_TYPE_SPEC_DOWN;
+//                             this->ClearCombo();
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
 
 INCLUDE_ASM(
     "/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckSpecLeftCombo__5Combo);
