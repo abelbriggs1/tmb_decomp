@@ -382,9 +382,126 @@ void Combo::CheckShieldCombo()
     }
 }
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckCloakCombo__5Combo);
+void Combo::CheckCloakCombo()
+{
+    int prev;
+    int total_this_window;
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckFreezeCombo__5Combo);
+    int total_frames = 0;
+    int now = this->cur_frame;
+    bool success = false;
+
+    if (downPressed && this->check_codes) {
+        SCAN_DPAD_START(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
+        if (success) {
+            SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
+            if (success) {
+                SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->leftPressed_buf)
+                if (success) {
+                    SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->leftPressed_buf)
+                    if (success) {
+                        SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_SHORT, this->leftPressed_buf)
+                        if (success && total_frames < COMBO_BUF_SIZE) {
+                            this->state = COMBO_TYPE_CLOAK;
+                            this->ClearCombo();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (leftButtonPressed && this->check_codes) {
+        SCAN_ANALOG_START(COMBO_INPUT_GAP_SHORT, this->downPressedAnalog_buf)
+        if (success) {
+            SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressedAnalog_buf)
+            if (success) {
+                SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressedAnalog_buf)
+                if (success) {
+                    SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressedAnalog_buf)
+                    if (success) {
+                        SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->leftPressedAnalog_buf)
+                        if (success) {
+                            SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->leftPressedAnalog_buf)
+                            if (success) {
+                                SCAN_NEGATIVE_EDGE(
+                                    COMBO_INPUT_GAP_SHORT, this->leftPressedAnalog_buf)
+                                if (success && total_frames < COMBO_BUF_SIZE) {
+                                    this->state = COMBO_TYPE_CLOAK;
+                                    this->ClearCombo();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Combo::CheckFreezeCombo()
+{
+    int prev;
+    int total_this_window;
+
+    int total_frames = 0;
+    int now = this->cur_frame;
+    bool success = false;
+
+    if (upPressed && this->check_codes) {
+        // SCAN_DPAD_START but for negative edge
+        do {
+            total_this_window = 1;
+            prev = this->cur_frame - 1;
+            int _test = prev + COMBO_BUF_SIZE;
+            if (prev < 0)
+                prev = _test;
+            total_frames++;
+            _test = this->downPressed_buf[prev];
+            if (!_test) {
+                do {
+                    total_this_window++;
+                    if (total_this_window >= (COMBO_INPUT_GAP_LONG))
+                        break;
+                    total_frames++;
+                    prev = this->cur_frame - total_this_window;
+                    _test = prev + COMBO_BUF_SIZE;
+                    if (prev < 0)
+                        prev = _test;
+                    _test = (this->downPressed_buf)[prev];
+                } while (!_test);
+                if (total_this_window >= (COMBO_INPUT_GAP_LONG))
+                    break;
+                success = true;
+                now = prev;
+            } else {
+                success = true;
+                now = prev;
+            }
+        } while (0);
+        if (success) {
+            SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_LONG, this->upPressed_buf)
+            if (success && total_frames < COMBO_BUF_SIZE) {
+                this->state = COMBO_TYPE_FREEZE;
+                this->ClearCombo();
+            }
+        }
+    }
+
+    if (leftButtonPressed && this->check_codes) {
+        SCAN_ANALOG_START(COMBO_INPUT_GAP_SHORT, this->upPressedAnalog_buf)
+        if (success) {
+            SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressedAnalog_buf)
+            if (success) {
+                SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_LONG, this->upPressedAnalog_buf)
+                if (success && total_frames < COMBO_BUF_SIZE) {
+                    this->state = COMBO_TYPE_FREEZE;
+                    this->ClearCombo();
+                }
+            }
+        }
+    }
+}
 
 void Combo::CheckMinionCombo()
 {
@@ -393,13 +510,243 @@ void Combo::CheckMinionCombo()
     // the equivalent "normal combo" function is stubbed.
 }
 
-INCLUDE_ASM(
-    "/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckRearFireCombo__5Combo);
+void Combo::CheckRearFireCombo()
+{
+    int prev;
+    int total_this_window;
+
+    int total_frames = 0;
+    int now = this->cur_frame;
+    bool success = false;
+
+    if (downPressed && this->check_codes) {
+        // SCAN_DPAD_START but for negative edge
+        do {
+            total_this_window = 1;
+            prev = this->cur_frame - 1;
+            int _test = prev + COMBO_BUF_SIZE;
+            if (prev < 0)
+                prev = _test;
+            total_frames++;
+            _test = this->rightPressed_buf[prev];
+            if (!_test) {
+                do {
+                    total_this_window++;
+                    if (total_this_window >= (COMBO_INPUT_GAP_LONG))
+                        break;
+                    total_frames++;
+                    prev = this->cur_frame - total_this_window;
+                    _test = prev + COMBO_BUF_SIZE;
+                    if (prev < 0)
+                        prev = _test;
+                    _test = (this->rightPressed_buf)[prev];
+                } while (!_test);
+                if (total_this_window >= (COMBO_INPUT_GAP_LONG))
+                    break;
+                success = true;
+                now = prev;
+            } else {
+                success = true;
+                now = prev;
+            }
+        } while (0);
+        if (success) {
+            SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_LONG, this->leftPressed_buf)
+            if (success && total_frames < COMBO_BUF_SIZE) {
+                this->state = COMBO_TYPE_REAR_FIRE;
+                this->ClearCombo();
+            }
+        }
+    }
+
+    if (leftButtonPressed && this->check_codes) {
+        SCAN_ANALOG_START(COMBO_INPUT_GAP_SHORT, this->downPressedAnalog_buf)
+        if (success) {
+            SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->rightPressedAnalog_buf)
+            if (success) {
+                SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_LONG, this->leftPressedAnalog_buf)
+                if (success && total_frames < COMBO_BUF_SIZE) {
+                    this->state = COMBO_TYPE_REAR_FIRE;
+                    this->ClearCombo();
+                }
+            }
+        }
+    }
+}
 
 INCLUDE_ASM(
     "/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckDropMineCombo__5Combo);
 
 INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckGasCanCombo__5Combo);
+// void Combo::CheckGasCanCombo()
+// {
+//     int prev;
+//     int total_this_window;
+
+//     int total_frames = 0;
+//     int now = this->cur_frame;
+//     bool success = false;
+
+//     if (downPressed && this->check_codes) {
+//         // SCAN_DPAD_START but for negative edge
+//         do {
+//             this->delta_time += timerGetFieldsLastFrame();
+//             total_this_window = 1;
+//             prev = this->cur_frame - 1;
+//             if (prev < 0)
+//                 prev += COMBO_BUF_SIZE;
+//             total_frames++;
+//             if (!this->upPressed_buf[prev]) {
+//                 do {
+//                     total_this_window++;
+//                     if (total_this_window >= (COMBO_INPUT_GAP_LONG))
+//                         break;
+//                     total_frames++;
+//                     prev = this->cur_frame - total_this_window;
+//                     if (prev < 0)
+//                         prev += COMBO_BUF_SIZE;
+//                 } while (!this->upPressed_buf[prev]);
+//                 if (total_this_window >= (COMBO_INPUT_GAP_LONG))
+//                     break;
+//                 success = true;
+//                 now = prev;
+//             } else {
+//                 success = true;
+//                 now = prev;
+//             }
+//         } while (0);
+//         if (success) {
+//             do {
+//                 success = false;
+//                 total_this_window = 1;
+//                 prev = now - 1;
+//                 int _test = prev + COMBO_BUF_SIZE;
+//                 if (prev < 0)
+//                     prev = _test;
+//                 total_frames++;
+//                 _test = (this->downPressed_buf)[prev];
+//                 if (!_test) {
+//                     do {
+//                         total_this_window++;
+//                         if (total_this_window >= (COMBO_INPUT_GAP_LONG))
+//                             break;
+//                         prev = now - total_this_window;
+//                         _test = prev + COMBO_BUF_SIZE;
+//                         if (prev < 0)
+//                             prev = _test;
+//                         total_frames++;
+//                         _test = (this->downPressed_buf)[prev];
+//                     } while (!_test);
+//                     if (total_this_window >= (COMBO_INPUT_GAP_LONG))
+//                         break;
+//                     success = true;
+//                 } else {
+//                     success = true;
+//                 }
+//             } while (0);
+//             if (success && total_frames < COMBO_BUF_SIZE) {
+//                 this->state = COMBO_TYPE_GAS_CAN;
+//                 this->ClearCombo();
+//             }
+//         }
+//     }
+
+//     if (leftButtonPressed && this->check_codes) {
+//         do {
+//             total_this_window = 1;
+//             prev = this->cur_frame - 1;
+//             if (prev < 0)
+//                 prev += COMBO_BUF_SIZE;
+//             total_frames++;
+//             if (!((this->downPressedAnalog_buf)[prev])) {
+//                 do {
+//                     total_this_window++;
+//                     if (total_this_window >= (COMBO_INPUT_GAP_SHORT))
+//                         break;
+//                     total_frames++;
+//                     prev = this->cur_frame - total_this_window;
+//                     if (prev < 0)
+//                         prev += COMBO_BUF_SIZE;
+//                 } while (!(this->downPressedAnalog_buf)[prev]);
+//                 if (total_this_window >= (COMBO_INPUT_GAP_SHORT))
+//                     break;
+//                 success = true;
+//                 now = prev;
+//             } else {
+//                 success = true;
+//                 now = prev;
+//             }
+//         } while (0);
+//         if (success) {
+//             do {
+//                 success = false;
+//                 total_this_window = 1;
+//                 prev = now - 1;
+//                 int _test = prev + COMBO_BUF_SIZE;
+//                 if (prev < 0)
+//                     prev = _test;
+//                 total_frames++;
+//                 _test = (this->upPressedAnalog_buf)[prev];
+//                 if (!_test) {
+//                     do {
+//                         total_this_window++;
+//                         if (total_this_window >= (COMBO_INPUT_GAP_SHORT))
+//                             break;
+//                         prev = now - total_this_window;
+//                         _test = prev + COMBO_BUF_SIZE;
+//                         if (prev < 0)
+//                             prev = _test;
+//                         total_frames++;
+//                         _test = (this->upPressedAnalog_buf)[prev];
+//                     } while (!_test);
+//                     if (total_this_window >= (COMBO_INPUT_GAP_SHORT))
+//                         break;
+//                     success = true;
+//                     now = prev;
+//                 } else {
+//                     success = true;
+//                     now = prev;
+//                 }
+//             } while (0);
+//             if (success) {
+//                 do {
+//                     success = false;
+//                     total_this_window = 1;
+//                     prev = now - 1;
+//                     int _test = prev + COMBO_BUF_SIZE;
+//                     if (prev < 0)
+//                         prev = _test;
+//                     total_frames++;
+//                     _test = (this->downPressedAnalog_buf)[prev];
+//                     if (!_test) {
+//                         do {
+//                             total_this_window++;
+//                             if (total_this_window >= (COMBO_INPUT_GAP_LONG))
+//                                 break;
+//                             prev = now - total_this_window;
+//                             _test = prev + COMBO_BUF_SIZE;
+//                             if (prev < 0)
+//                                 prev = _test;
+//                             total_frames++;
+//                             _test = (this->downPressedAnalog_buf)[prev];
+//                         } while (!_test);
+//                         if (total_this_window >= (COMBO_INPUT_GAP_LONG))
+//                             break;
+//                         success = true;
+//                         now = prev;
+//                     } else {
+//                         success = true;
+//                         now = prev;
+//                     }
+//                 } while (0);
+//                 if (success && total_frames < COMBO_BUF_SIZE) {
+//                     this->state = COMBO_TYPE_GAS_CAN;
+//                     this->ClearCombo();
+//                 }
+//             }
+//         }
+//     }
+// }
 
 // Attempt to find the next edge of some input whose most recent edge is
 // located at `buffer[now]`.
