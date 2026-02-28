@@ -645,244 +645,301 @@ void Combo::CheckGasCanCombo()
     }
 }
 
-// Attempt to find the next edge of some input whose most recent edge is
-// located at `buffer[now]`.
+void Combo::CheckSpecUpCombo()
+{
+    int prev;
+    int total_this_window;
 
-// this->cur_frame requires a use somewhere later in the function to fix
-// the regswap
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckSpecUpCombo__5Combo);
-// void Combo::CheckSpecUpCombo()
-// {
-//     // - s3: `this`
-//     // - s2: `success`
-//     // - s1: `total_frames`
-//     // - s0: `now`
-//     int prev;
-//     int total_this_window;
+    int total_frames = 0;
+    int now = this->cur_frame;
+    bool success = false;
 
-//     int total_frames = 0;
-//     int now = this->cur_frame;
-//     bool success = false;
+    if (upPressed && this->check_codes) {
+        SCAN_DPAD_START(COMBO_INPUT_GAP_SHORT, this->upPressed_buf)
+        if (success) {
+            SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->upPressed_buf)
+            if (success) {
+                SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->upPressed_buf)
+                if (success) {
+                    SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_SHORT, this->upPressed_buf)
+                    if (success && total_frames < COMBO_BUF_SIZE) {
+                        this->state = COMBO_TYPE_SPEC_UP;
+                        this->ClearCombo();
+                    }
+                }
+            }
+        }
+    }
 
-//     if (upPressed && this->check_codes) {
-//         SCAN_DPAD_START(COMBO_INPUT_GAP_SHORT, this->upPressed_buf)
-//         if (success) {
-//             SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->upPressed_buf)
-//             if (success) {
-//                 SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->upPressed_buf)
-//                 if (success) {
-//                     SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_SHORT, this->upPressed_buf)
-//                     if (success && total_frames < COMBO_BUF_SIZE) {
-//                         this->state = COMBO_TYPE_SPEC_UP;
-//                         this->ClearCombo();
-//                     }
-//                 }
-//             }
-//         }
-//     }
+    if (leftButtonPressed && this->check_codes) {
+        do {
+            // TODO[FAKEMATCH]: Regswap between `a3` and `t0` caused by
+            // `this->cur_frame`. Figure out the original code.
+            const register int fr asm("t0") = this->cur_frame;
+            total_this_window = 1;
+            prev = fr - 1;
+            if (prev < 0)
+                prev += COMBO_BUF_SIZE;
+            total_frames++;
+            if (!((this->upPressedAnalog_buf)[prev])) {
+                do {
+                    total_this_window++;
+                    if (total_this_window >= (COMBO_INPUT_GAP_SHORT))
+                        break;
+                    total_frames++;
+                    prev = fr - total_this_window;
+                    if (prev < 0)
+                        prev += COMBO_BUF_SIZE;
+                } while (!(this->upPressedAnalog_buf)[prev]);
+                if (total_this_window >= (COMBO_INPUT_GAP_SHORT))
+                    break;
+                success = true;
+                now = prev;
+            } else {
+                success = true;
+                now = prev;
+            }
+        } while (0);
+        if (success) {
+            SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->upPressedAnalog_buf)
+            if (success) {
+                SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_LONG, this->upPressedAnalog_buf)
+                if (success) {
+                    SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_LONG, this->upPressedAnalog_buf)
+                    if (success) {
+                        SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_LONG, this->upPressedAnalog_buf)
+                        if (success && total_frames < COMBO_BUF_SIZE) {
+                            this->state = COMBO_TYPE_SPEC_UP;
+                            this->ClearCombo();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
-//     if (leftButtonPressed && this->check_codes) {
-//         SCAN_ANALOG_START(COMBO_INPUT_GAP_SHORT, this->upPressedAnalog_buf)
-//         if (success) {
-//             SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->upPressedAnalog_buf)
-//             if (success) {
-//                 SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_LONG, this->upPressedAnalog_buf)
-//                 if (success) {
-//                     SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_LONG, this->upPressedAnalog_buf)
-//                     if (success) {
-//                         SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_LONG, this->upPressedAnalog_buf)
-//                         if (success && total_frames < COMBO_BUF_SIZE) {
-//                             this->state = COMBO_TYPE_SPEC_UP;
-//                             this->ClearCombo();
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//     }
-// }
+void Combo::CheckSpecDownCombo()
+{
+    int prev;
+    int total_this_window;
 
-INCLUDE_ASM(
-    "/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckSpecDownCombo__5Combo);
-// void Combo::CheckSpecDownCombo()
-// {
-//     // - s3: `this`
-//     // - s2: `success`
-//     // - s1: `total_frames`
-//     // - s0: `now`
-//     int prev;
-//     int total_this_window;
+    int total_frames = 0;
+    int now = this->cur_frame;
+    bool success = false;
 
-//     int total_frames = 0;
-//     int now = this->cur_frame;
-//     bool success = false;
+    if (downPressed && this->check_codes) {
+        SCAN_DPAD_START(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
+        if (success) {
+            SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
+            if (success) {
+                SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
+                if (success) {
+                    SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
+                    if (success && total_frames < COMBO_BUF_SIZE) {
+                        this->state = COMBO_TYPE_SPEC_DOWN;
+                        this->ClearCombo();
+                    }
+                }
+            }
+        }
+    }
 
-//     if (downPressed && this->check_codes) {
-//         SCAN_DPAD_START(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
-//         if (success) {
-//             SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
-//             if (success) {
-//                 SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
-//                 if (success) {
-//                     SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_SHORT, this->downPressed_buf)
-//                     if (success && total_frames < COMBO_BUF_SIZE) {
-//                         this->state = COMBO_TYPE_SPEC_DOWN;
-//                         this->ClearCombo();
-//                     }
-//                 }
-//             }
-//         }
-//     }
+    if (leftButtonPressed && this->check_codes) {
+        do {
+            // TODO[FAKEMATCH]: Regswap between `a3` and `t0` caused by
+            // `this->cur_frame`. Figure out the original code.
+            const register int fr asm("t0") = this->cur_frame;
+            total_this_window = 1;
+            prev = fr - 1;
+            if (prev < 0)
+                prev += COMBO_BUF_SIZE;
+            total_frames++;
+            if (!((this->downPressedAnalog_buf)[prev])) {
+                do {
+                    total_this_window++;
+                    if (total_this_window >= (COMBO_INPUT_GAP_SHORT))
+                        break;
+                    total_frames++;
+                    prev = fr - total_this_window;
+                    if (prev < 0)
+                        prev += COMBO_BUF_SIZE;
+                } while (!(this->downPressedAnalog_buf)[prev]);
+                if (total_this_window >= (COMBO_INPUT_GAP_SHORT))
+                    break;
+                success = true;
+                now = prev;
+            } else {
+                success = true;
+                now = prev;
+            }
+        } while (0);
+        if (success) {
+            SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->downPressedAnalog_buf)
+            if (success) {
+                SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_LONG, this->downPressedAnalog_buf)
+                if (success) {
+                    SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_LONG, this->downPressedAnalog_buf)
+                    if (success) {
+                        SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_LONG, this->downPressedAnalog_buf)
+                        if (success && total_frames < COMBO_BUF_SIZE) {
+                            this->state = COMBO_TYPE_SPEC_DOWN;
+                            this->ClearCombo();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
-//     // If `cur_frame` is used later, it will be moved to `t0`.
-//     //
-//     // If `total_this_window` and `prev` assignments are moved outside
-//     // the `do_while`, the registers will be correct, but the instructions
-//     // will be irreversibly swapped.
-//     if (leftButtonPressed && this->check_codes) {
-//         do {\
-//             total_this_window = 1;\
-//             prev = this->cur_frame - 1;\
-//             if (prev < 0) prev += COMBO_BUF_SIZE; \
-//             total_frames++;\
-//             if (!((this->downPressedAnalog_buf)[prev])) {\
-//                 do {\
-//                     total_this_window++;\
-//                     if (total_this_window >= (COMBO_INPUT_GAP_SHORT)) break;\
-//                     total_frames++;\
-//                     prev = this->cur_frame - total_this_window;\
-//                     if (prev < 0) prev += COMBO_BUF_SIZE;\
-//                 } while (!(this->downPressedAnalog_buf)[prev]);\
-//                 if (total_this_window >= (COMBO_INPUT_GAP_SHORT)) break;\
-//                 success = true;\
-//                 now = prev;\
-//             } else {\
-//                 success = true;\
-//                 now = prev;\
-//             }\
-//         } while (0);
-//         if (success) {
-//             do {\
-//                 success = false;\
-//                 total_this_window = 1;\
-//                 prev = now - 1;\
-//                 int _test = prev + COMBO_BUF_SIZE;\
-//                 if (prev < 0) prev = _test; \
-//                 total_frames++;\
-//                 _test = (this->downPressedAnalog_buf)[prev];\
-//                 if (_test) {\
-//                     do {\
-//                         total_this_window++;\
-//                         if (total_this_window >= (COMBO_INPUT_GAP_SHORT)) break;\
-//                         prev = now - total_this_window;\
-//                         _test = prev + COMBO_BUF_SIZE;\
-//                         if (prev < 0) prev = _test;\
-//                         total_frames++;\
-//                         _test = (this->downPressedAnalog_buf)[prev];\
-//                     } while (_test);\
-//                     if (total_this_window >= (COMBO_INPUT_GAP_SHORT)) break;\
-//                     success = true;\
-//                     now = prev;\
-//                 } else {\
-//                     success = true;\
-//                     now = prev;\
-//                 }\
-//             } while (0);
-//             if (success) {
-//                 do {\
-//                     success = false;\
-//                     total_this_window = 1;\
-//                     prev = now - 1;\
-//                     int _test = prev + COMBO_BUF_SIZE;\
-//                     if (prev < 0) prev = _test; \
-//                     total_frames++;\
-//                     _test = (this->downPressedAnalog_buf)[prev];\
-//                     if (!_test) {\
-//                         do {\
-//                             total_this_window++;\
-//                             if (total_this_window >= (COMBO_INPUT_GAP_LONG)) break;\
-//                             prev = now - total_this_window;\
-//                             _test = prev + COMBO_BUF_SIZE;\
-//                             if (prev < 0) prev = _test;\
-//                             total_frames++;\
-//                             _test = (this->downPressedAnalog_buf)[prev];\
-//                         } while (!_test);\
-//                         if (total_this_window >= (COMBO_INPUT_GAP_LONG)) break;\
-//                         success = true;\
-//                         now = prev;\
-//                     } else {\
-//                         success = true;\
-//                         now = prev;\
-//                     }\
-//                 } while (0);
-//                 if (success) {
-//                     do {\
-//                         success = false;\
-//                         total_this_window = 1;\
-//                         prev = now - 1;\
-//                         int _test = prev + COMBO_BUF_SIZE;\
-//                         if (prev < 0) prev = _test; \
-//                         total_frames++;\
-//                         _test = (this->downPressedAnalog_buf)[prev];\
-//                         if (_test) {\
-//                             do {\
-//                                 total_this_window++;\
-//                                 if (total_this_window >= (COMBO_INPUT_GAP_LONG)) break;\
-//                                 prev = now - total_this_window;\
-//                                 _test = prev + COMBO_BUF_SIZE;\
-//                                 if (prev < 0) prev = _test;\
-//                                 total_frames++;\
-//                                 _test = (this->downPressedAnalog_buf)[prev];\
-//                             } while (_test);\
-//                             if (total_this_window >= (COMBO_INPUT_GAP_LONG)) break;\
-//                             success = true;\
-//                             now = prev;\
-//                         } else {\
-//                             success = true;\
-//                             now = prev;\
-//                         }\
-//                     } while (0);
-//                     if (success) {
-//                         do {\
-//                             success = false;\
-//                             total_this_window = 1;\
-//                             prev = now - 1;\
-//                             int _test = prev + COMBO_BUF_SIZE;\
-//                             if (prev < 0) prev = _test; \
-//                             total_frames++;\
-//                             _test = (this->downPressedAnalog_buf)[prev];\
-//                             if (!_test) {\
-//                                 do {\
-//                                     total_this_window++;\
-//                                     if (total_this_window >= (COMBO_INPUT_GAP_LONG)) break;\
-//                                     prev = now - total_this_window;\
-//                                     _test = prev + COMBO_BUF_SIZE;\
-//                                     if (prev < 0) prev = _test; \
-//                                     total_frames++;\
-//                                     _test = (this->downPressedAnalog_buf)[prev];\
-//                                 } while (!_test);\
-//                                 if (total_this_window >= (COMBO_INPUT_GAP_LONG)) break;\
-//                                 success = true;\
-//                             } else {\
-//                                 success = true;
-//                             }
-//                         } while (0);
-//                         if (success && total_frames < COMBO_BUF_SIZE) {
-//                             this->state = COMBO_TYPE_SPEC_DOWN;
-//                             this->ClearCombo();
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//     }
-// }
+void Combo::CheckSpecLeftCombo()
+{
+    int prev;
+    int total_this_window;
 
-INCLUDE_ASM(
-    "/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckSpecLeftCombo__5Combo);
+    int total_frames = 0;
+    int now = this->cur_frame;
+    bool success = false;
 
-INCLUDE_ASM(
-    "/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckSpecRightCombo__5Combo);
+    if (leftPressed && this->check_codes) {
+        SCAN_DPAD_START(COMBO_INPUT_GAP_SHORT, this->leftPressed_buf)
+        if (success) {
+            SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->leftPressed_buf)
+            if (success) {
+                SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->leftPressed_buf)
+                if (success) {
+                    SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_SHORT, this->leftPressed_buf)
+                    if (success && total_frames < COMBO_BUF_SIZE) {
+                        this->state = COMBO_TYPE_SPEC_LEFT;
+                        this->ClearCombo();
+                    }
+                }
+            }
+        }
+    }
+
+    if (leftButtonPressed && this->check_codes) {
+        do {
+            // TODO[FAKEMATCH]: Regswap between `a3` and `t0` caused by
+            // `this->cur_frame`. Figure out the original code.
+            const register int fr asm("t0") = this->cur_frame;
+            total_this_window = 1;
+            prev = fr - 1;
+            if (prev < 0)
+                prev += COMBO_BUF_SIZE;
+            total_frames++;
+            if (!((this->leftPressedAnalog_buf)[prev])) {
+                do {
+                    total_this_window++;
+                    if (total_this_window >= (COMBO_INPUT_GAP_SHORT))
+                        break;
+                    total_frames++;
+                    prev = fr - total_this_window;
+                    if (prev < 0)
+                        prev += COMBO_BUF_SIZE;
+                } while (!(this->leftPressedAnalog_buf)[prev]);
+                if (total_this_window >= (COMBO_INPUT_GAP_SHORT))
+                    break;
+                success = true;
+                now = prev;
+            } else {
+                success = true;
+                now = prev;
+            }
+        } while (0);
+        if (success) {
+            SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->leftPressedAnalog_buf)
+            if (success) {
+                SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_LONG, this->leftPressedAnalog_buf)
+                if (success) {
+                    SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_LONG, this->leftPressedAnalog_buf)
+                    if (success) {
+                        SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_LONG, this->leftPressedAnalog_buf)
+                        if (success && total_frames < COMBO_BUF_SIZE) {
+                            this->state = COMBO_TYPE_SPEC_LEFT;
+                            this->ClearCombo();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Combo::CheckSpecRightCombo()
+{
+    int prev;
+    int total_this_window;
+
+    int total_frames = 0;
+    int now = this->cur_frame;
+    bool success = false;
+
+    if (rightPressed && this->check_codes) {
+        SCAN_DPAD_START(COMBO_INPUT_GAP_SHORT, this->rightPressed_buf)
+        if (success) {
+            SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->rightPressed_buf)
+            if (success) {
+                SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->rightPressed_buf)
+                if (success) {
+                    SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_SHORT, this->rightPressed_buf)
+                    if (success && total_frames < COMBO_BUF_SIZE) {
+                        this->state = COMBO_TYPE_SPEC_RIGHT;
+                        this->ClearCombo();
+                    }
+                }
+            }
+        }
+    }
+
+    if (leftButtonPressed && this->check_codes) {
+        do {
+            // TODO[FAKEMATCH]: Regswap between `a3` and `t0` caused by
+            // `this->cur_frame`. Figure out the original code.
+            const register int fr asm("t0") = this->cur_frame;
+            total_this_window = 1;
+            prev = fr - 1;
+            if (prev < 0)
+                prev += COMBO_BUF_SIZE;
+            total_frames++;
+            if (!((this->rightPressedAnalog_buf)[prev])) {
+                do {
+                    total_this_window++;
+                    if (total_this_window >= (COMBO_INPUT_GAP_SHORT))
+                        break;
+                    total_frames++;
+                    prev = fr - total_this_window;
+                    if (prev < 0)
+                        prev += COMBO_BUF_SIZE;
+                } while (!(this->rightPressedAnalog_buf)[prev]);
+                if (total_this_window >= (COMBO_INPUT_GAP_SHORT))
+                    break;
+                success = true;
+                now = prev;
+            } else {
+                success = true;
+                now = prev;
+            }
+        } while (0);
+        if (success) {
+            SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->rightPressedAnalog_buf)
+            if (success) {
+                SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_LONG, this->rightPressedAnalog_buf)
+                if (success) {
+                    SCAN_POSITIVE_EDGE(COMBO_INPUT_GAP_LONG, this->rightPressedAnalog_buf)
+                    if (success) {
+                        SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_LONG, this->rightPressedAnalog_buf)
+                        if (success && total_frames < COMBO_BUF_SIZE) {
+                            this->state = COMBO_TYPE_SPEC_RIGHT;
+                            this->ClearCombo();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 void Combo::ClearSecretCode()
 {
