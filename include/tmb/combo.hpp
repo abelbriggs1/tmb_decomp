@@ -82,7 +82,7 @@ public:
     // just successfully been parsed.
     int state;
     int pad_index;
-    int field2_0x8;
+    int updates_since_last_combo;
     int parse_secret_code;
     int secret_buf_idx;
     int secret_code_timer;

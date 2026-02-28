@@ -19,11 +19,11 @@ static bool R1Pressed;
 static bool R2Pressed;
 static bool selectPressed;
 static int joyStick;
-static bool leftButtonPressed;
+static bool leftButtonPressed; // Corresponds to L3.
 
 void Combo::Init(int pad_idx)
 {
-    this->field2_0x8 = 0;
+    this->updates_since_last_combo = 0;
     this->unlock_all_pt1_entered = 0;
     this->unlock_all_timer = 0;
     this->pad_index = pad_idx;
@@ -35,7 +35,7 @@ void Combo::Init(int pad_idx)
 void Combo::Update(Vehicle* vehicle)
 {
     this->state = COMBO_TYPE_NONE;
-    this->field2_0x8++;
+    this->updates_since_last_combo++;
 
     // Read current inputs.
     upPressed = inputGetInput(INPUT_UP, this->pad_index) != 0;
@@ -449,7 +449,6 @@ void Combo::CheckFreezeCombo()
     bool success = false;
 
     if (upPressed && this->check_codes) {
-        // SCAN_DPAD_START but for negative edge
         do {
             total_this_window = 1;
             prev = this->cur_frame - 1;
@@ -520,7 +519,6 @@ void Combo::CheckRearFireCombo()
     bool success = false;
 
     if (downPressed && this->check_codes) {
-        // SCAN_DPAD_START but for negative edge
         do {
             total_this_window = 1;
             prev = this->cur_frame - 1;
@@ -574,8 +572,103 @@ void Combo::CheckRearFireCombo()
     }
 }
 
-INCLUDE_ASM(
-    "/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/combo", CheckDropMineCombo__5Combo);
+void Combo::CheckDropMineCombo()
+{
+    int prev;
+    int total_this_window;
+    int total_frames;
+    int now;
+    bool success;
+
+    total_frames = 0;
+    now = this->cur_frame;
+    success = false;
+
+    if (downPressed && this->check_codes) {
+        do {
+            this->delta_time += timerGetFieldsLastFrame();
+            total_this_window = 1;
+            prev = this->cur_frame - 1;
+            if (prev < 0)
+                prev += COMBO_BUF_SIZE;
+            total_frames++;
+
+            if (!this->leftPressed_buf[prev]) {
+                do {
+                    total_this_window++;
+                    if (total_this_window >= (COMBO_INPUT_GAP_LONG)) {
+                        break;
+                    }
+                    total_frames++;
+                    prev = this->cur_frame - total_this_window;
+                    if (prev < 0)
+                        prev += COMBO_BUF_SIZE;
+                } while (!this->leftPressed_buf[prev]);
+                if (total_this_window >= (COMBO_INPUT_GAP_LONG)) {
+                    break;
+                }
+            } else {
+                success = true;
+                now = prev;
+                break;
+            }
+            success = true;
+            now = prev;
+
+        } while (0);
+        if (success) {
+            SCAN_NEGATIVE_FINAL(COMBO_INPUT_GAP_LONG, this->rightPressed_buf)
+            if (success && total_frames < COMBO_BUF_SIZE) {
+                this->mine_ready = true;
+            }
+        }
+    }
+
+    if (leftButtonPressed && this->check_codes) {
+        do {
+            this->delta_time += timerGetFieldsLastFrame();
+            total_this_window = 1;
+            prev = this->cur_frame - 1;
+            if (prev < 0)
+                prev += COMBO_BUF_SIZE;
+            total_frames++;
+            if (!this->downPressedAnalog_buf[prev]) {
+                do {
+                    total_this_window++;
+                    if (total_this_window >= (COMBO_INPUT_GAP_SHORT)) {
+                        break;
+                    }
+                    total_frames++;
+                    prev = this->cur_frame - total_this_window;
+                    if (prev < 0)
+                        prev += COMBO_BUF_SIZE;
+                } while (!this->downPressedAnalog_buf[prev]);
+                if (total_this_window >= (COMBO_INPUT_GAP_SHORT)) {
+                    break;
+                }
+                success = true;
+                now = prev;
+            } else {
+                success = true;
+                now = prev;
+            }
+        } while (0);
+        if (success) {
+            SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_SHORT, this->leftPressedAnalog_buf)
+            if (success) {
+                SCAN_NEGATIVE_EDGE(COMBO_INPUT_GAP_LONG, this->rightPressedAnalog_buf)
+                if (success && total_frames < COMBO_BUF_SIZE) {
+                    this->mine_ready = true;
+                }
+            }
+        }
+    }
+
+    if (this->mine_ready && !downPressed && !leftButtonPressed) {
+        this->state = COMBO_TYPE_DROP_MINE;
+        this->ClearCombo();
+    }
+}
 
 void Combo::CheckGasCanCombo()
 {
@@ -592,7 +685,6 @@ void Combo::CheckGasCanCombo()
     success = false;
 
     if (downPressed && this->check_codes) {
-        // SCAN_DPAD_START but for negative edge
         do {
             this->delta_time += timerGetFieldsLastFrame();
             total_this_window = 1;
@@ -972,7 +1064,7 @@ void Combo::ClearCombo()
         this->downPressedAnalog_buf[i] = 0;
     }
 
-    this->field2_0x8 = 0;
+    this->updates_since_last_combo = 0;
     if (prev_state != COMBO_TYPE_DROP_MINE) {
         this->delta_time = 0;
     }
