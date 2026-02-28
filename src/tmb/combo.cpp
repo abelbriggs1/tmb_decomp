@@ -176,6 +176,22 @@ void Combo::Update(Vehicle* vehicle)
             this->CheckGasCanCombo();
         }
         if (vehicle->launcher.cur_wep_pickup_type == WEAPON_0x1) {
+            // Most of these combos (down, left, and right) are not used for anything
+            // in the final releases of TMB and TMBO.
+            // However, they are still checked if your active weapon is `SPECIAL`, and
+            // will clear the combo buffers if they are input by the player.
+            //
+            // This leads to conflicts when attempting other combos. For instance,
+            // if you attempt to shield `(RRDD)` while turning right, and you use the same
+            // directional input device (dpad/stick) for both, the `(RR)` component of the
+            // input will be treated as `(RRR)`, clearing the combo buffer and eating
+            // the rest of the inputs.
+            //
+            // This behavior is colloquially called the 'shield glitch' by the TMBO
+            // community, though it can also occur with cloak `(LLDD)`.
+            // The standard workarounds are:
+            // - Use the left stick to drive and d-pad for combos, or vice versa.
+            // - Don't idle with `SPECIAL` as your active weapon.
             this->CheckSpecUpCombo();
             this->CheckSpecDownCombo();
             this->CheckSpecLeftCombo();
