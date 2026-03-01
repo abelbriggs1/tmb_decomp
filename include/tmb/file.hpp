@@ -28,5 +28,8 @@ void setMaxResAddr(int index, u16 max);
 s8 getIdxOfAddr(char* file); // Specifically, the index of a tex addr.
 s8 getIdxOfResAddr(char* file);
 s8 getIdxOfName(char* name);
+void fileAddNgpFile(char* file, int size);
+void fileAddTexFile(char* file, int size);
+void fileAddResFile(char* file, int size);
 
 #endif // _TMB_FILE_H_

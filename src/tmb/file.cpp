@@ -201,11 +201,44 @@ s8 getIdxOfName(char* name)
     return -1;
 }
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileAddNgpFile__FPci);
+void fileAddNgpFile(char* file, int size)
+{
+    fileStatus.ngp_files[fileStatus.num_ngp_loaded++] = file;
+    fileStatus.ngp_files[fileStatus.num_ngp_loaded]
+        = fileStatus.ngp_files[fileStatus.num_ngp_loaded - 1] + size;
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileAddTexFile__FPci);
+    u32 align = (u32)fileStatus.ngp_files[fileStatus.num_ngp_loaded] & 0x7F;
+    if (align != 0) {
+        fileStatus.ngp_files[fileStatus.num_ngp_loaded] += (s8)(0x80 - align);
+        fileStatus.ngp_files[fileStatus.num_ngp_loaded] += 0x80;
+    }
+}
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileAddResFile__FPci);
+void fileAddTexFile(char* file, int size)
+{
+    fileStatus.tex_files[fileStatus.num_tex_loaded++] = file;
+    fileStatus.tex_files[fileStatus.num_tex_loaded]
+        = fileStatus.tex_files[fileStatus.num_tex_loaded - 1] + size;
+
+    u32 align = (u32)fileStatus.tex_files[fileStatus.num_tex_loaded] & 0x7F;
+    if (align != 0) {
+        fileStatus.tex_files[fileStatus.num_tex_loaded] += (s8)(0x80 - align);
+        fileStatus.tex_files[fileStatus.num_tex_loaded] += 0x70;
+    }
+}
+
+void fileAddResFile(char* file, int size)
+{
+    fileStatus.res_files[fileStatus.num_res_loaded++] = file;
+    fileStatus.res_files[fileStatus.num_res_loaded]
+        = fileStatus.res_files[fileStatus.num_res_loaded - 1] + size;
+
+    u32 align = (u32)fileStatus.res_files[fileStatus.num_res_loaded] & 0x7F;
+    if (align != 0) {
+        fileStatus.res_files[fileStatus.num_res_loaded] += (s8)(0x80 - align);
+        fileStatus.res_files[fileStatus.num_res_loaded] += 0x70;
+    }
+}
 
 INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileAddName__FPc);
 

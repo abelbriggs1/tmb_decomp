@@ -1,13 +1,13 @@
 {
   "measures": {
-    "fuzzy_match_percent": 2.2926512,
+    "fuzzy_match_percent": 2.331293,
     "total_code": "1221468",
-    "matched_code": "28004",
-    "matched_code_percent": 2.2926512,
+    "matched_code": "28476",
+    "matched_code_percent": 2.331293,
     "matched_data_percent": 100.0,
     "total_functions": 3606,
-    "matched_functions": 130,
-    "matched_functions_percent": 3.6051028,
+    "matched_functions": 133,
+    "matched_functions_percent": 3.6882975,
     "complete_data_percent": 100.0,
     "total_units": 416
   },
@@ -14929,21 +14929,21 @@
     {
       "name": "tmb/file",
       "measures": {
-        "fuzzy_match_percent": 18.906942,
+        "fuzzy_match_percent": 27.621862,
         "total_code": "5416",
-        "matched_code": "1024",
-        "matched_code_percent": 18.906942,
+        "matched_code": "1496",
+        "matched_code_percent": 27.621862,
         "matched_data_percent": 100.0,
         "total_functions": 43,
-        "matched_functions": 23,
-        "matched_functions_percent": 53.488373,
+        "matched_functions": 26,
+        "matched_functions_percent": 60.465115,
         "total_units": 1
       },
       "sections": [
         {
           "name": ".text",
           "size": "5416",
-          "fuzzy_match_percent": 18.906942,
+          "fuzzy_match_percent": 27.621862,
           "metadata": {
             "virtual_address": "1843664"
           }
@@ -15141,6 +15141,7 @@
         {
           "name": "fileAddNgpFile__FPci",
           "size": "160",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1845408"
           }
@@ -15148,6 +15149,7 @@
         {
           "name": "fileAddTexFile__FPci",
           "size": "152",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1845568"
           }
@@ -15155,6 +15157,7 @@
         {
           "name": "fileAddResFile__FPci",
           "size": "160",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1845720"
           }
@@ -36542,14 +36545,14 @@
       "id": "tmb",
       "name": "tmb",
       "measures": {
-        "fuzzy_match_percent": 2.6381733,
+        "fuzzy_match_percent": 2.6826391,
         "total_code": "1061492",
-        "matched_code": "28004",
-        "matched_code_percent": 2.6381736,
+        "matched_code": "28476",
+        "matched_code_percent": 2.6826391,
         "matched_data_percent": 100.0,
         "total_functions": 2724,
-        "matched_functions": 130,
-        "matched_functions_percent": 4.772393,
+        "matched_functions": 133,
+        "matched_functions_percent": 4.8825254,
         "complete_data_percent": 100.0,
         "total_units": 133
       }
