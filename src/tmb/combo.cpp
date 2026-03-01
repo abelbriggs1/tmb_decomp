@@ -588,6 +588,31 @@ void Combo::CheckRearFireCombo()
     }
 }
 
+// When dropped, mines normally emit a blue light. However, they can be charged for
+// 60 frames (1 second) by holding down the final input. The mine will be fired
+// after letting go of the button.
+// This behavior is implemented by `Vehicle::vehicleCheckForCombos()`.
+// `Combo.delta_time` tracks the amount of time the final "mine" input has been held down.
+// As expected, the game increments this whenever the final input (either `D` on the D-Pad,
+// or `L3` when using stick) is held down.
+//
+// There are several oversights in how `delta_time` is handled:
+// - Because the game checks the order of inputs in reverse order, it doesn't
+//   check that you completed the preceding "mine" inputs before incrementing `delta_time`.
+// - The game increments `delta_time` if `L3` is held down independently of whether
+//   D-Pad `D` is held.
+// - `delta_time` is not reset if the button is released; it only resets when completing a
+//   combo.
+//
+// This leads to some interesting advanced techniques:
+// - You can hold `L3` to pre-emptively charge mines while moving, as long as you
+//   don't input another combo.
+//   - This is quite useful, particularly for players who use D-Pad to input combos.
+//     D-Pad `D` normally overrides your accelerator inputs, slowing down the car when held.
+//     By holding `L3`, you can output charged mines without slowing down.
+// - You can hold D-Pad `D` and `L3` at the same time to charge mines at double speed.
+//   - This has limited practical use because of the high energy cost of charged mines.
+//
 void Combo::CheckDropMineCombo()
 {
     int prev;
