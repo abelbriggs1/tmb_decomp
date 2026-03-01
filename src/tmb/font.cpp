@@ -1,3 +1,5 @@
+#include "tmb/font.h"
+
 #include <string.h>
 
 #include <eekernel.h>
@@ -5,8 +7,6 @@
 
 #include "common.h"
 #include "tmb/view.h"
-
-#include "tmb/font.h"
 
 #define NUM_FONTS 2
 #define NUM_PACKETS 3000

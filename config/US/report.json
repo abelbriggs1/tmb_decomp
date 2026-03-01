@@ -1,13 +1,13 @@
 {
   "measures": {
-    "fuzzy_match_percent": 2.2101276,
+    "fuzzy_match_percent": 2.2926512,
     "total_code": "1221468",
-    "matched_code": "26996",
-    "matched_code_percent": 2.2101276,
+    "matched_code": "28004",
+    "matched_code_percent": 2.2926512,
     "matched_data_percent": 100.0,
     "total_functions": 3606,
-    "matched_functions": 109,
-    "matched_functions_percent": 3.02274,
+    "matched_functions": 130,
+    "matched_functions_percent": 3.6051028,
     "complete_data_percent": 100.0,
     "total_units": 416
   },
@@ -14929,21 +14929,21 @@
     {
       "name": "tmb/file",
       "measures": {
-        "fuzzy_match_percent": 0.29542097,
+        "fuzzy_match_percent": 18.906942,
         "total_code": "5416",
-        "matched_code": "16",
-        "matched_code_percent": 0.29542097,
+        "matched_code": "1024",
+        "matched_code_percent": 18.906942,
         "matched_data_percent": 100.0,
         "total_functions": 43,
-        "matched_functions": 2,
-        "matched_functions_percent": 4.6511626,
+        "matched_functions": 23,
+        "matched_functions_percent": 53.488373,
         "total_units": 1
       },
       "sections": [
         {
           "name": ".text",
           "size": "5416",
-          "fuzzy_match_percent": 0.29542097,
+          "fuzzy_match_percent": 18.906942,
           "metadata": {
             "virtual_address": "1843664"
           }
@@ -14981,6 +14981,7 @@
         {
           "name": "fileInitializeCd__Fv",
           "size": "168",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1844456"
           }
@@ -14988,6 +14989,7 @@
         {
           "name": "getTexFilesLoaded__Fv",
           "size": "16",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1844624"
           }
@@ -14995,6 +14997,7 @@
         {
           "name": "getNgpFilesLoaded__Fv",
           "size": "16",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1844640"
           }
@@ -15002,6 +15005,7 @@
         {
           "name": "getResFilesLoaded__Fv",
           "size": "16",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1844656"
           }
@@ -15009,6 +15013,7 @@
         {
           "name": "getNextNgpLoadAddr__Fv",
           "size": "32",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1844672"
           }
@@ -15016,6 +15021,7 @@
         {
           "name": "getNextTexLoadAddr__Fv",
           "size": "32",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1844704"
           }
@@ -15023,6 +15029,7 @@
         {
           "name": "getNextResLoadAddr__Fv",
           "size": "32",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1844736"
           }
@@ -15030,6 +15037,7 @@
         {
           "name": "getNgpAddr__Fi",
           "size": "48",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1844768"
           }
@@ -15037,6 +15045,7 @@
         {
           "name": "getTexAddr__Fi",
           "size": "48",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1844816"
           }
@@ -15044,6 +15053,7 @@
         {
           "name": "getResAddr__Fi",
           "size": "48",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1844864"
           }
@@ -15051,6 +15061,7 @@
         {
           "name": "getGenericName__Fi",
           "size": "48",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1844912"
           }
@@ -15058,6 +15069,7 @@
         {
           "name": "getMaxTexId__Fi",
           "size": "24",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1844960"
           }
@@ -15065,6 +15077,7 @@
         {
           "name": "getMaxTexAddr__Fi",
           "size": "24",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1844984"
           }
@@ -15072,6 +15085,7 @@
         {
           "name": "getMaxResAddr__Fi",
           "size": "24",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1845008"
           }
@@ -15079,6 +15093,7 @@
         {
           "name": "setMaxTexId__FiUs",
           "size": "24",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1845032"
           }
@@ -15086,6 +15101,7 @@
         {
           "name": "setMaxTexAddr__FiUs",
           "size": "24",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1845056"
           }
@@ -15093,6 +15109,7 @@
         {
           "name": "setMaxResAddr__FiUs",
           "size": "24",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1845080"
           }
@@ -15100,6 +15117,7 @@
         {
           "name": "getIdxOfAddr__FPc",
           "size": "80",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1845104"
           }
@@ -15107,6 +15125,7 @@
         {
           "name": "getIdxOfResAddr__FPc",
           "size": "80",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1845184"
           }
@@ -15114,6 +15133,7 @@
         {
           "name": "getIdxOfName__FPc",
           "size": "144",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1845264"
           }
@@ -15170,6 +15190,7 @@
         {
           "name": "fileInitBeforeDbLoad__Fv",
           "size": "56",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1846256"
           }
@@ -36521,14 +36542,14 @@
       "id": "tmb",
       "name": "tmb",
       "measures": {
-        "fuzzy_match_percent": 2.5432127,
+        "fuzzy_match_percent": 2.6381733,
         "total_code": "1061492",
-        "matched_code": "26996",
-        "matched_code_percent": 2.543213,
+        "matched_code": "28004",
+        "matched_code_percent": 2.6381736,
         "matched_data_percent": 100.0,
         "total_functions": 2724,
-        "matched_functions": 109,
-        "matched_functions_percent": 4.0014687,
+        "matched_functions": 130,
+        "matched_functions_percent": 4.772393,
         "complete_data_percent": 100.0,
         "total_units": 133
       }

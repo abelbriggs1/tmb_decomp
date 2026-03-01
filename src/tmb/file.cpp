@@ -1,4 +1,27 @@
-#include "common.h"
+#include "tmb/file.hpp"
+
+#include <eetypes.h>
+#include <libcdvd.h>
+#include <sifdev.h>
+#include <sifrpc.h>
+
+extern int cdHasBeenInitialized;
+
+extern struct {
+    char* tex_files[MAX_FILES_LOADED];
+    s8 num_tex_loaded;
+    char* ngp_files[MAX_FILES_LOADED];
+    s8 num_ngp_loaded;
+    char* res_files[MAX_FILES_LOADED];
+    s8 num_res_loaded; // offset 0xB0
+    char names[MAX_FILES_LOADED][MAX_NAME_LENGTH]; // offset 0xB1
+    u16 max_tex_ids[MAX_FILES_LOADED]; // offset 0x130
+    u16 max_tex_addrs[MAX_FILES_LOADED];
+    u16 max_res_addrs[MAX_FILES_LOADED];
+} fileStatus; // size 0x184 (?)
+
+void fileMakeDirTree();
+int fileStringCompare(char* lhs, char* rhs);
 
 INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileReadf__FPcPv);
 
@@ -10,45 +33,173 @@ INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileRea
 
 INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileWritef__FPcPvi);
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileInitializeCd__Fv);
+void fileInitializeCd()
+{
+    int ready;
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getTexFilesLoaded__Fv);
+    sceSifInitRpc(0);
+    sceCdInit(SCECdINIT);
+    do {
+        ready = sceSifRebootIop("cdrom0:\\IOPRP213.IMG;1");
+    } while (!ready);
+    do {
+        ready = sceSifSyncIop();
+    } while (!ready);
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getNgpFilesLoaded__Fv);
+    sceSifInitRpc(0);
+    sceCdInit(SCECdINIT);
+    sceCdMmode(SCECdDVD);
+    sceFsReset();
+    do {
+        ready = sceCdDiskReady(0);
+    } while (ready != SCECdComplete);
+    fileMakeDirTree();
+    cdHasBeenInitialized = 1;
+    do {
+        ready = sceCdDiskReady(0);
+    } while (ready != SCECdComplete);
+}
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getResFilesLoaded__Fv);
+s8 getTexFilesLoaded()
+{
+    return fileStatus.num_tex_loaded;
+}
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getNextNgpLoadAddr__Fv);
+s8 getNgpFilesLoaded()
+{
+    return fileStatus.num_ngp_loaded;
+}
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getNextTexLoadAddr__Fv);
+s8 getResFilesLoaded()
+{
+    return fileStatus.num_res_loaded;
+}
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getNextResLoadAddr__Fv);
+char* getNextNgpLoadAddr()
+{
+    return fileStatus.ngp_files[fileStatus.num_ngp_loaded];
+}
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getNgpAddr__Fi);
+char* getNextTexLoadAddr()
+{
+    return fileStatus.tex_files[fileStatus.num_tex_loaded];
+}
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getTexAddr__Fi);
+char* getNextResLoadAddr()
+{
+    return fileStatus.res_files[fileStatus.num_res_loaded];
+}
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getResAddr__Fi);
+char* getNgpAddr(int index)
+{
+    char* result;
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getGenericName__Fi);
+    if (index < fileStatus.num_ngp_loaded) {
+        result = fileStatus.ngp_files[index];
+    } else {
+        result = NULL;
+    }
+    return result;
+}
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getMaxTexId__Fi);
+char* getTexAddr(int index)
+{
+    char* result;
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getMaxTexAddr__Fi);
+    if (index < fileStatus.num_tex_loaded) {
+        result = fileStatus.tex_files[index];
+    } else {
+        result = NULL;
+    }
+    return result;
+}
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getMaxResAddr__Fi);
+char* getResAddr(int index)
+{
+    char* result;
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", setMaxTexId__FiUs);
+    if (index < fileStatus.num_res_loaded) {
+        result = fileStatus.res_files[index];
+    } else {
+        result = NULL;
+    }
+    return result;
+}
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", setMaxTexAddr__FiUs);
+char* getGenericName(int index)
+{
+    char* result;
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", setMaxResAddr__FiUs);
+    if (index < fileStatus.num_ngp_loaded) {
+        result = fileStatus.names[index];
+    } else {
+        result = NULL;
+    }
+    return result;
+}
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getIdxOfAddr__FPc);
+u16 getMaxTexId(int index)
+{
+    return fileStatus.max_tex_ids[index];
+}
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getIdxOfResAddr__FPc);
+u16 getMaxTexAddr(int index)
+{
+    return fileStatus.max_tex_addrs[index];
+}
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", getIdxOfName__FPc);
+u16 getMaxResAddr(int index)
+{
+    return fileStatus.max_res_addrs[index];
+}
+
+void setMaxTexId(int index, u16 max)
+{
+    fileStatus.max_tex_ids[index] = max;
+}
+
+void setMaxTexAddr(int index, u16 max)
+{
+    fileStatus.max_tex_addrs[index] = max;
+}
+
+void setMaxResAddr(int index, u16 max)
+{
+    fileStatus.max_res_addrs[index] = max;
+}
+
+s8 getIdxOfAddr(char* file)
+{
+    for (int i = 0; i < fileStatus.num_tex_loaded; i++) {
+        if (fileStatus.tex_files[i] == file) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+s8 getIdxOfResAddr(char* file)
+{
+    for (int i = 0; i < fileStatus.num_res_loaded; i++) {
+        if (fileStatus.res_files[i] == file) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+s8 getIdxOfName(char* name)
+{
+    for (int i = 0; i < fileStatus.num_ngp_loaded; i++) {
+        if (fileStringCompare(name, fileStatus.names[i])) {
+            return i;
+        }
+    }
+
+    return -1;
+}
 
 INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileAddNgpFile__FPci);
 
@@ -64,7 +215,14 @@ INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileOnl
 
 INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileOnlyResFile__FPci);
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileInitBeforeDbLoad__Fv);
+void fileInitBeforeDbLoad()
+{
+    for (int i = 0; i < MAX_FILES_LOADED; i++) {
+        fileStatus.max_tex_ids[i] = 0;
+        fileStatus.max_tex_addrs[i] = 0;
+        fileStatus.max_res_addrs[i] = 0;
+    }
+}
 
 void filePrintFileStatus()
 {
@@ -79,13 +237,15 @@ INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", twoChar
 
 INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileCdRead__FllPc);
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file",
-    fileCdSearchFile__FP10sceCdlFILEPCc);
+// clang-format off
+INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileCdSearchFile__FP10sceCdlFILEPCc);
+// clang-format on
 
 INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileHierAddrOfSect__FUi);
 
-INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file",
-    filePrintCdFiles__FP13_cdFileSystemi);
+// clang-format off
+INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", filePrintCdFiles__FP13_cdFileSystemi);
+// clang-format on
 
 INCLUDE_ASM("/mnt/brahms/projects/tmb-decomp/asm/nonmatchings/tmb/file", fileStringCompare__FPcT0);
 
