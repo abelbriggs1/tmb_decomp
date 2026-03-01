@@ -9,7 +9,7 @@
     "matched_functions": 107,
     "matched_functions_percent": 2.9672768,
     "complete_data_percent": 100.0,
-    "total_units": 265
+    "total_units": 343
   },
   "units": [
     {
@@ -32069,7 +32069,7 @@
       }
     },
     {
-      "name": "data/3E4780.rodata",
+      "name": "data/tmb/ai.rodata",
       "measures": {
         "fuzzy_match_percent": 100.0,
         "matched_code_percent": 100.0,
@@ -32080,7 +32080,7 @@
       "sections": [
         {
           "name": ".rodata",
-          "size": "55984",
+          "size": "488",
           "metadata": {
             "virtual_address": "5130112"
           }
@@ -32095,7 +32095,7 @@
       }
     },
     {
-      "name": "data/3F22A0.rodata",
+      "name": "data/tmb/attach.rodata",
       "measures": {
         "fuzzy_match_percent": 100.0,
         "matched_code_percent": 100.0,
@@ -32106,9 +32106,9 @@
       "sections": [
         {
           "name": ".rodata",
-          "size": "2704",
+          "size": "200",
           "metadata": {
-            "virtual_address": "5186208"
+            "virtual_address": "5130600"
           }
         }
       ],
@@ -32121,7 +32121,7 @@
       }
     },
     {
-      "name": "data/3F2D90.rodata",
+      "name": "data/tmb/attracti.rodata",
       "measures": {
         "fuzzy_match_percent": 100.0,
         "matched_code_percent": 100.0,
@@ -32132,9 +32132,2037 @@
       "sections": [
         {
           "name": ".rodata",
-          "size": "16368",
+          "size": "336",
           "metadata": {
-            "virtual_address": "5189008"
+            "virtual_address": "5130800"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/attractped.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "120",
+          "metadata": {
+            "virtual_address": "5131136"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/axle.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "32",
+          "metadata": {
+            "virtual_address": "5131256"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/blimp.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "40",
+          "metadata": {
+            "virtual_address": "5131288"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/boss.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "96",
+          "metadata": {
+            "virtual_address": "5131328"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/camera.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "64",
+          "metadata": {
+            "virtual_address": "5131424"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/clapper.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "64",
+          "metadata": {
+            "virtual_address": "5131488"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/collis.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "544",
+          "metadata": {
+            "virtual_address": "5131552"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/destruct.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "288",
+          "metadata": {
+            "virtual_address": "5132096"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/elevator.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "120",
+          "metadata": {
+            "virtual_address": "5132384"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/envheli.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "40",
+          "metadata": {
+            "virtual_address": "5132504"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/ferris.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "80",
+          "metadata": {
+            "virtual_address": "5132544"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/fodder.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "176",
+          "metadata": {
+            "virtual_address": "5132624"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/forceField.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "64",
+          "metadata": {
+            "virtual_address": "5132800"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/freeway.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "160",
+          "metadata": {
+            "virtual_address": "5132864"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/game.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "768",
+          "metadata": {
+            "virtual_address": "5133024"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/gastank.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "88",
+          "metadata": {
+            "virtual_address": "5133792"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/grim.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "40",
+          "metadata": {
+            "virtual_address": "5133880"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/healthstand.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "96",
+          "metadata": {
+            "virtual_address": "5133920"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/helicop.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "56",
+          "metadata": {
+            "virtual_address": "5134016"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/heliptool.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "136",
+          "metadata": {
+            "virtual_address": "5134072"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/highwaydriver.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "56",
+          "metadata": {
+            "virtual_address": "5134208"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/highwayptool.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "120",
+          "metadata": {
+            "virtual_address": "5134264"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/hud.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "5904",
+          "metadata": {
+            "virtual_address": "5134384"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/interact.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "80",
+          "metadata": {
+            "virtual_address": "5140288"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/junkjet.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "64",
+          "metadata": {
+            "virtual_address": "5140368"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/junkyard.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "160",
+          "metadata": {
+            "virtual_address": "5140432"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/launch.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "464",
+          "metadata": {
+            "virtual_address": "5140592"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/looptank.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "272",
+          "metadata": {
+            "virtual_address": "5141056"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/ped.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "264",
+          "metadata": {
+            "virtual_address": "5141328"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/pedptool.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "392",
+          "metadata": {
+            "virtual_address": "5141592"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/pickup.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "264",
+          "metadata": {
+            "virtual_address": "5141984"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/pickupptool.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "88",
+          "metadata": {
+            "virtual_address": "5142248"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/player.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "48",
+          "metadata": {
+            "virtual_address": "5142336"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/prison.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "128",
+          "metadata": {
+            "virtual_address": "5142384"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/prisonShip.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "64",
+          "metadata": {
+            "virtual_address": "5142512"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/rigiddebris.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "168",
+          "metadata": {
+            "virtual_address": "5142576"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/reset.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "56",
+          "metadata": {
+            "virtual_address": "5142744"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/rooftop.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "392",
+          "metadata": {
+            "virtual_address": "5142800"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/shadow.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "72",
+          "metadata": {
+            "virtual_address": "5143192"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/shell.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "1592",
+          "metadata": {
+            "virtual_address": "5143264"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/shelloverlays.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "2312",
+          "metadata": {
+            "virtual_address": "5144856"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/smasher.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "48",
+          "metadata": {
+            "virtual_address": "5147168"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/sound.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "8656",
+          "metadata": {
+            "virtual_address": "5147216"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/suburb.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "112",
+          "metadata": {
+            "virtual_address": "5155872"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/susp.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "176",
+          "metadata": {
+            "virtual_address": "5155984"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/timberdebris.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "40",
+          "metadata": {
+            "virtual_address": "5156160"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/tire.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "200",
+          "metadata": {
+            "virtual_address": "5156200"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/tmmemcard.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "96",
+          "metadata": {
+            "virtual_address": "5156400"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/ui.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "24128",
+          "metadata": {
+            "virtual_address": "5156496"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/uimemcard.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "3120",
+          "metadata": {
+            "virtual_address": "5180624"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/vehicle.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "416",
+          "metadata": {
+            "virtual_address": "5183744"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/weap.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "720",
+          "metadata": {
+            "virtual_address": "5184160"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/989snd.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "272",
+          "metadata": {
+            "virtual_address": "5184880"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/animChan.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "56",
+          "metadata": {
+            "virtual_address": "5185152"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/CsColor.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "56",
+          "metadata": {
+            "virtual_address": "5185208"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/dbs.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "480",
+          "metadata": {
+            "virtual_address": "5185264"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/file.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "352",
+          "metadata": {
+            "virtual_address": "5185744"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/hd.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "424",
+          "metadata": {
+            "virtual_address": "5186200"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/hdcar.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "784",
+          "metadata": {
+            "virtual_address": "5186624"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/hdhat.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "272",
+          "metadata": {
+            "virtual_address": "5187408"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/hdlos.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "304",
+          "metadata": {
+            "virtual_address": "5187680"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/hierc.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "160",
+          "metadata": {
+            "virtual_address": "5187984"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/hoserInfo.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "32",
+          "metadata": {
+            "virtual_address": "5188144"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/input.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "736",
+          "metadata": {
+            "virtual_address": "5188176"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/memCard.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "552",
+          "metadata": {
+            "virtual_address": "5189000"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/movie.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "64",
+          "metadata": {
+            "virtual_address": "5189552"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/particle.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "488",
+          "metadata": {
+            "virtual_address": "5189616"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/read.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "24",
+          "metadata": {
+            "virtual_address": "5190104"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/resetcom.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "480",
+          "metadata": {
+            "virtual_address": "5190128"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/strfile.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "48",
+          "metadata": {
+            "virtual_address": "5190608"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/td.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "112",
+          "metadata": {
+            "virtual_address": "5190656"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/terrain.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "168",
+          "metadata": {
+            "virtual_address": "5190768"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/texm.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "152",
+          "metadata": {
+            "virtual_address": "5190936"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/view.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "88",
+          "metadata": {
+            "virtual_address": "5191088"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/videodec.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "40",
+          "metadata": {
+            "virtual_address": "5191176"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/zip.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "2920",
+          "metadata": {
+            "virtual_address": "5191216"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/vibuf.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "24",
+          "metadata": {
+            "virtual_address": "5194136"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/3F41B0.rodata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".rodata",
+          "size": "11216",
+          "metadata": {
+            "virtual_address": "5194160"
           }
         }
       ],
@@ -32624,7 +34652,7 @@
         "matched_functions_percent": 100.0,
         "complete_code_percent": 100.0,
         "complete_data_percent": 100.0,
-        "total_units": 21
+        "total_units": 99
       }
     }
   ]

@@ -22,7 +22,7 @@ _SECTIONS: dict[str, int] = {
     ".bss": 0x10,
     ".sbss": 0x04,
     ".sdata": 0x04,
-    ".rodata": 0x10,
+    ".rodata": 0x08,
 }
 
 _FILE_SECTIONS_OVERRIDE: dict[str, dict[str, int]] = {
