@@ -91,7 +91,7 @@ def _generate_ninja_script(env: Environment, linker_entries: list[LinkerEntry]):
         ninja.rule(
             name="progress",
             description="PROGRESS    $in",
-            command="./configure.py progress --map-file $in --output $out",
+            command="python3 -m mapfile_parser objdiff_report",
         )
 
         built_objects: set[Path] = set()

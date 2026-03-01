@@ -91,6 +91,8 @@ class EnvironmentFiles:
     Dataclass for core files required for, used, or created as part of the build.
     """
 
+    # Path to the global `decomp.yaml` file.
+    decomp_yaml: Path
     # Path to the `splat` YAML file.
     splat_yaml: Path
     # Path to the `splat` cache.
@@ -115,8 +117,6 @@ class EnvironmentFiles:
     # Path to the final ROM file. This is the result used for comparisons.
     final_rom: Path
 
-    # Path to the `objdiff.json` created by the build.
-    objdiff_config: Path
     # Path to the `permuter_config.toml` created by the build.
     permuter_config: Path
 
@@ -130,6 +130,7 @@ class EnvironmentFiles:
         """
 
         return EnvironmentFiles(
+            decomp_yaml=directories.root / "decomp.yaml",
             splat_yaml=directories.config / f"{basename}.yaml",
             splat_cache=directories.config / ".splache",
             splat_symbols=directories.config / "symbol_addrs.txt",
@@ -140,7 +141,6 @@ class EnvironmentFiles:
             disk_rom=directories.disks / f"{basename}.rom",
             final_elf=directories.build / f"{basename}.elf",
             final_rom=directories.build / f"{basename}.rom",
-            objdiff_config=directories.root / "objdiff.json",
             permuter_config=directories.root / "permuter_settings.toml",
         )
 

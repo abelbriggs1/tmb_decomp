@@ -1,0 +1,20 @@
+name: Twisted Metal Black
+platform: ps2
+versions:
+- name: US
+  fullname: NTSC
+  paths:
+    target: "disks/SCUS_971.01.rom"
+    build_dir: "build/"
+    map: "build/SCUS_971.01.map"
+    compiled_target: "build/SCUS_971.01.rom"
+    elf: "build/SCUS_971.01.elf"
+    asm: "asm"
+    nonmatchings: "asm/nonmatchings"
+tools:
+  mapfile_parser:
+    progress_report:
+      output: config/US/report.json
+      prefixes_to_trim: ["build/asm", "build/src"]
+      check_asm_paths: True
+      report_data: False

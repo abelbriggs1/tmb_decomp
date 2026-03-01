@@ -13,7 +13,6 @@ from .operations import (
     generate,
     split,
     check,
-    progress,
     ctx,
     patchelf,
     permute,
@@ -48,7 +47,6 @@ distclean.add_subparser(subparsers)
 split.add_subparser(subparsers)
 generate.add_subparser(subparsers)
 check.add_subparser(subparsers)
-progress.add_subparser(subparsers)
 ctx.add_subparser(subparsers)
 patchelf.add_subparser(subparsers)
 permute.add_subparser(subparsers)
