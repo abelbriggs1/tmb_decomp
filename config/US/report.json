@@ -9,7 +9,7 @@
     "matched_functions": 107,
     "matched_functions_percent": 2.9672768,
     "complete_data_percent": 100.0,
-    "total_units": 343
+    "total_units": 417
   },
   "units": [
     {
@@ -34201,7 +34201,7 @@
       }
     },
     {
-      "name": "data/3F6E80.lit4",
+      "name": "data/tmb/ai.lit4",
       "measures": {
         "fuzzy_match_percent": 100.0,
         "matched_code_percent": 100.0,
@@ -34212,7 +34212,7 @@
       "sections": [
         {
           "name": ".lit4",
-          "size": "14284",
+          "size": "988",
           "metadata": {
             "virtual_address": "5205632"
           }
@@ -34227,7 +34227,7 @@
       }
     },
     {
-      "name": "data/3FA690.lit4",
+      "name": "data/tmb/attract.lit4",
       "measures": {
         "fuzzy_match_percent": 100.0,
         "matched_code_percent": 100.0,
@@ -34238,9 +34238,1933 @@
       "sections": [
         {
           "name": ".lit4",
-          "size": "624",
+          "size": "32",
+          "metadata": {
+            "virtual_address": "5206620"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/attracti.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "56",
+          "metadata": {
+            "virtual_address": "5206652"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/attractped.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "280",
+          "metadata": {
+            "virtual_address": "5206708"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/axle.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "16",
+          "metadata": {
+            "virtual_address": "5206988"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/blimp.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "84",
+          "metadata": {
+            "virtual_address": "5207004"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/boss.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "524",
+          "metadata": {
+            "virtual_address": "5207088"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/burnman.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "64",
+          "metadata": {
+            "virtual_address": "5207612"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/camera.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "224",
+          "metadata": {
+            "virtual_address": "5207676"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/clapper.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "20",
+          "metadata": {
+            "virtual_address": "5207900"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/collis.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "484",
+          "metadata": {
+            "virtual_address": "5207920"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/death3.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "4",
+          "metadata": {
+            "virtual_address": "5208404"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/debris.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "108",
+          "metadata": {
+            "virtual_address": "5208408"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/destruct.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "532",
+          "metadata": {
+            "virtual_address": "5208516"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/drivein.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "48",
+          "metadata": {
+            "virtual_address": "5209048"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/driver.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "208",
+          "metadata": {
+            "virtual_address": "5209096"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/elevator.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "40",
+          "metadata": {
+            "virtual_address": "5209304"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/envheli.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "244",
+          "metadata": {
+            "virtual_address": "5209344"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/ferris.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "104",
+          "metadata": {
+            "virtual_address": "5209588"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/fodder.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "4",
+          "metadata": {
+            "virtual_address": "5209692"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/fodderdriver.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "56",
+          "metadata": {
+            "virtual_address": "5209696"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/forceField.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "32",
+          "metadata": {
+            "virtual_address": "5209752"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/freeway.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "12",
+          "metadata": {
+            "virtual_address": "5209784"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/freewaytrain.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "16",
+          "metadata": {
+            "virtual_address": "5209796"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/game.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "116",
+          "metadata": {
+            "virtual_address": "5209812"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/gastank.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "68",
+          "metadata": {
+            "virtual_address": "5209928"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/grim.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "16",
+          "metadata": {
+            "virtual_address": "5209996"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/healthstand.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "20",
+          "metadata": {
+            "virtual_address": "5210012"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/helicop.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "300",
+          "metadata": {
+            "virtual_address": "5210032"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/highwaydriver.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "84",
+          "metadata": {
+            "virtual_address": "5210332"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/hud.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "216",
+          "metadata": {
+            "virtual_address": "5210416"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/junkjet.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "140",
+          "metadata": {
+            "virtual_address": "5210632"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/junkyard.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "52",
+          "metadata": {
+            "virtual_address": "5210772"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/launch.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "2536",
+          "metadata": {
+            "virtual_address": "5210824"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/looptank.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "52",
+          "metadata": {
+            "virtual_address": "5213360"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/ped.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "76",
+          "metadata": {
+            "virtual_address": "5213412"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/pickup.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "12",
+          "metadata": {
+            "virtual_address": "5213488"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/player.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "8",
+          "metadata": {
+            "virtual_address": "5213500"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/prison.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "128",
+          "metadata": {
+            "virtual_address": "5213508"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/prisonShip.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "52",
+          "metadata": {
+            "virtual_address": "5213636"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/rigiddebris.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "200",
+          "metadata": {
+            "virtual_address": "5213688"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/reset.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "16",
+          "metadata": {
+            "virtual_address": "5213888"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/rooftop.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "4",
+          "metadata": {
+            "virtual_address": "5213904"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/shadow.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "4",
+          "metadata": {
+            "virtual_address": "5213908"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/skidmark.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "32",
+          "metadata": {
+            "virtual_address": "5213912"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/smasher.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "4",
+          "metadata": {
+            "virtual_address": "5213944"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/sound.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "732",
+          "metadata": {
+            "virtual_address": "5213948"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/suburb.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "24",
+          "metadata": {
+            "virtual_address": "5214680"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/susp.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "444",
+          "metadata": {
+            "virtual_address": "5214704"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/tankcar.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "32",
+          "metadata": {
+            "virtual_address": "5215148"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/thunderstorm.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "16",
+          "metadata": {
+            "virtual_address": "5215180"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/timberdebris.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "52",
+          "metadata": {
+            "virtual_address": "5215196"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/tire.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "148",
+          "metadata": {
+            "virtual_address": "5215248"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/trafficdirector.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "24",
+          "metadata": {
+            "virtual_address": "5215396"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/ui.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "280",
+          "metadata": {
+            "virtual_address": "5215420"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/uimemcard.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "8",
+          "metadata": {
+            "virtual_address": "5215700"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/vehicle.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "3292",
+          "metadata": {
+            "virtual_address": "5215708"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/watow.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "56",
+          "metadata": {
+            "virtual_address": "5219000"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/weap.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "772",
+          "metadata": {
+            "virtual_address": "5219056"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/bound.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "36",
+          "metadata": {
+            "virtual_address": "5219828"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/hdhat.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "20",
+          "metadata": {
+            "virtual_address": "5219864"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/hdlos.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "8",
+          "metadata": {
+            "virtual_address": "5219884"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/hierc.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "16",
+          "metadata": {
+            "virtual_address": "5219892"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/hoserInfo.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "4",
+          "metadata": {
+            "virtual_address": "5219908"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/LightVolume.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "4",
+          "metadata": {
+            "virtual_address": "5219912"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/particle.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "232",
           "metadata": {
             "virtual_address": "5219984"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/plight.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "44",
+          "metadata": {
+            "virtual_address": "5220216"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/resetcom.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "12",
+          "metadata": {
+            "virtual_address": "5220260"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/rigidbody.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "24",
+          "metadata": {
+            "virtual_address": "5220272"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/smooth.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "24",
+          "metadata": {
+            "virtual_address": "5220296"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/terrain.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "88",
+          "metadata": {
+            "virtual_address": "5220320"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/timer.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "12",
+          "metadata": {
+            "virtual_address": "5220408"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/tod.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "32",
+          "metadata": {
+            "virtual_address": "5220420"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/utilities.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "8",
+          "metadata": {
+            "virtual_address": "5220452"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/view.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "24",
+          "metadata": {
+            "virtual_address": "5220460"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/bsp.lit4",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".lit4",
+          "size": "124",
+          "metadata": {
+            "virtual_address": "5220484"
           }
         }
       ],
@@ -34652,7 +36576,7 @@
         "matched_functions_percent": 100.0,
         "complete_code_percent": 100.0,
         "complete_data_percent": 100.0,
-        "total_units": 99
+        "total_units": 173
       }
     }
   ]
