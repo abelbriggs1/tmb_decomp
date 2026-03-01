@@ -1,15 +1,15 @@
 {
   "measures": {
-    "fuzzy_match_percent": 2.2088175,
+    "fuzzy_match_percent": 2.2101276,
     "total_code": "1221468",
-    "matched_code": "26980",
-    "matched_code_percent": 2.2088175,
+    "matched_code": "26996",
+    "matched_code_percent": 2.2101276,
     "matched_data_percent": 100.0,
     "total_functions": 3606,
-    "matched_functions": 107,
-    "matched_functions_percent": 2.9672768,
+    "matched_functions": 109,
+    "matched_functions_percent": 3.02274,
     "complete_data_percent": 100.0,
-    "total_units": 417
+    "total_units": 416
   },
   "units": [
     {
@@ -14929,17 +14929,30 @@
     {
       "name": "tmb/file",
       "measures": {
+        "fuzzy_match_percent": 0.29542097,
         "total_code": "5416",
+        "matched_code": "16",
+        "matched_code_percent": 0.29542097,
         "matched_data_percent": 100.0,
         "total_functions": 43,
+        "matched_functions": 2,
+        "matched_functions_percent": 4.6511626,
         "total_units": 1
       },
       "sections": [
         {
           "name": ".text",
           "size": "5416",
+          "fuzzy_match_percent": 0.29542097,
           "metadata": {
             "virtual_address": "1843664"
+          }
+        },
+        {
+          "name": ".rodata",
+          "size": "352",
+          "metadata": {
+            "virtual_address": "5185744"
           }
         }
       ],
@@ -15164,6 +15177,7 @@
         {
           "name": "filePrintFileStatus__Fv",
           "size": "8",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1846312"
           }
@@ -15234,6 +15248,7 @@
         {
           "name": "fileOutputTime__Fv",
           "size": "8",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1848984"
           }
@@ -33603,32 +33618,6 @@
       }
     },
     {
-      "name": "data/tmb/file.rodata",
-      "measures": {
-        "fuzzy_match_percent": 100.0,
-        "matched_code_percent": 100.0,
-        "matched_data_percent": 100.0,
-        "matched_functions_percent": 100.0,
-        "total_units": 1
-      },
-      "sections": [
-        {
-          "name": ".rodata",
-          "size": "352",
-          "metadata": {
-            "virtual_address": "5185744"
-          }
-        }
-      ],
-      "metadata": {
-        "module_name": ".main",
-        "module_id": 0,
-        "progress_categories": [
-          "data"
-        ]
-      }
-    },
-    {
       "name": "data/tmb/hd.rodata",
       "measures": {
         "fuzzy_match_percent": 100.0,
@@ -36532,14 +36521,14 @@
       "id": "tmb",
       "name": "tmb",
       "measures": {
-        "fuzzy_match_percent": 2.5417054,
+        "fuzzy_match_percent": 2.5432127,
         "total_code": "1061492",
-        "matched_code": "26980",
-        "matched_code_percent": 2.5417054,
+        "matched_code": "26996",
+        "matched_code_percent": 2.543213,
         "matched_data_percent": 100.0,
         "total_functions": 2724,
-        "matched_functions": 107,
-        "matched_functions_percent": 3.928047,
+        "matched_functions": 109,
+        "matched_functions_percent": 4.0014687,
         "complete_data_percent": 100.0,
         "total_units": 133
       }
@@ -36576,7 +36565,7 @@
         "matched_functions_percent": 100.0,
         "complete_code_percent": 100.0,
         "complete_data_percent": 100.0,
-        "total_units": 173
+        "total_units": 172
       }
     }
   ]

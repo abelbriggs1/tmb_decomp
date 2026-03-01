@@ -134,7 +134,7 @@ segments:
       - [0xC0248, asm, tmb/dbs] # this file has C++ STL inlines
       - [0xC1310, asm, tmb/disp]
       - [0xC1B20, asm, tmb/drawc]
-      - [0xC21D0, asm, tmb/file]
+      - [0xC21D0, cpp, tmb/file]
       - [0xC36F8, asm, tmb/fog]
       - [0xC3E48, cpp, tmb/font]
       - [0xC4C38, asm, tmb/hd]
@@ -367,7 +367,7 @@ segments:
       - [0x3F1E80, rodata, tmb/animChan]
       - [0x3F1EB8, rodata, tmb/CsColor]
       - [0x3F1EF0, rodata, tmb/dbs]
-      - [0x3F20D0, rodata, tmb/file]
+      - [0x3F20D0, .rodata, tmb/file]
       - [0x3F2230, .rodata, tmb/font]
       - [0x3F2298, rodata, tmb/hd]
       - [0x3F2440, rodata, tmb/hdcar]
