@@ -1,15 +1,15 @@
 {
   "measures": {
-    "fuzzy_match_percent": 2.331293,
-    "total_code": "1221468",
-    "matched_code": "28476",
-    "matched_code_percent": 2.331293,
+    "fuzzy_match_percent": 2.4062927,
+    "total_code": "1221464",
+    "matched_code": "29392",
+    "matched_code_percent": 2.4062927,
     "matched_data_percent": 100.0,
     "total_functions": 3606,
-    "matched_functions": 133,
-    "matched_functions_percent": 3.6882975,
+    "matched_functions": 144,
+    "matched_functions_percent": 3.9933443,
     "complete_data_percent": 100.0,
-    "total_units": 416
+    "total_units": 419
   },
   "units": [
     {
@@ -14929,28 +14929,35 @@
     {
       "name": "tmb/file",
       "measures": {
-        "fuzzy_match_percent": 27.621862,
-        "total_code": "5416",
-        "matched_code": "1496",
-        "matched_code_percent": 27.621862,
+        "fuzzy_match_percent": 44.567627,
+        "total_code": "5412",
+        "matched_code": "2412",
+        "matched_code_percent": 44.567627,
         "matched_data_percent": 100.0,
         "total_functions": 43,
-        "matched_functions": 26,
-        "matched_functions_percent": 60.465115,
+        "matched_functions": 37,
+        "matched_functions_percent": 86.04651,
         "total_units": 1
       },
       "sections": [
         {
           "name": ".text",
-          "size": "5416",
-          "fuzzy_match_percent": 27.621862,
+          "size": "5412",
+          "fuzzy_match_percent": 44.567627,
           "metadata": {
             "virtual_address": "1843664"
           }
         },
         {
+          "name": ".data",
+          "size": "35248",
+          "metadata": {
+            "virtual_address": "4811776"
+          }
+        },
+        {
           "name": ".rodata",
-          "size": "352",
+          "size": "343",
           "metadata": {
             "virtual_address": "5185744"
           }
@@ -14974,6 +14981,7 @@
         {
           "name": "fileWritef__FPcPvi",
           "size": "104",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1844352"
           }
@@ -15165,6 +15173,7 @@
         {
           "name": "fileAddName__FPc",
           "size": "160",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1845880"
           }
@@ -15172,6 +15181,7 @@
         {
           "name": "fileOnlyNgpFile__FPci",
           "size": "72",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1846040"
           }
@@ -15179,6 +15189,7 @@
         {
           "name": "fileOnlyTexFile__FPci",
           "size": "72",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1846112"
           }
@@ -15186,6 +15197,7 @@
         {
           "name": "fileOnlyResFile__FPci",
           "size": "72",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1846184"
           }
@@ -15216,6 +15228,7 @@
         {
           "name": "fourCharsToInt__Fi",
           "size": "72",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1847432"
           }
@@ -15223,6 +15236,7 @@
         {
           "name": "twoCharsToShort__Fi",
           "size": "48",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1847504"
           }
@@ -15230,6 +15244,7 @@
         {
           "name": "fileCdRead__FllPc",
           "size": "72",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1847552"
           }
@@ -15244,6 +15259,7 @@
         {
           "name": "fileHierAddrOfSect__FUi",
           "size": "80",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1848272"
           }
@@ -15258,6 +15274,7 @@
         {
           "name": "fileStringCompare__FPcT0",
           "size": "80",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1848688"
           }
@@ -15279,7 +15296,8 @@
         },
         {
           "name": "fileGetTimeString__Fv",
-          "size": "88",
+          "size": "84",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1848992"
           }
@@ -32093,9 +32111,35 @@
       "sections": [
         {
           "name": ".data",
-          "size": "2816640",
+          "size": "2498304",
           "metadata": {
             "virtual_address": "2313472"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/39F5B0.data",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".data",
+          "size": "283088",
+          "metadata": {
+            "virtual_address": "4847024"
           }
         }
       ],
@@ -36253,9 +36297,61 @@
       "sections": [
         {
           "name": ".sdata",
-          "size": "3116",
+          "size": "2988",
           "metadata": {
             "virtual_address": "5221396"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/tmb/file.sdata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".sdata",
+          "size": "44",
+          "metadata": {
+            "virtual_address": "5224384"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main",
+        "module_id": 0,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/3FB7EC.sdata",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".sdata",
+          "size": "84",
+          "metadata": {
+            "virtual_address": "5224428"
           }
         }
       ],
@@ -36545,14 +36641,14 @@
       "id": "tmb",
       "name": "tmb",
       "measures": {
-        "fuzzy_match_percent": 2.6826391,
-        "total_code": "1061492",
-        "matched_code": "28476",
-        "matched_code_percent": 2.6826391,
+        "fuzzy_match_percent": 2.7689433,
+        "total_code": "1061488",
+        "matched_code": "29392",
+        "matched_code_percent": 2.7689433,
         "matched_data_percent": 100.0,
         "total_functions": 2724,
-        "matched_functions": 133,
-        "matched_functions_percent": 4.8825254,
+        "matched_functions": 144,
+        "matched_functions_percent": 5.2863436,
         "complete_data_percent": 100.0,
         "total_units": 133
       }
@@ -36589,7 +36685,7 @@
         "matched_functions_percent": 100.0,
         "complete_code_percent": 100.0,
         "complete_data_percent": 100.0,
-        "total_units": 172
+        "total_units": 175
       }
     }
   ]

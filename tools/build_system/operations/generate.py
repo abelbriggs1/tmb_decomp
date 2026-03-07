@@ -17,6 +17,12 @@ from .split import split
 
 LOG = logging.getLogger(__name__)
 
+# Extra compiler flags for specific TUs.
+_EXTRA_FLAGS = {
+    "cxx": {},
+    "cc": {},
+}
+
 
 def add_subparser(subparsers):
     """
@@ -57,16 +63,21 @@ def _generate_ninja_script(env: Environment, linker_entries: list[LinkerEntry]):
     with env.files.build_script.open("w") as f:
         ninja = ninja_syntax.Writer(f)
 
+        # Declare an global variable used in the C and C++
+        # rules. This is empty by default and intended to allow extra flags
+        # for specific TUs.
+        ninja.variable("extra_cflags", None)
+
         # Create rules for ninja build steps.
         ninja.rule(
             name="cc",
             description="CC          $in",
-            command=f"{env.generate_c_compiler_cmd()} $in -o $out && {env.toolchain.strip_cmd} $out -N dummy-symbol-name",
+            command=f"{env.generate_c_compiler_cmd()} $extra_cflags $in -o $out && {env.toolchain.strip_cmd} $out -N dummy-symbol-name",
         )
         ninja.rule(
             name="cxx",
             description="CXX         $in",
-            command=f"{env.generate_cxx_compiler_cmd()} $in -o $out && {env.toolchain.strip_cmd} $out -N dummy-symbol-name",
+            command=f"{env.generate_cxx_compiler_cmd()} $extra_cflags $in -o $out && {env.toolchain.strip_cmd} $out -N dummy-symbol-name",
         )
         ninja.rule(
             name="as",
@@ -181,7 +192,19 @@ def _add_build_rule(
     """
     Add a build with the given output and inputs to the Ninja script.
     """
-    ninja.build(outputs=[str(output)], rule=rule, inputs=[str(p) for p in inputs])
+    extra_vars = {}
+    if rule in _EXTRA_FLAGS:
+        if len(inputs) == 1:
+            candidate = inputs[0].relative_to("src")
+            if candidate in _EXTRA_FLAGS[rule]:
+                extra_vars["extra_cflags"] = _EXTRA_FLAGS[rule][candidate]
+
+    ninja.build(
+        outputs=[str(output)],
+        rule=rule,
+        inputs=[str(p) for p in inputs],
+        variables=extra_vars,
+    )
 
 
 def _is_assemblable(segment: splat_segtypes.segment.Segment) -> bool:
@@ -201,7 +224,9 @@ def _is_c_code(segment: splat_segtypes.segment.Segment) -> bool:
     """
     Determine if the `splat` segment should be fed to the C compiler.
     """
-    return isinstance(segment, splat_segtypes.c.CommonSegC)
+    return isinstance(segment, splat_segtypes.c.CommonSegC) and not isinstance(
+        segment, splat_segtypes.cpp.CommonSegCpp
+    )
 
 
 def _is_cxx_code(segment: splat_segtypes.segment.Segment) -> bool:

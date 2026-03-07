@@ -31,5 +31,9 @@ s8 getIdxOfName(char* name);
 void fileAddNgpFile(char* file, int size);
 void fileAddTexFile(char* file, int size);
 void fileAddResFile(char* file, int size);
+void fileAddName(char* name);
+void fileOnlyNgpFile(char* file, int size);
+void fileOnlyTexFile(char* file, int size);
+void fileOnlyResFile(char* file, int size);
 
 #endif // _TMB_FILE_H_

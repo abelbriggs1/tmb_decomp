@@ -302,6 +302,8 @@ segments:
       # .data segment
       # ------------------------------------------------
       - [0x134D00, data]
+      - [0x396C00, .data, tmb/file]
+      - [0x39F5B0, data]
       # ------------------------------------------------
       # .rodata segment
       # TODO: Many segments in here contain the string `Q210PedestrianStrategy`,
@@ -482,6 +484,8 @@ segments:
       - [0x3FA900, sdata]
       - [0x3FAB3C, sdata, tmb/launch]
       - [0x3FAC14, sdata]
+      - [0x3FB7C0, sdata, tmb/file]
+      - [0x3FB7EC, sdata]
       - [0x3FB840, .sdata, tmb/font]
       - [0x3FB850, sdata, tmb/hd]
       - [0x3FB86C, sdata, tmb/hdcar]
