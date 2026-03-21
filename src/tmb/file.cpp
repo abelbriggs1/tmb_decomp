@@ -1,9 +1,9 @@
 #include "tmb/file.hpp"
 
 #include <stdio.h>
+#include <string.h>
 
 #include <eetypes.h>
-#include <libcdvd.h>
 #include <sifdev.h>
 #include <sifrpc.h>
 
@@ -14,18 +14,16 @@
 #define HALF_MEG 0x80000
 #define BYTES_TO_SECTORS(bytes) (((bytes) + 0x7FFu) / 0x800)
 
-// TODO: Most of the names here are guesses based on debug output.
-// Figure out where the original TOC structure came from.
 typedef struct _cdFileSystem {
-    char tNAME[FILE_SYSTEM_TOC_NAME_SIZE];
-    u32 tSEC; // Sector location on disc.
-    u16 tTYPE; // Type of this file. Directory == 2.
-    u16 tNCHLD; // Number of children.
-    u32 tSIZ; // Size, in bytes.
+    char name[FILE_SYSTEM_TOC_NAME_SIZE];
+    u32 sector; // Sector location on disc.
+    u16 type; // Type of this file. Directory == 2.
+    u16 num_children; // Number of children.
+    u32 size; // Size, in bytes.
 
     // Array of pointers to children, if this is a directory.
     // Size seems to be unbounded.
-    _cdFileSystem* tCHLD[1];
+    _cdFileSystem* children[1];
 } CdFileSystem; // size 0x20
 
 // Note: TOC structures are not necessarily `0x20` in size in the case of
@@ -47,20 +45,14 @@ static struct {
 } fileStatus = { 0 }; // size 0x184 (?)
 static char globalTimeString[24] = { 0 };
 
-// sdata
-extern int cdHasBeenInitialized; //= 0;
-// static char _ROOT[] = "Root\n";
-// static char _SPACE[] = "  ";
-// static char _DIR[] = " + %s";
-// static char _FILENAME[] = "  -%16s";
-extern sceCdRMode cdReadMode; //= { 0 };
+extern sceCdRMode cdReadMode;
+static int cdHasBeenInitialized = 0;
 
 void fileMakeDirTree();
 int fileStringCompare(char* lhs, char* rhs);
 s32 fourCharsToInt(int offset);
 s16 twoCharsToShort(int offset);
 int fileCdRead(long sectors, long lbn, char* buf);
-bool fileCdSearchFile(sceCdlFILE* file, const char* file_name);
 
 INCLUDE_ASM("asm/nonmatchings/tmb/file", fileReadf__FPcPv);
 // int fileReadf(char* file_name, void* dst)
@@ -461,20 +453,94 @@ int fileCdRead(long sectors, long lbn, char* buf)
     return ret;
 }
 
-// clang-format off
-INCLUDE_ASM("asm/nonmatchings/tmb/file", fileCdSearchFile__FP10sceCdlFILEPCc);
-// clang-format on
+int fileCdSearchFile(sceCdlFILE* result, const char* file_name)
+{
+    int i, j, tmp;
+    char tmp_name1[FILE_SYSTEM_TOC_NAME_SIZE];
+    char tmp_name2[FILE_SYSTEM_TOC_NAME_SIZE];
+
+    CdFileSystem* parent = &cdFileSystemToc[0];
+    char* p2 = tmp_name1;
+    char* p3 = tmp_name2;
+    const char* p1 = file_name;
+    bool recursed = false;
+
+    if (*p1 != '\\') {
+        // Relative path; file paths must be absolute.
+        return 0;
+    }
+
+    // Skip the leading `\\`.
+    p1++;
+
+    while (*p1 != '\\' && *p1 != '\0') {
+        *p2++ = *p1++;
+    }
+
+    tmp = *p1;
+    *p2 = '\0';
+
+    p2 = tmp_name1;
+    if (tmp == '\\') {
+        p3 = (char*)p1 + 1;
+    }
+
+    for (i = 0; i < parent->num_children; i++) {
+        if (fileStringCompare(parent->children[i]->name, p2)) {
+            if (!(parent->type & FILE_SYSTEM_TOC_TYPE_DIR)) {
+                // We found the file, return it.
+                result->lsn = parent->children[i]->sector;
+                result->size = parent->children[i]->size;
+                for (j = 0; j < 8; j++)
+                    result->date[j] = '\0';
+                for (j = 0; j < 16; j++)
+                    result->name[j] = parent->children[i]->name[j];
+
+                return 1;
+
+            } else {
+                // This is a directory, recurse into it.
+                // The index doesn't get reset; this is probably an oversight.
+                // Directory search, in general, is not properly supported.
+                parent = parent->children[i];
+                recursed = true;
+            }
+        }
+    }
+
+    if (recursed) {
+        // Search the final directory, if we recursed.
+        // Again, this likely isn't implemented correctly; the array pointed to
+        // by `p3` may be filled with garbage data depending on the format of the
+        // input path.
+        for (i = 0; i < parent->num_children; i++) {
+            if (fileStringCompare(parent->children[i]->name, p3)) {
+                result->lsn = parent->children[i]->sector;
+                result->size = parent->children[i]->size;
+                for (j = 0; j < 8; j++)
+                    result->date[j] = '\0';
+                for (j = 0; j < 16; j++)
+                    result->name[j] = parent->children[i]->name[j];
+                return 1;
+            }
+        }
+    }
+
+    printf("Could not find file %s, toc starts at %p\n", file_name, cdFileSystemToc);
+
+    return 0;
+}
 
 CdFileSystem* fileHierAddrOfSect(u32 sector)
 {
     CdFileSystem* root = &cdFileSystemToc[0];
-    int num_files = root->tNCHLD;
+    int num_files = root->num_children;
     int i = 0;
 
     if (num_files != 0) {
         do {
-            CdFileSystem* child = root->tCHLD[i];
-            if (child->tSEC == sector) {
+            CdFileSystem* child = root->children[i];
+            if (child->sector == sector) {
                 return child;
             }
             i++;
@@ -484,34 +550,31 @@ CdFileSystem* fileHierAddrOfSect(u32 sector)
     return NULL;
 }
 
-// clang-format off
-INCLUDE_ASM("asm/nonmatchings/tmb/file", filePrintCdFiles__FP13_cdFileSystemi);
-// clang-format on
-// void filePrintCdFiles(CdFileSystem* dir, int indent)
-// {
-//     if (dir == NULL) {
-//         dir = &cdFileSystemToc[0];
-//     }
-//     if (indent == 0) {
-//         printf("Root\n");
-//     }
+void filePrintCdFiles(CdFileSystem* dir, int indent)
+{
+    if (dir == NULL) {
+        dir = &cdFileSystemToc[0];
+    }
+    if (indent == 0) {
+        printf("Root\n");
+    }
 
-//     for (int i = 0; i < dir->tNCHLD; i++) {
-//         for (int indents = 0; indents < indent; indents++) {
-//             printf("  ");
-//         }
+    for (int i = 0; i < dir->num_children; i++) {
+        for (int indents = 0; indents < indent; indents++) {
+            printf("  ");
+        }
 
-//         if (dir->tCHLD[i]->tTYPE == FILE_SYSTEM_TOC_TYPE_DIR) {
-//             printf(" + %s", dir->tCHLD[i]->tNAME);
-//             printf("<<DIR>>\n");
-//             filePrintCdFiles(dir->tCHLD[i], indent + 1);
-//         } else {
-//             printf("  -%16s", dir->tCHLD[i]->tNAME);
-//             printf("\tSEC=%8i\tSIZ=%9i\n", dir->tCHLD[i]->tSEC, ((dir->tCHLD[i]->tSIZ - 1 >> 0xB)
-//             + 1) * 0x800);
-//         }
-//     }
-// }
+        if (dir->children[i]->type == FILE_SYSTEM_TOC_TYPE_DIR) {
+            printf(" + %s", dir->children[i]->name);
+            printf("<<DIR>>\n");
+            filePrintCdFiles(dir->children[i], indent + 1);
+        } else {
+            printf("  -%16s", dir->children[i]->name);
+            printf("\tSEC=%8i\tSIZ=%9i\n", dir->children[i]->sector,
+                ((dir->children[i]->size - 1 >> 0xB) + 1) * 0x800);
+        }
+    }
+}
 
 int fileStringCompare(char* lhs, char* rhs)
 {
@@ -527,7 +590,36 @@ int fileStringCompare(char* lhs, char* rhs)
     return 0;
 }
 
-INCLUDE_ASM("asm/nonmatchings/tmb/file", fileTrimPath__FPc);
+char* fileTrimPath(char* path)
+{
+    static char shortFileName[FILE_SYSTEM_TOC_NAME_SIZE];
+
+    int i;
+    for (i = 0; i <= 8; i++) {
+        shortFileName[i] = '\0';
+    }
+
+    i = 1;
+    while (path[i] != '\\') {
+        i++;
+    }
+
+    i++;
+    int trimmed_idx = 0;
+    while (path[i] != '.') {
+        if (path[i] == '\\') {
+            i++;
+            trimmed_idx = 0;
+        }
+
+        shortFileName[trimmed_idx] = path[i];
+        i++;
+        trimmed_idx++;
+    }
+
+    shortFileName[trimmed_idx] = '\0';
+    return shortFileName;
+}
 
 void fileOutputTime()
 {
@@ -543,3 +635,7 @@ char* fileGetTimeString()
     }
     return globalTimeString;
 }
+
+// This was defined down here for unknown reasons.
+// (If you define the variable on declaration, `.sdata` does not match.)
+sceCdRMode cdReadMode = { 0 };

@@ -1,13 +1,13 @@
 {
   "measures": {
-    "fuzzy_match_percent": 2.4062927,
+    "fuzzy_match_percent": 2.4338007,
     "total_code": "1221464",
-    "matched_code": "29392",
-    "matched_code_percent": 2.4062927,
+    "matched_code": "29728",
+    "matched_code_percent": 2.4338007,
     "matched_data_percent": 100.0,
     "total_functions": 3606,
-    "matched_functions": 144,
-    "matched_functions_percent": 3.9933443,
+    "matched_functions": 145,
+    "matched_functions_percent": 4.021076,
     "complete_data_percent": 100.0,
     "total_units": 419
   },
@@ -14929,21 +14929,21 @@
     {
       "name": "tmb/file",
       "measures": {
-        "fuzzy_match_percent": 44.567627,
+        "fuzzy_match_percent": 50.776054,
         "total_code": "5412",
-        "matched_code": "2412",
-        "matched_code_percent": 44.567627,
+        "matched_code": "2748",
+        "matched_code_percent": 50.776054,
         "matched_data_percent": 100.0,
         "total_functions": 43,
-        "matched_functions": 37,
-        "matched_functions_percent": 86.04651,
+        "matched_functions": 38,
+        "matched_functions_percent": 88.37209,
         "total_units": 1
       },
       "sections": [
         {
           "name": ".text",
           "size": "5412",
-          "fuzzy_match_percent": 44.567627,
+          "fuzzy_match_percent": 50.776054,
           "metadata": {
             "virtual_address": "1843664"
           }
@@ -14960,6 +14960,20 @@
           "size": "343",
           "metadata": {
             "virtual_address": "5185744"
+          }
+        },
+        {
+          "name": ".sdata",
+          "size": "44",
+          "metadata": {
+            "virtual_address": "5224384"
+          }
+        },
+        {
+          "name": ".bss",
+          "size": "16",
+          "metadata": {
+            "virtual_address": "5260264"
           }
         }
       ],
@@ -15267,6 +15281,7 @@
         {
           "name": "filePrintCdFiles__FP13_cdFileSystemi",
           "size": "336",
+          "fuzzy_match_percent": 100.0,
           "metadata": {
             "virtual_address": "1848352"
           }
@@ -36312,32 +36327,6 @@
       }
     },
     {
-      "name": "data/tmb/file.sdata",
-      "measures": {
-        "fuzzy_match_percent": 100.0,
-        "matched_code_percent": 100.0,
-        "matched_data_percent": 100.0,
-        "matched_functions_percent": 100.0,
-        "total_units": 1
-      },
-      "sections": [
-        {
-          "name": ".sdata",
-          "size": "44",
-          "metadata": {
-            "virtual_address": "5224384"
-          }
-        }
-      ],
-      "metadata": {
-        "module_name": ".main",
-        "module_id": 0,
-        "progress_categories": [
-          "data"
-        ]
-      }
-    },
-    {
       "name": "data/3FB7EC.sdata",
       "measures": {
         "fuzzy_match_percent": 100.0,
@@ -36583,7 +36572,7 @@
       "sections": [
         {
           "name": ".bss",
-          "size": "33920",
+          "size": "33768",
           "metadata": {
             "virtual_address": "5226496"
           }
@@ -36599,6 +36588,32 @@
     },
     {
       "name": "data/bss2.bss",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "matched_code_percent": 100.0,
+        "matched_data_percent": 100.0,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".bss",
+          "size": "136",
+          "metadata": {
+            "virtual_address": "5260280"
+          }
+        }
+      ],
+      "metadata": {
+        "module_name": ".main_bss",
+        "module_id": 1,
+        "progress_categories": [
+          "data"
+        ]
+      }
+    },
+    {
+      "name": "data/bss3.bss",
       "measures": {
         "fuzzy_match_percent": 100.0,
         "matched_code_percent": 100.0,
@@ -36641,14 +36656,14 @@
       "id": "tmb",
       "name": "tmb",
       "measures": {
-        "fuzzy_match_percent": 2.7689433,
+        "fuzzy_match_percent": 2.800597,
         "total_code": "1061488",
-        "matched_code": "29392",
-        "matched_code_percent": 2.7689433,
+        "matched_code": "29728",
+        "matched_code_percent": 2.800597,
         "matched_data_percent": 100.0,
         "total_functions": 2724,
-        "matched_functions": 144,
-        "matched_functions_percent": 5.2863436,
+        "matched_functions": 145,
+        "matched_functions_percent": 5.3230543,
         "complete_data_percent": 100.0,
         "total_units": 133
       }

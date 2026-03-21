@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+#include <libcdvd.h>
+
 // Maximum number of each type of file (TEX, NGP, RES) that can be
 // loaded at once.
 #define MAX_FILES_LOADED 14
@@ -35,5 +37,8 @@ void fileAddName(char* name);
 void fileOnlyNgpFile(char* file, int size);
 void fileOnlyTexFile(char* file, int size);
 void fileOnlyResFile(char* file, int size);
+void fileInitBeforeDbLoad();
+int fileCdSearchFile(sceCdlFILE* file, const char* file_name);
+char* fileTrimPath(char* path);
 
 #endif // _TMB_FILE_H_

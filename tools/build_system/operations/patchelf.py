@@ -19,7 +19,8 @@ _SECTIONS: dict[str, int] = {
     ".text": 0x08,
     # TODO: make sure this is correct.
     ".data": 0x04,
-    ".bss": 0x10,
+    # ".bss": 0x10,
+    ".bss": 0x08,
     ".sbss": 0x04,
     ".sdata": 0x04,
     ".rodata": 0x08,

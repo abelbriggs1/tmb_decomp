@@ -484,7 +484,7 @@ segments:
       - [0x3FA900, sdata]
       - [0x3FAB3C, sdata, tmb/launch]
       - [0x3FAC14, sdata]
-      - [0x3FB7C0, sdata, tmb/file]
+      - [0x3FB7C0, .sdata, tmb/file]
       - [0x3FB7EC, sdata]
       - [0x3FB840, .sdata, tmb/font]
       - [0x3FB850, sdata, tmb/hd]
@@ -504,7 +504,9 @@ segments:
       # .bss segment
       # ------------------------------------------------
       - {type: bss, vram: 0x004FC000, name: bss1}
+      - {type: .bss, vram: 0x005043E8, name: tmb/file}
+      - {type: bss, vram: 0x005043F8, name: bss2}
       - {type: .bss, vram: 0x00504480, name: tmb/font}
-      - {type: bss, vram: 0x00510100, name: bss2}
+      - {type: bss, vram: 0x00510100, name: bss3}
 
   - [0x3FBD00] # end of file
